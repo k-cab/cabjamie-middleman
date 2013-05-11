@@ -8,8 +8,24 @@ var appModule = angular.module('appModule', [], function($routeProvider, $locati
 });
 
 var AppCntl = function ($scope) {
-	$scope.addSticker = function(el) {
-		console.log({ obj: el, msg: 'add sticker'});
+	$scope.stickers = [
+		{
+			name: 'stub-sticker-1'
+		},
+		{
+			name: 'stub-sticker-2'
+		},
+		{
+			name: 'stub-sticker-3'
+		},
+	];		
+
+	$scope.page = null; // TODO
+
+	$scope.addSticker = function(sticker) {
+		console.log({ obj: sticker, msg: 'add sticker'});
+
+		// $scope.page.addSticker(sticker);
 	};
 };
 

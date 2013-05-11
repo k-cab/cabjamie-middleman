@@ -42,11 +42,15 @@
 	<div ng-cloak ng-view></div>
 
   <div class="row">
-    <p ng-click="addSticker(this)">sticker</p>
-    <p>sticker</p>
-    <p>sticker</p>
-    <p>sticker</p>
+
+    <ul id="sticker-list">
+      <li ng-repeat="sticker in stickers" ng-class="">
+        <p ng-click="addSticker(sticker)">{{sticker.name}}</p>
+      </li>
+    </ul>
+
     <p>new sticker...</p>
+    
   </div>
   
   <div class="row">
