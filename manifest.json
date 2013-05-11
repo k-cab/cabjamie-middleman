@@ -7,7 +7,9 @@
   ,"options_page":"options.html"
   ,"minimum_chrome_version":"16"
   ,"default_locale":"en"
-  ,"permissions":[]
+  ,"permissions":[
+    "tabs"
+  ]
   ,"icons": {
     "16": "images/context menu icon.png"
     ,"19": "images/browser action icon.png"
@@ -18,5 +20,7 @@
     "default_popup": "popup.html",
     "default_icon": "images/small app icon.png"
   }
+  ,"content_security_policy": "script-src 'self' http://localhost 'unsafe-eval'; object-src 'self'"
+
 
 }
