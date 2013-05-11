@@ -18,11 +18,17 @@ appModule = angular.module("appModule", [], ($routeProvider, $locationProvider) 
     },
   ]
 
-  $scope.page = null # TODO
+  # TODO factor out the class.
+  # TODO sync with rest backend.
+  $scope.page = 
+    url: 'stub-url'
+
+    addSticker: (sticker) ->
+      console.log
+        obj: sticker
+        msg: "add sticker to #{self.url}"
+  
 
   $scope.addSticker = (sticker) ->
-    console.log
-      obj: sticker
-      msg: "add sticker"
 
-    # $scope.page.addSticker sticker
+    $scope.page.addSticker sticker
