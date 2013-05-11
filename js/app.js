@@ -8,6 +8,8 @@ var appModule = angular.module('appModule', [], function($routeProvider, $locati
 });
 
 var AppCntl = function ($scope) {
-	
+	$scope.addSticker = function(el) {
+		console.log({ obj: el, msg: 'add sticker'});
+	};
 };
 

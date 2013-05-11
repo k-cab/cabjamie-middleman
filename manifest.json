@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name":"Your Extension"
+  ,"version":"0.1"
+  ,"description":"Does something awesome"
+  ,"background":"background.html"
+  ,"options_page":"options.html"
+  ,"minimum_chrome_version":"16"
+  ,"default_locale":"en"
+  ,"permissions":[]
+  ,"icons": {
+    "16": "images/context menu icon.png"
+    ,"19": "images/browser action icon.png"
+    ,"48": "images/small app icon.png"
+    ,"128":"images/big app icon.png"
+  }
+  ,"browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": "images/small app icon.png"
+  }
+
+}
