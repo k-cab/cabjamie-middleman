@@ -21,9 +21,6 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           name: "stub-sticker-3"
       },
     ]
-    results.forEach (e)->
-      e.get = (name) -> 
-        this[name]
 
     resultHandler results
 
@@ -43,6 +40,11 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
     query.find
       success: (results) ->
         $log.info "Successfully retrieved " + results.length + " entries."
+        results.forEach (result) ->
+          # HACK convert the attrs to properties.
+          [ 'name', 'url', 'stickers' ].forEach (attr) ->
+            result[attr] = result.get attr
+        
         resultHandler results
       error: (error) ->
         $log.info "Error: " + error.code + " " + error.message
@@ -65,6 +67,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           stickersRelation.add modelObj.stickers
       #...    
 
+    # REFACTOR
     properties.forEach (p) =>
       modelObj.set(p, modelObj[p])
 
@@ -74,3 +77,5 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       error: (theObj) ->
         $log.info "save failed"
 
+
+  

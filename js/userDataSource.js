@@ -19,11 +19,6 @@
             name: "stub-sticker-3"
           }
         ];
-        results.forEach(function(e) {
-          return e.get = function(name) {
-            return this[name];
-          };
-        });
         return resultHandler(results);
       },
       fetch_parse: function(dataType, params, resultHandler) {
@@ -45,6 +40,11 @@
         return query.find({
           success: function(results) {
             $log.info("Successfully retrieved " + results.length + " entries.");
+            results.forEach(function(result) {
+              return ['name', 'url', 'stickers'].forEach(function(attr) {
+                return result[attr] = result.get(attr);
+              });
+            });
             return resultHandler(results);
           },
           error: function(error) {

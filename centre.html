@@ -41,10 +41,10 @@
 
     <ul id="sticker-list">
       <li ng-repeat="sticker in stickers" ng-class="">
-        <p ng-click="doSomethingUseful()">{{sticker.get('name')}}</p>
+        <p ng-click="doSomethingUseful()">{{sticker.name}}</p>
         <ul id="item-list">
           <li ng-repeat="item in sticker.items">
-            <a href="{{item.get('url')}}">{{item.get('url')}}</p>
+            <a href="{{item.url}}">{{item.url}}</p>
           </li>
         </ul>
       </li>

@@ -25,18 +25,23 @@
   this.Page = Parse.Object.extend("Page", {
     url: 'stub-url',
     addSticker: function(sticker) {
-      var _base;
-
       if (!this.stickers) {
         this.stickers = [];
       }
-      if (!(typeof (_base = this.stickers).include === "function" ? _base.include(sticker) : void 0)) {
+      if (!_.include(this.stickers, sticker)) {
         this.stickers.push(sticker);
       }
       return console.log({
         obj: this,
         msg: "stickers: " + this.stickers
       });
+    },
+    hasSticker: function(sticker) {
+      if (_.include(this.stickers, sticker)) {
+        return true;
+      } else {
+        return false;
+      }
     }
   });
 

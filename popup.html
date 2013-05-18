@@ -33,6 +33,9 @@
       width: 320px; 
       height: 320px;
     }
+    .on-page-true {
+      background-color: pink;
+    }
   </style>
 </head>
 
@@ -47,7 +50,7 @@
 
     <ul id="sticker-list">
       <li ng-repeat="sticker in stickers" ng-class="">
-        <a ng-click="addSticker(sticker)" href="#">{{sticker.get('name')}}</a>
+        <a href="#"ng-click="addSticker(sticker)" class="on-page-{{page.hasSticker(sticker)}}">{{sticker.name}}</a>
         <!-- FIXME abstract away parse / backbone impl details -->
       </li>
 

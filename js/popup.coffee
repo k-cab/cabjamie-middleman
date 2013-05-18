@@ -38,11 +38,15 @@
   addSticker: (sticker) ->
 
     this.stickers = [] unless this.stickers
-    this.stickers.push sticker unless this.stickers.include? sticker
+    this.stickers.push sticker unless _.include this.stickers, sticker
 
     # $log.info   # TODO factor out as angular module
     console.log
       obj: this
       msg: "stickers: #{this.stickers}"
 
-
+  hasSticker: (sticker) ->
+    if _.include this.stickers, sticker
+      true
+    else
+      false
