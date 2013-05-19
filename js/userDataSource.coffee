@@ -29,11 +29,18 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       when 'stickers'
         Sticker = Parse.Object.extend('Sticker')
         query = new Parse.Query(Sticker)
+
       when 'items'
         # TODO address abstraction gap between items and pages.
         Page = Parse.Object.extend('Page')
         query = new Parse.Query(Page) 
         query.equalTo('stickers', params[0])
+
+      when 'page'
+        Page = Parse.Object.extend('Page')
+        query = new Parse.Query(Page) 
+        query.equalTo('url', params[0])
+
       else
         throw "unknown data type #{dataType}"
    

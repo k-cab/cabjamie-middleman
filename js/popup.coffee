@@ -4,22 +4,25 @@
 )
 
 @AppCntl = ($scope, $log, userDataSource, runtime) ->
+
   ## controller actions
 
   $scope.addSticker = (sticker) ->
     $scope.page.addSticker sticker
     userDataSource.persist $scope.page
 
-    # TODO relay result back to ui.
-
 
   ## set up the page
 
-  $scope.page = new Page()
-
   runtime.withCurrentResource (url)->
-    $scope.page.url = url
-    # $scope.$apply()  # this throws when out of chrome.
+
+    userDataSource.fetch 'page', [ url ], (pageData) ->
+      $log.info pageData
+      
+      page = new Page()
+      page.url = pageData[0].get 'url'
+
+      $scope.page = page
     
     
   ## set up stickers
@@ -30,6 +33,7 @@
 
     $log.info JSON.stringify $scope.stickers
     $scope.$apply()
+
 
 
 @Page = Parse.Object.extend "Page",
@@ -50,3 +54,5 @@
       true
     else
       false
+
+  # TODO fetch rather than instantiate - for the stickers already applied.
