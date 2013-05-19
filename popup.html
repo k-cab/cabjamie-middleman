@@ -50,12 +50,16 @@
 
     <ul id="sticker-list">
       <li ng-repeat="sticker in stickers" ng-class="">
-        <a href="#"ng-click="addSticker(sticker)" class="on-page-{{page.hasSticker(sticker)}}">{{sticker.name}}</a>
+        <a href="#" ng-click="addSticker(sticker)" class="on-page-{{page.hasSticker(sticker)}}">{{sticker.name}}</a>
         <!-- FIXME abstract away parse / backbone impl details -->
       </li>
 
       <li>
-        <a href="#">new sticker...</a>
+        <form id="new-sticker-form">
+          <input ng-model="newSticker.name" placeholder="new sticker...">
+          <button ng-click="addNewSticker()">Create</button>
+          <!-- TODO validation / reactive states -->
+        </form>
       </li>
     </ul>
 

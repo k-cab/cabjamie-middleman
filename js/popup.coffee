@@ -11,6 +11,11 @@
     $scope.page.addSticker sticker
     userDataSource.persist $scope.page
 
+  $scope.addNewSticker = ->
+    $log.info $scope.newSticker
+    # post to server TODO
+    # get delta of stickers TODO
+
 
   ## set up the page
 
