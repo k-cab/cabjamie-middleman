@@ -7,40 +7,48 @@
 
   ## controller actions
 
-  $scope.addSticker = (sticker) ->
+  $scope.addSticker = (sticker) -> 
     $scope.page.addSticker sticker
-    userDataSource.persist $scope.page
+    userDataSource.persist 'page', $scope.page
 
-  $scope.addNewSticker = ->
+  $scope.createNewSticker = ->
     $log.info $scope.newSticker
-    # post to server TODO
-    # get delta of stickers TODO
+
+    $scope.stickers.push $scope.newSticker
+
+    userDataSource.persist 'sticker', $scope.newSticker
+    # TODO error case
+
+    # $scope.fetchStickers()
+    # FIXME get delta of stickers
+
+  $scope.fetchPage = ->
+
+    runtime.withCurrentResource (url)->
+
+      userDataSource.fetch 'page', [ url ], (pageData) ->
+        $log.info pageData
+        
+        page = new Page()
+        page.url = pageData[0].get 'url'
+
+        $scope.page = page
+
+  $scope.fetchStickers = ->    
+
+    userDataSource.fetch 'stickers', [], (stickers) ->
+
+      $scope.stickers = stickers
+
+      $log.info JSON.stringify $scope.stickers
+      $scope.$apply()
 
 
-  ## set up the page
-
-  runtime.withCurrentResource (url)->
-
-    userDataSource.fetch 'page', [ url ], (pageData) ->
-      $log.info pageData
-      
-      page = new Page()
-      page.url = pageData[0].get 'url'
-
-      $scope.page = page
-    
-    
-  ## set up stickers
-
-  userDataSource.fetch 'stickers', [], (stickers) ->
-
-    $scope.stickers = stickers
-
-    $log.info JSON.stringify $scope.stickers
-    $scope.$apply()
+  $scope.fetchPage()
+  $scope.fetchStickers()
 
 
-
+# FIXME isolate Parse-specifics into userDataSource.
 @Page = Parse.Object.extend "Page",
   url: 'stub-url'
 
@@ -59,5 +67,3 @@
       true
     else
       false
-
-  # TODO fetch rather than instantiate - for the stickers already applied.

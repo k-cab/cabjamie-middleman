@@ -59,12 +59,12 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         resultHandler error
 
 
-  persist: (modelObj) ->
-    this.persist_parse modelObj
+  persist: (type, modelObj) ->
+    this.persist_parse type, modelObj
 
-  persist_parse: (modelObj) ->
-    switch modelObj.className
-      when 'Page'
+  persist_parse: (type, modelObj) ->
+    switch type
+      when 'page'
         properties = [ 'url' ]  # only non-collection properties
 
         # set up the relation for stickers
@@ -72,7 +72,12 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           $log.info { stickers: modelObj.stickers }
           stickersRelation = modelObj.relation('stickers')
           stickersRelation.add modelObj.stickers
-      #...    
+
+      when 'sticker'
+        data = modelObj
+        Sticker = Parse.Object.extend('Sticker')
+        modelObj = new Sticker data
+        properties = []
 
     # REFACTOR
     properties.forEach (p) =>
