@@ -26,11 +26,14 @@
 
     runtime.withCurrentResource (url)->
 
-      userDataSource.fetch 'page', [ url ], (pageData) ->
-        $log.info pageData
+      userDataSource.fetch 'page', [ url ], (pages) ->
+        $log.info pages
         
-        page = new Page()
-        page.url = pageData[0].get 'url'
+        if pages.length > 0
+          page = pages[0]
+        else
+          page = new Page
+          page.url = url
 
         $scope.page = page
 
@@ -47,6 +50,7 @@
   $scope.fetchPage()
   $scope.fetchStickers()
 
+  # FIXME stickered status for page doesn't show up initially.
 
 # FIXME isolate Parse-specifics into userDataSource.
 @Page = Parse.Object.extend "Page",
@@ -62,8 +66,8 @@
       obj: this
       msg: "stickers: #{this.stickers}"
 
-  hasSticker: (sticker) ->
-    if _.include this.stickers, sticker
+  hasSticker: (stickerName) ->
+    if _.include this.stickers?.map((e) -> e.name), stickerName
       true
     else
       false

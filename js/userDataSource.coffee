@@ -44,14 +44,27 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       else
         throw "unknown data type #{dataType}"
    
+    attrsToProps = (obj, attrs...) ->
+      attrs.forEach (attr) ->
+        obj[attr] = obj.get attr
+    
     query.find
       success: (results) ->
         $log.info "Successfully retrieved " + results.length + " entries."
         results.forEach (result) ->
           # HACK convert the attrs to properties.
-          [ 'name', 'url', 'stickers' ].forEach (attr) ->
-            result[attr] = result.get attr
-        
+          attrsToProps result, 'name', 'url'
+
+          result.relation('stickers').query().find
+            success: (stickers) ->
+              stickers.forEach (sticker) -> 
+                attrsToProps sticker, 'name'
+
+              result.stickers = stickers
+            error: (error) ->
+              $log.error error
+                        
+
         resultHandler results
       error: (error) ->
         $log.info "Error: " + error.code + " " + error.message
