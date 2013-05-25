@@ -24,32 +24,44 @@
 
   $scope.fetchPage = ->
 
-    runtime.withCurrentResource (url)->
+    promise = new RSVP.Promise (resolve, reject) ->
+      runtime.withCurrentResource (url)->
+        userDataSource.fetch 'page', [ url ], (pages) ->
+          $log.info pages
+          
+          if pages.length > 0
+            page = pages[0]
+          else
+            page = new Page
+            page.url = url
 
-      userDataSource.fetch 'page', [ url ], (pages) ->
-        $log.info pages
-        
-        if pages.length > 0
-          page = pages[0]
-        else
-          page = new Page
-          page.url = url
+          $scope.page = page
 
-        $scope.page = page
+          resolve page
+
+          # TODO error case
+
 
   $scope.fetchStickers = ->    
 
-    userDataSource.fetch 'stickers', [], (stickers) ->
-      $log.info JSON.stringify stickers
+    promise = new RSVP.Promise (resolve, reject) ->
+      userDataSource.fetch 'stickers', [], (stickers) ->
+        $log.info JSON.stringify stickers
 
-      $scope.stickers = stickers
+        $scope.stickers = stickers
 
-      $scope.$apply()
+        $scope.$apply()
 
+        resolve stickers
 
-  $scope.fetchPage()
-  $scope.fetchStickers()
-  setTimeout $scope.$apply, 3000  # HACK
+        # TODO error case
+
+  $scope.fetchPage().then ->
+    $scope.fetchStickers()
+  .then ->
+    $scope.$apply()
+  .then null, (error) ->
+    #
 
   # FIXME stickered status for page doesn't show up initially.
 
