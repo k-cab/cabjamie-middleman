@@ -40,15 +40,16 @@
   $scope.fetchStickers = ->    
 
     userDataSource.fetch 'stickers', [], (stickers) ->
+      $log.info JSON.stringify stickers
 
       $scope.stickers = stickers
 
-      $log.info JSON.stringify $scope.stickers
       $scope.$apply()
 
 
   $scope.fetchPage()
   $scope.fetchStickers()
+  setTimeout $scope.$apply, 3000  # HACK
 
   # FIXME stickered status for page doesn't show up initially.
 
