@@ -25,12 +25,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
     resultHandler results
 
   fetch_parse: (dataType, params, resultHandler) ->
-    attrsToProps = (obj, attrs...) ->
-      attrs.forEach (attr) ->
-        val = obj.get attr
-        obj[attr] = val if val
-          
-
+    that = this
     switch dataType
       when 'stickers'
         Sticker = Parse.Object.extend('Sticker')
@@ -40,55 +35,32 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
       when 'items'
         # TODO address abstraction gap between items and pages.
-        Page = Parse.Object.extend('Page')
-        query = new Parse.Query(Page) 
+        query = new Parse.Query(@Page) 
         query.equalTo('stickers', params[0])
-
         preprocessResults = (results) ->
           results.forEach (result) ->
 
-            result.relation('stickers').query().find
-
-              success: (stickers) ->
-                stickers.forEach (sticker) -> 
-                  attrsToProps sticker, 'name'
-
-                result.stickers = stickers
-
-              error: (error) ->
-                $log.error error
+            # this.fetchStickers result
                           
       when 'page'
-        Page = Parse.Object.extend('Page')
-        query = new Parse.Query(Page) 
+        query = new Parse.Query(@Page) 
         query.equalTo('url', params[0])
-
+        # query.include('stickers')
+        
         preprocessResults = (results) ->
           if results.length > 0
             result = results[0]
 
             # debugger
-            # DUP
-
-
-            result.relation('stickers').query().find
-
-              success: (stickers) ->
-                stickers.forEach (sticker) -> 
-                  attrsToProps sticker, 'name'
-
-                result.stickers = stickers
-
-              error: (error) ->
-                $log.error error
 
           else
-            result = new Page()
+            result = new that.Page()
             results.push result
 
       else
         throw "unknown data type #{dataType}"
    
+    that = this
     query.find
       success: (results) ->
         $log.info "Successfully retrieved " + results.length + " entries."
@@ -97,7 +69,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
         # HACK convert the attrs to properties.
         results.forEach (result) -> 
-          attrsToProps result, 'name', 'url'
+          that.attrsToProps result, 'name', 'url'
         
         resultHandler results
 
@@ -106,32 +78,47 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         # deferred.notify error
         resultHandler error
 
+  fetchStickers: (page, resultHandler) ->  # stub impl
+    return if page.isNew()
+
+    that = this
+    page.relation('stickers').query().find
+
+      success: (stickers) ->
+        $log.info "fetched #{stickers.length} stickers for #{page}"
+        stickers.forEach (sticker) -> 
+          that.attrsToProps sticker, 'name'
+
+        page.stickers = stickers
+
+        resultHandler stickers
+
+      error: (error) ->
+        $log.error error
+
 
 
   persist: (type, modelObj) ->
-    this.persist_parse type, modelObj
+    @persist_parse type, modelObj
 
-  persist_parse: (type, data) ->
+  persist_parse: (type, modelObj) ->
+    that = this
     switch type
       when 'page'
-        Page = Parse.Object.extend 'Page'
-        modelObj = new Page
         properties = [ 'url' ]  # only non-collection properties
 
         # set up the relation for stickers
-        if data.stickers
-          $log.info { stickers: data.stickers }
+        if modelObj.stickers
+          $log.info { stickers: modelObj.stickers }
           stickersRelation = modelObj.relation('stickers')
-          stickersRelation.add data.stickers
+          stickersRelation.add modelObj.stickers
 
       when 'sticker'
-        Sticker = Parse.Object.extend 'Sticker'
-        modelObj = new Sticker
         properties = []
 
     # REFACTOR
     properties.forEach (p) =>
-      modelObj.set(p, data[p])
+      modelObj.set(p, modelObj[p])
 
     modelObj.save null,
       success: (theObj) ->
@@ -139,4 +126,30 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       error: (theObj) ->
         $log.info "save failed"
 
+
+  attrsToProps: (obj, attrs...) ->
+    attrs.forEach (attr) ->
+      val = obj.get attr
+      obj[attr] = val if val
+        
+
+  Page: Parse.Object.extend 'Page',
+
+    url: 'stub-url'
+
+    addSticker: (sticker) ->
+
+      this.stickers = [] unless this.stickers
+      this.stickers.push sticker unless _.include this.stickers, sticker
+
+      # $log.info   # TODO factor out as angular module
+      console.log
+        obj: this
+        msg: "stickers: #{this.stickers}"
+
+    hasSticker: (stickerName) ->
+      if _.include this.stickers?.map((e) -> e.name), stickerName
+        true
+      else
+        false
 

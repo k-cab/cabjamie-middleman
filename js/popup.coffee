@@ -31,18 +31,19 @@
         userDataSource.fetch 'page', [ url ], (pages) ->
           $log.info pages
 
-          page = new Page()
-          page.url = pages[0].url
-          page.stickers = pages[0].fetchStickers()
-
+          page = pages[0]
           $scope.page = page
 
-          resolve $scope.page
+          userDataSource.fetchStickers page, (stickers) ->
+
+            resolve $scope.page
+
+          # resolve $scope.page
 
           # TODO error case
 
 
-  $scope.fetchStickers = ->    
+  $scope.fetchStickers = (page)->    
 
     promise = new RSVP.Promise (resolve, reject) ->
       userDataSource.fetch 'stickers', [], (stickers) ->
@@ -66,24 +67,3 @@
   return null
 
   # FIXME stickered status for page doesn't show up initially.
-
-
-# FIXME isolate Parse-specifics into userDataSource.
-class Page
-  url: 'stub-url'
-
-  addSticker: (sticker) ->
-
-    this.stickers = [] unless this.stickers
-    this.stickers.push sticker unless _.include this.stickers, sticker
-
-    # $log.info   # TODO factor out as angular module
-    console.log
-      obj: this
-      msg: "stickers: #{this.stickers}"
-
-  hasSticker: (stickerName) ->
-    if _.include this.stickers?.map((e) -> e.name), stickerName
-      true
-    else
-      false
