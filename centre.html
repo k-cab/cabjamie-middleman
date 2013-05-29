@@ -28,6 +28,25 @@
 
   <script src="foundation/javascripts/modernizr.foundation.js"></script>
 
+  <style type="text/css" media="screen">
+    .scrapbook {
+      height: 100%;
+      overflow-y: scroll;
+    }
+    .scrapbook-item {
+      display: inline-block;
+      vertical-align: middle;
+
+      margin: 10px;
+
+      width: 300px;
+      height: 300px;
+
+      border-style: solid;
+    }
+
+  </style>
+
 </head>
 
 
@@ -39,11 +58,11 @@
 
   <div class="row">
 
-    <ul id="sticker-list">
-      <li ng-repeat="sticker in stickers" ng-class="">
+    <ul id="scrapbook-list">
+      <li ng-repeat="sticker in stickers" ng-class="" class="scrapbook">
         <p ng-click="doSomethingUseful()">{{sticker.name}}</p>
         <ul id="item-list">
-          <li ng-repeat="item in sticker.items">
+          <li ng-repeat="item in sticker.items" class="scrapbook-item">
             <a href="{{item.url}}">{{item.url}}</p>
           </li>
         </ul>
