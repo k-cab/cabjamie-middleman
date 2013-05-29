@@ -14,7 +14,7 @@
     userDataSource.persist 'page', $scope.page
 
   $scope.createNewSticker = ->
-    $log.info $scope.newSticker
+    $log.info {msg: "new sticker", sticker:$scope.newSticker}
 
     $scope.stickers.push $scope.newSticker
 
@@ -29,7 +29,7 @@
     promise = new RSVP.Promise (resolve, reject) ->
       runtime.withCurrentResource (url)->
         userDataSource.fetch 'page', [ url ], (pages) ->
-          $log.info pages
+          $log.info {url, pages}
 
           page = pages[0]
           $scope.page = page
@@ -47,7 +47,6 @@
 
     promise = new RSVP.Promise (resolve, reject) ->
       userDataSource.fetch 'stickers', [], (stickers) ->
-        $log.info JSON.stringify stickers
 
         $scope.stickers = stickers
 

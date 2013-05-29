@@ -19,7 +19,7 @@
               $log.info(tabs);
               url = tabs[0].url;
               $log.info({
-                page: _this,
+                msg: "chrome env",
                 url: url
               });
               return callback(url);

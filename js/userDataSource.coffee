@@ -1,3 +1,7 @@
+# TODO factor out into multiple implementations of the interface.
+# TODO resolve API inconsistency
+# TODO factor out attr <-> prop.
+
 Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Qeob7MLPGsz3wLFQexlOOgm")
 
 @appModule.factory 'userDataSource', ($log) ->
@@ -55,15 +59,15 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
           else
             result = new that.Page()
+            result.url = params[0]
             results.push result
 
       else
         throw "unknown data type #{dataType}"
    
-    that = this
     query.find
       success: (results) ->
-        $log.info "Successfully retrieved " + results.length + " entries."
+        $log.info { dataType, results }
 
         preprocessResults results
 
@@ -109,7 +113,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
         # set up the relation for stickers
         if modelObj.stickers
-          $log.info { stickers: modelObj.stickers }
+          $log.info { page: modelObj, stickers: modelObj.stickers }
           stickersRelation = modelObj.relation('stickers')
           stickersRelation.add modelObj.stickers
 
@@ -124,14 +128,17 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       success: (theObj) ->
         $log.info "save successful"
       error: (theObj) ->
-        $log.info "save failed"
+        $log.error theObj
 
+  ##
 
   attrsToProps: (obj, attrs...) ->
     attrs.forEach (attr) ->
       val = obj.get attr
       obj[attr] = val if val
         
+
+  ##
 
   Page: Parse.Object.extend 'Page',
 
@@ -143,9 +150,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       this.stickers.push sticker unless _.include this.stickers, sticker
 
       # $log.info   # TODO factor out as angular module
-      console.log
-        obj: this
-        msg: "stickers: #{this.stickers}"
+      console.log { this:this, stickers: this.stickers }
 
     hasSticker: (stickerName) ->
       if _.include this.stickers?.map((e) -> e.name), stickerName
