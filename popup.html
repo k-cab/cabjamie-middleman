@@ -37,7 +37,7 @@
     .on-page-true {
       background-color: pink;
     }
-    .list-flow-item {
+    .sticker {
       display: inline-block;
       margin: 10px;
     }
@@ -53,8 +53,8 @@
 
   <div class="row">
 
-    <ul id="sticker-list" class="list-flow">
-      <li ng-repeat="sticker in stickers" class="list-flow-item">
+    <ul id="sticker-list" class="sticker-group">
+      <li ng-repeat="sticker in stickers" class="sticker">
         <a href="#" ng-click="addSticker(sticker)" class="on-page-{{page.hasSticker(sticker.name)}}">{{sticker.name}}</a>
         <!-- FIXME abstract away parse / backbone impl details -->
       </li>
