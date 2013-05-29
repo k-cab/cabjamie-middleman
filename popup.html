@@ -31,15 +31,28 @@
 
   <style type="text/css" media="screen">
     body { 
-      width: 320px; 
-      height: 320px;
+      width: 360px; 
+      height: 280px;
     }
+
     .on-page-true {
       background-color: pink;
     }
     .sticker {
       display: inline-block;
+      vertical-align: middle;
+
       margin: 10px;
+
+      width: 70px;
+      height: 70px;
+
+      border-style: solid;
+    }
+
+    .fit-parent {
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
@@ -54,8 +67,8 @@
   <div class="row">
 
     <ul id="sticker-list" class="sticker-group">
-      <li ng-repeat="sticker in stickers" class="sticker">
-        <a href="#" ng-click="addSticker(sticker)" class="on-page-{{page.hasSticker(sticker.name)}}">{{sticker.name}}</a>
+      <li ng-repeat="sticker in stickers" class="sticker on-page-{{page.hasSticker(sticker.name)}}">
+        <a href="#" ng-click="addSticker(sticker)" class="fit-parent">{{sticker.name}}</a>
         <!-- FIXME abstract away parse / backbone impl details -->
       </li>
 
