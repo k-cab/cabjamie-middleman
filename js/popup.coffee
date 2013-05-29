@@ -1,3 +1,5 @@
+#FIXME time to clean up the backbone / prop api mismatch.
+
 @appModule = angular.module("appModule", [ ], ($routeProvider, $locationProvider) ->
   $routeProvider.when "/",
     templateUrl: "templates/index.html"
@@ -28,16 +30,14 @@
       runtime.withCurrentResource (url)->
         userDataSource.fetch 'page', [ url ], (pages) ->
           $log.info pages
-          
-          if pages.length > 0
-            page = pages[0]
-          else
-            page = new Page
-            page.url = url
+
+          page = new Page()
+          page.url = pages[0].url
+          page.stickers = pages[0].fetchStickers()
 
           $scope.page = page
 
-          resolve page
+          resolve $scope.page
 
           # TODO error case
 
@@ -56,17 +56,20 @@
 
         # TODO error case
 
-  $scope.fetchPage().then ->
-    $scope.fetchStickers()
+
+  RSVP.all([ $scope.fetchPage(), $scope.fetchStickers() ])
   .then ->
     $scope.$apply()
   .then null, (error) ->
-    #
+    $log.error error
+
+  return null
 
   # FIXME stickered status for page doesn't show up initially.
 
+
 # FIXME isolate Parse-specifics into userDataSource.
-@Page = Parse.Object.extend "Page",
+class Page
   url: 'stub-url'
 
   addSticker: (sticker) ->

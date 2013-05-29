@@ -3,22 +3,27 @@
   this.appModule.factory('runtime', function($log) {
     return {
       withCurrentResource: function(callback) {
-        var url,
-          _this = this;
+        var url;
 
         if (chrome.extension) {
           $log.info("initializing chrome extension environment");
-          return chrome.tabs.query({
-            active: true
-          }, function(tabs) {
-            var url;
+          return chrome.windows.getCurrent({}, function(chromeWindow) {
+            var _this = this;
 
-            url = tabs[0].url;
-            $log.info({
-              page: _this,
-              url: url
+            return chrome.tabs.query({
+              windowId: chromeWindow.id,
+              active: true
+            }, function(tabs) {
+              var url;
+
+              $log.info(tabs);
+              url = tabs[0].url;
+              $log.info({
+                page: _this,
+                url: url
+              });
+              return callback(url);
             });
-            return callback(url);
           });
         } else {
           $log.info("not running as chrome extension");
