@@ -99,7 +99,7 @@
 
   <ul class="scrapbook-nav">
     <li ng-repeat="sticker in stickers" ng-class="" class="scrapbook-nav-item">
-      <a ng-click="navigateTo(sticker)" href="#">{{sticker.name}}</p>
+      <a ng-click="navigateTo(sticker)" href="#">{{sticker.name}}</a>
     </li>
   </ul>
 
@@ -109,7 +109,7 @@
       <p ng-click="doSomethingUseful()">{{sticker.name}}</p>
       <ul id="item-list">
         <li ng-repeat="item in sticker.items" class="scrapbook-item">
-          <a href="{{item.url}}" class="fit-parent">{{item.url}}</p>
+          <a href="{{item.url}}" class="fit-parent">{{item.url}}</a>
         </li>
       </ul>
     </li>
