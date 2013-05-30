@@ -29,8 +29,16 @@
   <script src="foundation/javascripts/modernizr.foundation.js"></script>
 
   <style type="text/css" media="screen">
-    .scrapbook-list {
+    .scrapbook-nav {
+      white-space: nowrap;
+/*
+      TODO horizontal scrolling
+*/
+    }
+    .scrapbook-nav-item {
+      display: inline-block;
 
+      margin: 10px;
     }
     .scrapbook {
       display: inline-block;
@@ -50,6 +58,9 @@
       border-style: solid;
     }
 
+    .selected-false {
+      display: none;
+    }
   </style>
 
 </head>
@@ -61,8 +72,15 @@
 
   <div ng-cloak ng-view></div>
 
+  <ul class="scrapbook-nav">
+    <li ng-repeat="sticker in stickers" ng-class="" class="scrapbook-nav-item">
+      <a ng-click="navigateTo(sticker)" href="#">{{sticker.name}}</p>
+    </li>
+  </ul>
+
   <ul id="scrapbook-list" class="scrapbook-list">
-    <li ng-repeat="sticker in stickers" ng-class="" class="scrapbook">
+
+    <li ng-repeat="sticker in stickers" ng-class="" class="scrapbook selected-{{selectedSticker == sticker}}">
       <p ng-click="doSomethingUseful()">{{sticker.name}}</p>
       <ul id="item-list">
         <li ng-repeat="item in sticker.items" class="scrapbook-item">

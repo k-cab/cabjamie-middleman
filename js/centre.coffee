@@ -9,6 +9,9 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 @AppCntl = ($scope, $log, userDataSource) ->
   ## controller actions
 
+  $scope.navigateTo = (sticker) ->
+    $scope.selectedSticker = sticker
+
   $scope.fetchItems = (sticker) ->
     userDataSource.fetch 'items', [ sticker ], (items)->
       $log.info items
