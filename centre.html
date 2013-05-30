@@ -40,12 +40,36 @@
 
       margin: 10px;
     }
+    .scrapbook-list {
+      text-align: center;
+    }
     .scrapbook {
       display: inline-block;
 
-      height: 100%;
+      width: 80%;
+      height: 90%;
       overflow-y: scroll;
     }
+
+/* WIP overlapped, well-positioned and resizing-compliant scrapbooks 
+    .scrapbook {
+      position: absolute;
+
+      background-color: blue;
+    }
+   #s-1 {
+      top: 0px;
+      left: 20px;
+      z-index: 99999;
+    }
+    #s-2 {
+      top: 10px;
+      left: 0px;
+      width: 60%;
+      height: 65%;
+      background-color: red;
+    }
+*/    
     .scrapbook-item {
       display: inline-block;
       vertical-align: middle;
@@ -88,6 +112,24 @@
         </li>
       </ul>
     </li>
+
+<!-- stub elements for experimentation.
+    <li ng-class="" class="scrapbook" id="s-1">
+      <p ng-click="doSomethingUseful()">{{sticker.name}}</p>
+        <li ng-repeat="item in sticker.items" class="scrapbook-item">
+          <a href="{{item.url}}">{{item.url}}</p>
+        </li>
+      </ul>
+    </li>
+    <li ng-class="" class="scrapbook" id="s-2">
+      <p ng-click="doSomethingUseful()">{{sticker.name}}</p>
+      <ul id="item-list">
+        <li ng-repeat="item in sticker.items" class="scrapbook-item">
+          <a href="{{item.url}}">{{item.url}}</p>
+        </li>
+      </ul>
+    </li>
+ -->  
   </ul>
 
   <div class="row" id="msg-container">
