@@ -29,7 +29,12 @@
   <script src="foundation/javascripts/modernizr.foundation.js"></script>
 
   <style type="text/css" media="screen">
+    .scrapbook-list {
+
+    }
     .scrapbook {
+      display: inline-block;
+
       height: 100%;
       overflow-y: scroll;
     }
@@ -56,20 +61,16 @@
 
   <div ng-cloak ng-view></div>
 
-  <div class="row">
-
-    <ul id="scrapbook-list">
-      <li ng-repeat="sticker in stickers" ng-class="" class="scrapbook">
-        <p ng-click="doSomethingUseful()">{{sticker.name}}</p>
-        <ul id="item-list">
-          <li ng-repeat="item in sticker.items" class="scrapbook-item">
-            <a href="{{item.url}}">{{item.url}}</p>
-          </li>
-        </ul>
-      </li>
-    </ul>
-
-  </div>
+  <ul id="scrapbook-list" class="scrapbook-list">
+    <li ng-repeat="sticker in stickers" ng-class="" class="scrapbook">
+      <p ng-click="doSomethingUseful()">{{sticker.name}}</p>
+      <ul id="item-list">
+        <li ng-repeat="item in sticker.items" class="scrapbook-item">
+          <a href="{{item.url}}">{{item.url}}</p>
+        </li>
+      </ul>
+    </li>
+  </ul>
 
   <div class="row" id="msg-container">
     <p>{{msg}}</p>
