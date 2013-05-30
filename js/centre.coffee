@@ -18,6 +18,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       sticker.items = items
       $scope.$apply()
 
+
   ## load the stickers
 
   userDataSource.fetch 'stickers', null, (stickers) ->
@@ -26,6 +27,8 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
     $log.info JSON.stringify $scope.stickers
 
+    # select first sticker.
+    $scope.navigateTo stickers[0] if stickers.length > 0
 
     ## brute-force fetch of items for all stickers
     # FIXME make it based on a promise.
