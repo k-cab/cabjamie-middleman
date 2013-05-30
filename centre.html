@@ -18,10 +18,11 @@
   <link rel="stylesheet" href="foundation/stylesheets/app.css">
 
   <script src="js/vendor/parse-1.2.7.js"></script>
-	<script src="js/vendor/underscore.js"></script>
-	<script src="js/vendor/jquery.min.js"></script>
+  <script src="js/vendor/underscore.js"></script>
+  <script src="js/vendor/jquery.min.js"></script>
   <script src="js/vendor/angular-1.0.6/angular.js"></script>
 
+  <link rel="stylesheet" href="style.css">
 	<script src="js/centre.js"></script>
   <script src="js/runtime.js"></script>
   <script src="js/userDataSource.js"></script>
@@ -108,7 +109,7 @@
       <p ng-click="doSomethingUseful()">{{sticker.name}}</p>
       <ul id="item-list">
         <li ng-repeat="item in sticker.items" class="scrapbook-item">
-          <a href="{{item.url}}">{{item.url}}</p>
+          <a href="{{item.url}}" class="fit-parent">{{item.url}}</p>
         </li>
       </ul>
     </li>
