@@ -7,13 +7,62 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 @appModule.factory 'userDataSource', ($log) ->
 
   fetch: (dataType, params, resultHandler) ->
-    # just the sticker type for now.
+    switch dataType
+      when 'stickers'
+        @fetchStickers null, resultHandler
+      when 'items'
+        @fetchItems params, resultHandler
+      when 'page'
+        @fetchPage params, resultHandler
+      else
+        throw "unknown data type #{dataType}"
 
-    # this.fetch_stub dataType, resultHandler
-    this.fetch_parse dataType, params, resultHandler
+  fetchPage: (params, resultHandler) ->
+    @fetchPage_parse params, resultHandler
+
+  fetchStickers: (page, resultHandler) ->
+    @fetchStickers_parse page, resultHandler
+
+  fetchItems: (params, resultHandler) ->
+    @fetchItems_parse params, resultHandler
+
+  persist: (type, modelObj) ->
+    @persist_parse type, modelObj
 
 
-  fetch_stub: (dataType, resultHandler) ->
+        
+  fetchPage_parse: (params, resultHandler) ->
+    url = params[0]
+
+    query = new Parse.Query(@Page) 
+    query.equalTo('url', url)
+    # query.include('stickers')
+    
+    that = this
+    query.find
+      success: (results) ->
+        $log.info { url, results }
+
+        if results.length > 0
+          result = results[0]
+        else
+          result = new that.Page()
+          result.url = params[0]
+          results.push result
+
+        # HACK convert the attrs to properties.
+        that.attrsToProps result, 'url'
+
+        that.fetchStickers result, (stickers) ->
+          resultHandler results      
+                
+      error: (error) ->
+        $log.info "Error: " + error.code + " " + error.message
+        # deferred.notify error
+        resultHandler error
+
+
+  fetchStickers_stub: (page, resultHandler) ->
     results = [
       {
           name: "stub-sticker-1",
@@ -28,52 +77,45 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
     resultHandler results
 
-  fetch_parse: (dataType, params, resultHandler) ->
+  fetchStickers_parse: (page, resultHandler) ->
+    if page == null
+      Sticker = Parse.Object.extend('Sticker')
+      query = new Parse.Query(Sticker)
+    else
+      return if page.isNew()
+      query = page.relation('stickers').query()
+
     that = this
-    switch dataType
-      when 'stickers'
-        Sticker = Parse.Object.extend('Sticker')
-        query = new Parse.Query(Sticker)
+    query.find
 
-        preprocessResults = ->
+      success: (stickers) ->
+        $log.info "fetched #{stickers.length} stickers for #{page}"
+        stickers.forEach (sticker) -> 
+          that.attrsToProps sticker, 'name'
 
-      when 'items'
-        # TODO address abstraction gap between items and pages.
-        query = new Parse.Query(@Page) 
-        query.equalTo('stickers', params[0])
-        preprocessResults = (results) ->
-          results.forEach (result) ->
+        page.stickers = stickers if page
 
-            # this.fetchStickers result
-                          
-      when 'page'
-        query = new Parse.Query(@Page) 
-        query.equalTo('url', params[0])
-        # query.include('stickers')
-        
-        preprocessResults = (results) ->
-          if results.length > 0
-            result = results[0]
+        resultHandler stickers
 
-            # debugger
+      error: (error) ->
+        $log.error error
 
-          else
-            result = new that.Page()
-            result.url = params[0]
-            results.push result
+  fetchStickers_evernote: (page, resultHandler) ->
 
-      else
-        throw "unknown data type #{dataType}"
-   
+
+  fetchItems_parse: (params, resultHandler) ->
+  
+    # TODO address abstraction gap between items and pages.
+    query = new Parse.Query(@Page) 
+    query.equalTo('stickers', params[0])
+
     query.find
       success: (results) ->
-        $log.info { dataType, results }
-
-        preprocessResults results
+        $log.info { params, results }
 
         # HACK convert the attrs to properties.
         results.forEach (result) -> 
-          that.attrsToProps result, 'name', 'url'
+          that.attrsToProps result, 'url'
         
         resultHandler results
 
@@ -82,28 +124,9 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         # deferred.notify error
         resultHandler error
 
-  fetchStickers: (page, resultHandler) ->  # stub impl
-    return if page.isNew()
-
-    that = this
-    page.relation('stickers').query().find
-
-      success: (stickers) ->
-        $log.info "fetched #{stickers.length} stickers for #{page}"
-        stickers.forEach (sticker) -> 
-          that.attrsToProps sticker, 'name'
-
-        page.stickers = stickers
-
-        resultHandler stickers
-
-      error: (error) ->
-        $log.error error
-
-
-
-  persist: (type, modelObj) ->
-    @persist_parse type, modelObj
+        results.forEach (result) -> 
+          that.attrsToProps result, 'name', 'url'
+        
 
   persist_parse: (type, modelObj) ->
     that = this
