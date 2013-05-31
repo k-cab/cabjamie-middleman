@@ -64,8 +64,8 @@
   <div class="row">
 
     <ul id="sticker-list" class="sticker-group">
-      <li ng-repeat="sticker in stickers" class="sticker on-page-{{page.hasSticker(sticker.name)}}">
-        <a href="#" ng-click="addSticker(sticker)" class="fit-parent">{{sticker.name}}</a>
+      <li ng-repeat="sticker in stickers" class="sticker on-page-{{page.hasSticker(sticker)}}">
+        <a href="#" ng-click="toggleSticker(sticker)" class="fit-parent">{{sticker.name}}</a>
         <!-- FIXME abstract away parse / backbone impl details -->
       </li>
 

@@ -152,8 +152,12 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       # $log.info   # TODO factor out as angular module
       console.log { this:this, stickers: this.stickers }
 
-    hasSticker: (stickerName) ->
-      if _.include this.stickers?.map((e) -> e.name), stickerName
+    removeSticker: (sticker) ->
+      console.log "TODO remove sticker from #{this.url}"
+      this.stickers = this.stickers.filter( (e) -> e.name != sticker.name )
+    
+    hasSticker: (sticker) ->
+      if _.include this.stickers?.map((e) -> e.name), sticker.name
         true
       else
         false

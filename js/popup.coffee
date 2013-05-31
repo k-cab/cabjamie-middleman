@@ -9,10 +9,23 @@
 
   ## controller actions
 
+  $scope.toggleSticker = (sticker) ->
+    unless $scope.page.hasSticker sticker
+      $scope.addSticker sticker
+    else
+      $scope.removeSticker sticker
+
   $scope.addSticker = (sticker) -> 
     $scope.page.addSticker sticker
     userDataSource.persist 'page', $scope.page
 
+  $scope.removeSticker = (sticker) ->
+    $scope.page.removeSticker sticker
+    userDataSource.persist 'page', $scope.page
+
+    # TODO decouple the writes from the user interaction, coalecse and schedule.
+
+  
   $scope.createNewSticker = ->
     $log.info {msg: "new sticker", sticker:$scope.newSticker}
 
