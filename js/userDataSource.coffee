@@ -190,10 +190,10 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         note = null # TODO 
         url = "http://localhost:8081/notes"
         data = 
-          title: url
+          title: modelObj.url
           content: """
             <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
-            <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub note</div>
+            <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>useful content from page to go here...</div>
             </en-note>
             """
           tagNames: modelObj.stickers.map (sticker) -> sticker.name          
