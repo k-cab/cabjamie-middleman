@@ -48,7 +48,10 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         else
           result = new that.Page()
           result.url = params[0]
+          result.stickers = []
+
           results.push result
+
 
         # HACK convert the attrs to properties.
         that.attrsToProps result, 'url'
@@ -82,7 +85,11 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       Sticker = Parse.Object.extend('Sticker')
       query = new Parse.Query(Sticker)
     else
-      return if page.isNew()
+      # in order to prevent saving a possibly unnecessary page, we shortcut to the result handler if page is new.
+      if page.isNew()
+        resultHandler []
+        return
+
       query = page.relation('stickers').query()
 
     that = this

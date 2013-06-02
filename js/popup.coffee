@@ -51,7 +51,6 @@
 
             resolve $scope.page
 
-          # resolve $scope.page
 
           # TODO error case
 
