@@ -4,7 +4,7 @@
 
 Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Qeob7MLPGsz3wLFQexlOOgm")
 
-@appModule.factory 'userDataSource', ($log) ->
+@appModule.factory 'userDataSource', ($log, $http) ->
 
   fetch: (dataType, params, resultHandler) ->
     switch dataType
