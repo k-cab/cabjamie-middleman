@@ -29,9 +29,10 @@
   $scope.createNewSticker = ->
     $log.info {msg: "new sticker", sticker:$scope.newSticker}
 
-    $scope.stickers.push $scope.newSticker
-
-    userDataSource.persist 'sticker', $scope.newSticker
+    userDataSource.persist 'sticker', $scope.newSticker, (newSticker) ->
+      $scope.stickers.push newSticker
+      $scope.$apply()
+      
     # TODO error case
 
     # $scope.fetchStickers()

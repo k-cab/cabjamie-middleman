@@ -26,8 +26,8 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
   fetchItems: (params, resultHandler) ->
     @fetchItems_parse params, resultHandler
 
-  persist: (type, modelObj) ->
-    @persist_parse type, modelObj
+  persist: (type, modelObj, resultHandler) ->
+    @persist_parse type, modelObj, resultHandler
 
 
         
@@ -135,7 +135,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           that.attrsToProps result, 'name', 'url'
         
 
-  persist_parse: (type, modelObj) ->
+  persist_parse: (type, modelObj, resultHandler) ->
     that = this
     switch type
       when 'page'
@@ -163,6 +163,9 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
     modelObj.save null,
       success: (theObj) ->
         $log.info "save successful"
+
+        resultHandler theObj
+        
       error: (theObj) ->
         $log.error theObj
 
