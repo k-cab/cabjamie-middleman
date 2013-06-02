@@ -184,10 +184,10 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         $log.error theObj
 
   persist_evernote: (type, modelObj) ->
-    that = this
+    # FIXME update the note after creation on multiple stickerings.
+
     switch type
       when 'page'
-        note = null # TODO 
         url = "http://localhost:8081/notes"
         data = 
           title: modelObj.url
