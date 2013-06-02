@@ -116,6 +116,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
     query = new Parse.Query(@Page) 
     query.equalTo('stickers', params[0])
 
+    that = this
     query.find
       success: (results) ->
         $log.info { params, results }
