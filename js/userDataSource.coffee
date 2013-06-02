@@ -108,6 +108,20 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
   fetchStickers_evernote: (page, resultHandler) ->
 
+    $http.get(url)
+      .success (data, status, headers, config) -> 
+        # // this callback will be called asynchronously
+        # // when the response is available
+        $log.info data
+        stickers = data.filter (evernoteTag) -> evernoteTag.name.match /^##/ 
+        
+        resultHandler stickers
+
+      .error (data, status, headers, config) ->
+        # // called asynchronously if an error occurs
+        # // or server returns response with an error status.
+        throw { data, status, headers, config }
+
 
   fetchItems_parse: (params, resultHandler) ->
   
