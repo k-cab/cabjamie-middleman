@@ -42,15 +42,10 @@
     promise = new RSVP.Promise (resolve, reject) ->
       runtime.withCurrentResource (url)->
         userDataSource.fetch 'page', [ url ], (pages) ->
-          $log.info {url, pages}
-
           page = pages[0]
           $scope.page = page
 
-          userDataSource.fetchStickers page, (stickers) ->
-
-            resolve $scope.page
-
+          resolve $scope.page
 
           # TODO error case
 

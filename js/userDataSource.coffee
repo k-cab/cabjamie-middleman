@@ -82,8 +82,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
   fetchStickers_parse: (page, resultHandler) ->
     if page == null
-      Sticker = Parse.Object.extend('Sticker')
-      query = new Parse.Query(Sticker)
+      query = new Parse.Query(@Sticker)
     else
       # in order to prevent saving a possibly unnecessary page, we shortcut to the result handler if page is new.
       if page.isNew()
@@ -146,9 +145,16 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         $log.info { page: modelObj, stickers: modelObj.stickers }
         stickersRelation = modelObj.relation('stickers')
         stickersRelation.add modelObj.stickers
+        # FIXME remove the unstickered stickers from the relation.
 
       when 'sticker'
-        properties = []
+        properties = [ 'name' ]
+
+        # create the obj
+        unless modelObj.className == 'Sticker'
+          theObj = new @Sticker()
+          theObj.name = modelObj.name
+          modelObj = theObj
 
     # REFACTOR
     properties.forEach (p) =>
@@ -191,4 +197,6 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         true
       else
         false
+
+  Sticker: Parse.Object.extend('Sticker')
 
