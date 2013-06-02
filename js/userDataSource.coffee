@@ -169,6 +169,37 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       error: (theObj) ->
         $log.error theObj
 
+  persist_evernote: (type, modelObj) ->
+    that = this
+    switch type
+      when 'page'
+        note = null # TODO 
+        url = "http://localhost:8081/notes"
+        data = 
+          title: url
+          content: """
+            <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+            <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub note</div>
+            </en-note>
+            """
+          tagNames: modelObj.stickers.map (sticker) -> sticker.name          
+          
+      when 'sticker'
+        throw "unimplemented"
+
+    # post note
+    $http.post(url, data)
+      .success (data, status, headers, config) -> 
+        # // this callback will be called asynchronously
+        # // when the response is available
+        $log.info data
+
+      .error (data, status, headers, config) ->
+        # // called asynchronously if an error occurs
+        # // or server returns response with an error status.
+        throw { data, status, headers, config }
+
+
   ##
 
   attrsToProps: (obj, attrs...) ->
