@@ -50,7 +50,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           result.url = params[0]
           result.stickers = []
 
-          results.push result
+        results.push result
 
 
         # HACK convert the attrs to properties.
@@ -143,10 +143,9 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         properties = [ 'url' ]  # only non-collection properties
 
         # set up the relation for stickers
-        if modelObj.stickers
-          $log.info { page: modelObj, stickers: modelObj.stickers }
-          stickersRelation = modelObj.relation('stickers')
-          stickersRelation.add modelObj.stickers
+        $log.info { page: modelObj, stickers: modelObj.stickers }
+        stickersRelation = modelObj.relation('stickers')
+        stickersRelation.add modelObj.stickers
 
       when 'sticker'
         properties = []
@@ -169,7 +168,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       obj[attr] = val if val
         
 
-  ##
+  ## REFACTOR
 
   Page: Parse.Object.extend 'Page',
 

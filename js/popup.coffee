@@ -62,7 +62,8 @@
 
         $scope.stickers = stickers
 
-        $scope.$apply()
+        # this seems redundant now, but sweep for regressions
+        # $scope.$apply()
 
         resolve stickers
 
