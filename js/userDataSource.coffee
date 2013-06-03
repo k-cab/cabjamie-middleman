@@ -164,8 +164,8 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       success: (theObj) ->
         $log.info "save successful"
 
-        resultHandler theObj
-        
+        resultHandler theObj if resultHandler
+
       error: (theObj) ->
         $log.error theObj
 
