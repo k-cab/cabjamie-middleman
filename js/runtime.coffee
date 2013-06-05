@@ -3,7 +3,7 @@
   withCurrentResource: (callback)->
     # init chrome-specific
     if chrome.extension
-      withCurrentResource_chrome callback
+      @withCurrentResource_chrome callback
     else
       $log.info "not running as chrome extension"
       url = 'out-of-chrome-stub-url'
@@ -11,13 +11,13 @@
 
   sendMsg: (params, callback)->
     if chrome.extension
-      sendMsg_chrome params, callback
+      @sendMsg_chrome params, callback
     else
       $log.info { params, callback }
 
   onMsg: (params, callback)->
     if chrome.extension
-      onMsg_chrome params, callback
+      @onMsg_chrome params, callback
     else
       $log.info { params, callback }
 
