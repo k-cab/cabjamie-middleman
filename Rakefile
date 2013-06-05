@@ -22,7 +22,7 @@ task :iced do
   end
 end
 
-target_dir = "~/Dropbox/bigbearlabs/ngp/mackerel/builds/current"
+target_dir = "~/Dropbox/bigbearlabs/builds/mackerel-chrome"
 desc "copy to a dropbox folder"
 task :deploy do
   puts "*** Deploying the extension ***"
