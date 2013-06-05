@@ -1,3 +1,8 @@
+## Build
+
+* compile all coffeescript files to js.
+
+
 ## Install
 
 * Open the Chrome extensions page: Window > Extensions in the app menu.
