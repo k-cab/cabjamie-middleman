@@ -3,3 +3,8 @@ popup.js
 userDataSource.js
 centre.js
 runtime.js
+js/app.map
+js/centre.map
+js/popup.map
+js/runtime.map
+js/userDataSource.map
