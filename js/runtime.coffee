@@ -3,16 +3,40 @@
   withCurrentResource: (callback)->
     # init chrome-specific
     if chrome.extension
-      $log.info "initializing chrome extension environment"
-      chrome.windows.getCurrent {}, (chromeWindow) -> 
-        chrome.tabs.query {windowId: chromeWindow.id, active: true}, (tabs) =>
-          $log.info tabs
-          url = tabs[0].url
-          $log.info {msg: "chrome env", url: url}
-          callback url
+      withCurrentResource_chrome callback
     else
       $log.info "not running as chrome extension"
       url = 'out-of-chrome-stub-url'
       callback url
 
+  sendMsg: (params, callback)->
+    if chrome.extension
+      sendMsg_chrome params, callback
+    else
+      $log.info { params, callback }
 
+  onMsg: (params, callback)->
+    if chrome.extension
+      onMsg_chrome params, callback
+    else
+      $log.info { params, callback }
+
+
+  ## chrome extension environment
+
+  withCurrentResource_chrome: (callback) ->
+    $log.info "initializing chrome extension environment"
+    chrome.windows.getCurrent {}, (chromeWindow) -> 
+      chrome.tabs.query {windowId: chromeWindow.id, active: true}, (tabs) =>
+        $log.info tabs
+        url = tabs[0].url
+        $log.info {msg: "chrome env", url: url}
+        callback url
+  
+  # callback sig:
+  sendMsg_chrome: (params, callback)->
+    chrome.extension.sendMessage params, callback
+
+  # callback sig: 
+  onMsg_chrome: (callback) ->
+    chrome.extension.onMessage.addListener callback
