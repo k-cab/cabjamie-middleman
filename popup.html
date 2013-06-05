@@ -36,9 +36,6 @@
       height: 280px;
     }
 
-    .on-page-true {
-      background-color: pink;
-    }
     .sticker {
       display: inline-block;
       vertical-align: middle;
@@ -49,6 +46,14 @@
       height: 70px;
 
       border-style: solid;
+    }
+
+    .on-page-true {
+      background-color: pink;
+    }
+
+    .mouseover-true {
+      background-color: blue;
     }
 
   </style>
@@ -68,7 +73,7 @@
   <div class="row">
 
     <ul id="sticker-list" class="sticker-group">
-      <li ng-repeat="sticker in stickers" class="sticker on-page-{{page.hasSticker(sticker)}}">
+      <li ng-repeat="sticker in stickers" class="sticker on-page-{{page.hasSticker(sticker)}} mouseover-{{mouseOver}}" ng-mouseenter="mouseOver = true" ng-mouseleave="mouseOver = false">
         <a href="#" ng-click="toggleSticker(sticker)" class="fit-parent">{{sticker.name}}</a>
         <!-- FIXME abstract away parse / backbone impl details -->
       </li>
