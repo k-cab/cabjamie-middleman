@@ -108,8 +108,14 @@
     <li ng-repeat="sticker in stickers" ng-class="" class="scrapbook selected-{{selectedSticker == sticker}}">
       <p ng-click="doSomethingUseful()">{{sticker.name}}</p>
       <ul id="item-list">
-        <li ng-repeat="item in sticker.items" class="scrapbook-item">
-          <a href="{{item.url}}" class="fit-parent">{{item.url}}</a>
+        <li ng-repeat="item in sticker.items | orderBy:'updatedAt':true" class="scrapbook-item">
+          <a href="{{item.url}}" class="fit-parent">{{item.title}}
+            <div class="item-detail">
+              Address: {{item.url}}<br>
+              Updated: {{item.updatedAt}}<br>
+              Created: {{item.createdAt}}<br>
+            </div>
+          </a>
         </li>
       </ul>
     </li>
