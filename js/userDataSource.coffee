@@ -18,16 +18,16 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         throw "unknown data type #{dataType}"
 
   fetchPage: (params, resultHandler) ->
-    @fetchPage_parse params, resultHandler
+    @fetchPage_stub params, resultHandler
 
   fetchStickers: (page, resultHandler) ->
-    @fetchStickers_parse page, resultHandler
+    @fetchStickers_evernote page, resultHandler
 
   fetchItems: (params, resultHandler) ->
     @fetchItems_parse params, resultHandler
 
   persist: (type, modelObj, resultHandler) ->
-    @persist_parse type, modelObj, resultHandler
+    @persist_evernote type, modelObj, resultHandler
 
 
         
@@ -46,9 +46,6 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         if results.length > 0
           result = results[0]
         else
-          result = new that.Page()
-          result.url = params[0]
-          result.stickers = []
 
         results.push result
 
@@ -63,6 +60,20 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         $log.info "Error: " + error.code + " " + error.message
         # deferred.notify error
         resultHandler error
+
+  fetchPage_evernote: (params, resultHandler) ->
+    # check if there's a note for this page.
+
+    # if so, fetch the note and create the page object.
+
+    # else, create a new page object.
+
+  fetchPage_stub: (params, resultHandler) ->
+    result = new @Page()
+    result.url = params[0]
+    result.stickers = []
+
+    resultHandler [ result ]
 
 
   fetchStickers_stub: (page, resultHandler) ->
@@ -107,20 +118,14 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         $log.error error
 
   fetchStickers_evernote: (page, resultHandler) ->
-
-    $http.get(url)
-      .success (data, status, headers, config) -> 
-        # // this callback will be called asynchronously
-        # // when the response is available
-        $log.info data
-        stickers = data.filter (evernoteTag) -> evernoteTag.name.match /^##/ 
-        
+    if page == null
+      @evernote.listTags (tags) ->
+        $log.info tags
+        stickers = tags.filter (tag) -> tag.name.match /^##/
         resultHandler stickers
 
-      .error (data, status, headers, config) ->
-        # // called asynchronously if an error occurs
-        # // or server returns response with an error status.
-        throw { data, status, headers, config }
+    else
+      # throw "don't call me for page stickers."
 
 
   fetchItems_parse: (params, resultHandler) ->
@@ -183,37 +188,76 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       error: (theObj) ->
         $log.error theObj
 
-  persist_evernote: (type, modelObj) ->
+  persist_evernote: (type, modelObj, resultHandler) ->
     # FIXME update the note after creation on multiple stickerings.
 
     switch type
       when 'page'
-        url = "http://localhost:8081/notes"
-        data = 
-          title: modelObj.url
-          content: """
-            <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
-            <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>useful content from page to go here...</div>
-            </en-note>
-            """
-          tagNames: modelObj.stickers.map (sticker) -> sticker.name          
-          
+
+        @evernote.saveNote
+          guid: modelObj.guid
+          title: 'stub note'
+          content: 'stub note content'
+          tags: modelObj.stickers
+          callback: resultHandler
+
+        # url = "http://localhost:8081/notes"
+        # data = 
+        #   title: modelObj.url
+        #   content: """
+        #     <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+        #     <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>useful content from page to go here...</div>
+        #     </en-note>
+        #     """
+        #   tagNames: modelObj.stickers.map (sticker) -> sticker.name          
+
       when 'sticker'
         throw "unimplemented"
 
-    # post note
-    $http.post(url, data)
-      .success (data, status, headers, config) -> 
-        # // this callback will be called asynchronously
-        # // when the response is available
-        $log.info data
+    # # post note
+    # $http.post(url, data)
+    #   .success (data, status, headers, config) -> 
+    #     $log.info data
+    #     resultHandler modelObj
 
-      .error (data, status, headers, config) ->
-        # // called asynchronously if an error occurs
-        # // or server returns response with an error status.
-        throw { data, status, headers, config }
+    #   .error (data, status, headers, config) ->
+    #     throw { data, status, headers, config }
 
 
+  ##
+
+  evernote:
+    init: ->
+      @devToken = 'S=s1:U=6bbf6:E=1467335cb26:C=13f1b849f29:P=1cd:A=en-devtoken:V=2:H=af79274188c8caa763811073776c32d7'
+      noteStoreURL = 'https://sandbox.evernote.com/shard/s1/notestore'
+      noteStoreTransport = new Thrift.BinaryHttpTransport(noteStoreURL)
+      noteStoreProtocol = new Thrift.BinaryProtocol(noteStoreTransport)
+      @noteStore = new NoteStoreClient(noteStoreProtocol)
+
+    listTags: (callback) ->
+      @init()
+
+      @noteStore.listTags @devToken, callback
+    
+    fetchNote: (args) ->
+      # body...
+    
+    saveNote: (args) ->
+      note = new Note()
+      note.title = args.title
+      note.content = """
+        <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+        <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>#{args.content}</div>
+        </en-note>
+        """
+      note.tagNames = args.tags.map (sticker) -> sticker.name
+
+      @noteStore.createNote @devToken, note, (callback) ->
+        $log.info { msg: 'note saved', callback }
+        note.guid = callback.guid
+
+        args.callback note if args.callback
+      
   ##
 
   attrsToProps: (obj, attrs...) ->
