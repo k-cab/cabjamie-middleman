@@ -211,7 +211,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         when 'page'
 
           @evernote.saveNote
-            guid: modelObj.guid
+            guid: modelObj.note?.guid
             title: modelObj.title
             content: 'stub note content'
             tags: modelObj.stickers
@@ -262,7 +262,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       fetchNote: (args) ->
         pageSize = 10;
          
-        filter = new NoteFilter();
+        filter = new NoteFilter()
         filter.order = NoteSortOrder.UPDATED
         filter.words = "sourceURL:#{args.url}"
         
@@ -273,6 +273,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         # sourceApplication TODO
 
         @noteStore.findNotesMetadata @authToken, filter, 0, pageSize, spec, (notesMetadata) =>
+          $log.info { msg: "fetched notes", filter, spec, notesMetadata }
           if notesMetadata.notes.length > 1
             $log.warn
               msg: "multiple results for #{args.url}"
@@ -296,6 +297,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
             RSVP.all(fetchTags)
             .then (tags)->
               note = 
+                guid: noteMd.guid
                 url: args.url
                 tags: tags
 
@@ -304,8 +306,6 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
             args.callback null          
       
       saveNote: (args) ->
-        # TODO if note not new, update.
-
         note = new Note()
         note.title = args.title
         note.content = """
@@ -318,12 +318,21 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         attrs.sourceURL = args.url
         note.attributes = attrs
 
-        @noteStore.createNote @authToken, note, (callback) ->
-          $log.info { msg: 'note saved', callback }
-          note.guid = callback.guid
+        if args.guid
+          # update the note.
 
-          args.callback note if args.callback
-        
+          note.guid = args.guid
+          @noteStore.updateNote @authToken, note, (callback) ->
+            $log.info { msg: 'note updated', callback }
+
+            args.callback note if args.callback
+        else
+          @noteStore.createNote @authToken, note, (callback) ->
+            $log.info { msg: 'note saved', callback }
+            note.guid = callback.guid
+
+            args.callback note if args.callback
+          
     ##
 
     attrsToProps: (obj, attrs...) ->
