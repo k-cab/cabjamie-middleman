@@ -14,7 +14,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         when 'items'
           @fetchItems params, resultHandler
         when 'page'
-          @fetchPage { url: params[0] }, resultHandler
+          @fetchPage { url: params }, resultHandler
         else
           throw "unknown data type #{dataType}"
 
@@ -55,7 +55,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
 
           # HACK convert the attrs to properties.
-          that.attrsToProps result, 'url'
+          that.attrsToProps result, 'url', 'title'
 
           that.fetchStickers result, (stickers) ->
             resultHandler results      
@@ -212,7 +212,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
           @evernote.saveNote
             guid: modelObj.guid
-            title: 'stub note'
+            title: modelObj.title
             content: 'stub note content'
             tags: modelObj.stickers
 

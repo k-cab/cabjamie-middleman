@@ -6,8 +6,9 @@
       @withCurrentResource_chrome callback
     else
       $log.info "not running as chrome extension"
-      url = 'out-of-chrome-stub-url'
-      callback url
+      callback
+        url: 'http://out-of-chrome-stub-url'
+        title: 'stub url title'
 
   sendMsg: (params, callback)->
     if chrome.extension
@@ -29,9 +30,9 @@
     chrome.windows.getCurrent {}, (chromeWindow) -> 
       chrome.tabs.query {windowId: chromeWindow.id, active: true}, (tabs) =>
         $log.info tabs
-        url = tabs[0].url
-        $log.info {msg: "chrome env", url: url}
-        callback url
+        callback
+          url: tabs[0].url
+          title: tabs[0].title
   
   # callback sig:
   sendMsg_chrome: (params, callback)->

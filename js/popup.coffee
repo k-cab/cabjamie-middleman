@@ -41,9 +41,10 @@
   $scope.fetchPage = ->
 
     promise = new RSVP.Promise (resolve, reject) ->
-      runtime.withCurrentResource (url)->
-        userDataSource.fetch 'page', [ url ], (pages) ->
+      runtime.withCurrentResource (tab)->
+        userDataSource.fetch 'page', tab.url, (pages) ->
           page = pages[0]
+          page.title = tab.title
           $scope.page = page
 
           resolve $scope.page
