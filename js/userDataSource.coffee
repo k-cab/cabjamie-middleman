@@ -212,6 +212,8 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
             title: 'stub note'
             content: 'stub note content'
             tags: modelObj.stickers
+
+            url: modelObj.url
             callback: resultHandler
 
           # url = "http://localhost:8081/notes"
@@ -255,17 +257,15 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       #   callback tags
       
       fetchNote: (args) ->
-        #  based on the args.url
-
         pageSize = 10;
          
         filter = new NoteFilter();
         filter.order = NoteSortOrder.UPDATED
+        filter.words = "sourceURL:#{args.url}"
         
         spec = new NotesMetadataResultSpec()
         spec.includeTitle = true
         spec.includeTagGuids = true
-        spec.words = "sourceURL:#{args.url}"
 
         # sourceApplication TODO
 
@@ -309,6 +309,9 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           </en-note>
           """
         note.tagNames = args.tags.map (tag) -> tag.name
+        attrs = new NoteAttributes()
+        attrs.sourceURL = args.url
+        note.attributes = attrs
 
         @noteStore.createNote @authToken, note, (callback) ->
           $log.info { msg: 'note saved', callback }
