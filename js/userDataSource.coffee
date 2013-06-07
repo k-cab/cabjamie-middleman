@@ -304,6 +304,8 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
             args.callback null          
       
       saveNote: (args) ->
+        # TODO if note not new, update.
+
         note = new Note()
         note.title = args.title
         note.content = """
