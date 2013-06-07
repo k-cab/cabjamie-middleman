@@ -1,0 +1,43 @@
+<h1>Stickers</h1>
+
+<div class="row">
+
+  <ul id="sticker-list" class="sticker-group">
+    <li ng-repeat="sticker in stickers" class="sticker on-page-{{page.hasSticker(sticker)}} mouseover-{{mouseOver}}" ng-mouseenter="mouseOver = true" ng-mouseleave="mouseOver = false">
+      <a href="#" ng-click="toggleSticker(sticker)" class="fit-parent">{{sticker.name}}</a>
+      <!-- FIXME abstract away parse / backbone impl details -->
+    </li>
+
+    <li>
+      <form id="new-sticker-form">
+        <input ng-model="newSticker.name" placeholder="new sticker...">
+        <button ng-click="createNewSticker()">Create</button>
+        <!-- TODO validation / reactive states -->
+      </form>
+    </li>
+  </ul>
+
+</div>
+
+
+<style type="text/css" media="screen">
+  .sticker {
+    display: inline-block;
+    vertical-align: middle;
+
+    margin: 10px;
+
+    width: 70px;
+    height: 70px;
+
+    border-style: solid;
+  }
+
+  .on-page-true {
+    background-color: pink;
+  }
+
+  .mouseover-true {
+    background-color: blue;
+  }
+</style>

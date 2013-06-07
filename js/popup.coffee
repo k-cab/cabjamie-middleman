@@ -1,11 +1,11 @@
 #FIXME time to clean up the backbone / prop api mismatch.
 
 @appModule = angular.module("appModule", [ ], ($routeProvider, $locationProvider) ->
-  $routeProvider.when "/",
-    templateUrl: "templates/index.html"
+  $routeProvider.when "/stickers",
+    templateUrl: "templates/stickers.html"
 )
 
-@AppCntl = ($scope, $log, userDataSource, runtime) ->
+@AppCntl = ($scope, $location, $log, userDataSource, runtime) ->
 
   ## controller actions
 
@@ -38,11 +38,12 @@
     # $scope.fetchStickers()
     # FIXME get delta of stickers
 
+
   $scope.fetchPage = ->
 
     promise = new RSVP.Promise (resolve, reject) ->
       runtime.withCurrentResource (tab)->
-        userDataSource.fetch 'page', tab.url, (pages) ->
+        userDataSource.fetch 'page', tab, (pages) ->
           page = pages[0]
           page.title = tab.title
           $scope.page = page
@@ -50,7 +51,6 @@
           resolve $scope.page
 
           # TODO error case
-
 
   $scope.fetchStickers = (page)->    
 
@@ -67,12 +67,17 @@
         # TODO error case
 
 
-  RSVP.all([ $scope.fetchPage(), $scope.fetchStickers() ])
-  .then ->
-    $scope.$apply()
-  .then null, (error) ->
-    $log.error error
+  $scope.refresh = ->
+    RSVP.all([ 
+      $scope.fetchPage(), 
+      $scope.fetchStickers() 
+    ])
+    .then ->
+      $scope.$apply()
+    .then null, (error) ->
+      $log.error error
 
-  return null
+    return null
 
-  # FIXME stickered status for page doesn't show up initially.
+  $location.path '/stickers'
+  $scope.refresh()

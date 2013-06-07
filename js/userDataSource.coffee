@@ -345,7 +345,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
     Page: Parse.Object.extend 'Page',
 
-      url: 'stub-url'
+      url: 'http://stub-url'
 
       addSticker: (sticker) ->
 
