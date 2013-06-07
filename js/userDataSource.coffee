@@ -47,6 +47,9 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           if results.length > 0
             result = results[0]
           else
+          result = new that.Page()
+          result.url = params[0]
+          result.stickers = []
 
           results.push result
 
