@@ -14,7 +14,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         when 'items'
           @fetchItems params, resultHandler
         when 'page'
-          @fetchPage params, resultHandler
+          @fetchPage { url: params[0] }, resultHandler
         else
           throw "unknown data type #{dataType}"
 
@@ -33,7 +33,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
           
     fetchPage_parse: (params, resultHandler) ->
-      url = params[0]
+      url = params.url
 
       query = new Parse.Query(@Page) 
       query.equalTo('url', url)
@@ -47,9 +47,9 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           if results.length > 0
             result = results[0]
           else
-          result = new that.Page()
-          result.url = params[0]
-          result.stickers = []
+            result = new that.Page()
+            result.url = url
+            result.stickers = []
 
           results.push result
 
@@ -68,10 +68,10 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
     fetchPage_evernote: (params, resultHandler) ->
       that = this
       @evernote.fetchNote
-        url: params[0]
+        url: params.url
         callback: (result)->
           page = new that.Page()
-          page.url = params[0]
+          page.url = params.url
 
           unless result
             # no previous note for this url
@@ -86,7 +86,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
     fetchPage_stub: (params, resultHandler) ->
       result = new @Page()
-      result.url = params[0]
+      result.url = params.url
       result.stickers = []
 
       resultHandler [ result ]
