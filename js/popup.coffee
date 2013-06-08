@@ -1,10 +1,15 @@
 #FIXME time to clean up the backbone / prop api mismatch.
 
 @appModule = angular.module("appModule", [ ], ($routeProvider, $locationProvider) ->
-  $routeProvider.when "/stickers",
+  $routeProvider
+  .when "/stickers",
     templateUrl: "templates/stickers.html"
+    controller: @AppCntl
   .when "/evernote/authenticate",
     templateUrl: "templates/evernote_authenticate.html"
+    controller: @EvernoteLoginCntl
+  .when "/",
+    redirectTo: "/evernote/authenticate"
 )
 
 @AppCntl = ($scope, $location, $log, userDataSource, runtime) ->
@@ -82,6 +87,4 @@
     return null
 
 
-  $location.path '/evernote/authenticate'
-  
   $scope.update()

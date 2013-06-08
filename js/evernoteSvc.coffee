@@ -1,11 +1,26 @@
 @appModule.factory 'evernote', ($log, $http) ->
-	obj = 
+  obj = 
+    options:
+      consumerKey: "sohocoke"
+      consumerSecret: "80af1fd7b40f65d0"
+      evernoteHostName: "https://sandbox.evernote.com"
+
+
     init: ->
-      @authToken = 'S=s1:U=6bbf6:E=1467335cb26:C=13f1b849f29:P=1cd:A=en-devtoken:V=2:H=af79274188c8caa763811073776c32d7'
-      noteStoreURL = 'https://sandbox.evernote.com/shard/s1/notestore'
-      noteStoreTransport = new Thrift.BinaryHttpTransport(noteStoreURL)
+      noteStoreTransport = new Thrift.BinaryHttpTransport(obj.noteStoreURL)
       noteStoreProtocol = new Thrift.BinaryProtocol(noteStoreTransport)
       @noteStore = new NoteStoreClient(noteStoreProtocol)
+
+    ##
+
+    initOauth: ->
+      @oauth = OAuth
+        consumerKey: obj.options.consumerKey,
+        consumerSecret: obj.options.consumerSecret,
+        # callbackUrl : "gotOAuth.html",
+        # callbackUrl : window.location.origin + window.location.pathname + "#/stickers"
+        callbackUrl : window.location
+        signatureMethod : "HMAC-SHA1"
 
     listTags: (callback) ->
       @noteStore.listTags @authToken, callback
@@ -88,8 +103,107 @@
 
           args.callback note if args.callback
 
-  ##
 
-  obj.init()
-  obj
+    ##
+
+    login: ->
+      # OAuth Step 1: Get request token
+      obj.oauth.request
+        method: "GET"
+        url: @options.evernoteHostName + "/oauth"
+        success: @loginSuccess
+        failure: @loginFailure
+
+    loginSuccess: (data) ->
+      isCallBackConfirmed = false
+      token = ""
+      vars = data.text.split("&")
+      i = 0
+
+      while i < vars.length
+        y = vars[i].split("=")
+        if y[0] is "oauth_token"
+          token = y[1]
+        else if y[0] is "oauth_token_secret"
+          @oauth_token_secret = y[1]
+          localStorage.setItem "oauth_token_secret", y[1]
+        else isCallBackConfirmed = true  if y[0] is "oauth_callback_confirmed"
+        i++
+      ref = undefined
+      if isCallBackConfirmed
+        
+        # step 2 - send to the authorisation page
+        window.location = obj.options.evernoteHostName + "/OAuth.action?oauth_token=" + token
+
+        # ref.addEventListener "loadstart", (event) =>
+        #   # set verifier , oauth token - redundant as we're doing this in the controller.
+
+        #   loc = $location.url
+        #   if loc.indexOf(obj.options.evernoteHostName + "/Home.action?gotOAuth.html?") >= 0
+        #     index = undefined
+        #     verifier = ""
+        #     got_oauth = ""
+        #     params = loc.substr(loc.indexOf("?") + 1)
+        #     params = params.split("&")
+        #     i = 0
+
+        #     while i < params.length
+        #       y = params[i].split("=")
+        #       verifier = y[1]  if y[0] is "oauth_verifier"
+        #       i++
+        #   else got_oauth = y[1]  if y[0] is "gotOAuth.html?oauth_token"
+
+        #   @getOauth()
+
+      else
+        
+        # Step 4 : Get the final token
+        # querystring = app.getQueryParams(data.text)
+        # authTokenEvernote = querystring.oauth_token
+        
+        # authTokenEvernote can now be used to send request to the Evernote Cloud API
+        
+        # Here, we connect to the Evernote Cloud API and get a list of all of the
+        # notebooks in the authenticated user's account:
+        # noteStoreURL = querystring.edam_noteStoreUrl
+        # noteStoreTransport = new Thrift.BinaryHttpTransport(noteStoreURL)
+        # noteStoreProtocol = new Thrift.BinaryProtocol(noteStoreTransport)
+        # noteStore = new NoteStoreClient(noteStoreProtocol)
+        # noteStore.listNotebooks authTokenEvernote, ((notebooks) ->
+        #   console.log notebooks
+        # ), onerror = (error) ->
+        #   console.log error
+
+            
+    # set the access token and GET /oauth. why?
+    fetchEvernoteToken: (oauth_token, verifier, callback)->
+      obj.oauth.setVerifier verifier
+      obj.oauth.setAccessToken [oauth_token, localStorage.getItem("oauth_token_secret")]
+      # obj.oauth.setAccessToken [oauth_token, ""]
+      getData = oauth_verifier: verifier
+      obj.oauth.request
+        method: "GET"
+        url: obj.options.evernoteHostName + "/oauth"
+        success: (data)=>
+          console.log "got evernote token!"
+          @loginSuccess data
+          
+          # tidy the params
+          params = obj.parseParams data         
+
+          obj.noteStoreURL = params.noteStoreURL
+          obj.authToken = params.authToken
+
+          callback params
+        failure: @loginFailure
+
+    parseParams: (data) ->
+      # get the shit tidied up
+    
+      queryParamsToMap data
+      
+    
+
+    loginFailure: (error) ->
+      console.log "error " + error.text
 

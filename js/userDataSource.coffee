@@ -141,7 +141,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           resultHandler stickers
 
       else
-        # throw "don't call me for page stickers."
+        throw "don't call me for page stickers."
 
 
     fetchItems_parse: (params, resultHandler) ->
