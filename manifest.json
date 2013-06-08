@@ -8,7 +8,8 @@
   ,"minimum_chrome_version":"16"
   ,"default_locale":"en"
   ,"permissions":[
-    "tabs"
+    "tabs",
+    "https://sandbox.evernote.com"
   ]
   ,"icons": {
     "16": "images/context menu icon.png"

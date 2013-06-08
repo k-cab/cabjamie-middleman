@@ -3,6 +3,8 @@
 @appModule = angular.module("appModule", [ ], ($routeProvider, $locationProvider) ->
   $routeProvider.when "/stickers",
     templateUrl: "templates/stickers.html"
+  .when "/evernote/authenticate",
+    templateUrl: "templates/evernote_authenticate.html"
 )
 
 @AppCntl = ($scope, $location, $log, userDataSource, runtime) ->
@@ -67,7 +69,7 @@
         # TODO error case
 
 
-  $scope.refresh = ->
+  $scope.update = ->
     RSVP.all([ 
       $scope.fetchPage(), 
       $scope.fetchStickers() 
@@ -79,5 +81,7 @@
 
     return null
 
-  $location.path '/stickers'
-  $scope.refresh()
+
+  $location.path '/evernote/authenticate'
+  
+  $scope.update()
