@@ -7,6 +7,9 @@
 
 
     init: ->
+      obj.authToken = localStorage.getItem 'evernote_authToken'
+      obj.noteStoreURL = localStorage.getItem 'evernote_noteStoreURL'
+
       noteStoreTransport = new Thrift.BinaryHttpTransport(obj.noteStoreURL)
       noteStoreProtocol = new Thrift.BinaryProtocol(noteStoreTransport)
       @noteStore = new NoteStoreClient(noteStoreProtocol)
@@ -94,3 +97,6 @@
 
           args.callback note if args.callback
 
+
+  obj.init()
+  obj

@@ -10,8 +10,10 @@
     controller: @EvernoteLoginCntl
   .when "/action=gotOAuth.html",
     redirectTo: "/evernote/authenticate"
-  .when "/",
+  .when "/login",
     redirectTo: "/evernote/authenticate"
+  .when "/",
+    redirectTo: "/stickers"
 )
 
 @AppCntl = ($scope, $location, $log, userDataSource, runtime) ->
@@ -85,6 +87,8 @@
       $scope.$apply()
     .then null, (error) ->
       $log.error error
+      $location.path "/login"
+      $scope.$apply()
 
     return null
 

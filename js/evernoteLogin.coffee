@@ -8,14 +8,16 @@
   ## check if url has oauth results, use if they exist.
 
   params = $location.search()
+
   if params.oauth_token and params.oauth_verifier
 
     # we've been redirected back from Evernote oauth.
 
     window.evernoteAuthenticator.postAuthenticationCallback = ->
       # pass on to evernote svc
-      evernote.authToken = window.authTokenEvernote
-      evernote.noteStoreURL = window.noteStoreURL
+      localStorage.setItem 'evernote_authToken', window.authTokenEvernote
+      localStorage.setItem 'evernote_noteStoreURL', window.noteStoreURL
+
       evernote.init()
 
       $log.info
@@ -31,7 +33,6 @@
 
 
   else
-
     # start the oauth workflow.
 
     $scope.loginWithEvernote()
