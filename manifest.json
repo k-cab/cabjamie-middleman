@@ -9,7 +9,8 @@
   ,"default_locale":"en"
   ,"permissions":[
     "tabs",
-    "https://sandbox.evernote.com"
+    "https://sandbox.evernote.com/*",
+    "webRequest", "webRequestBlocking"
   ]
   ,"icons": {
     "16": "images/context menu icon.png"

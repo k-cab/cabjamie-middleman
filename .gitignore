@@ -12,3 +12,5 @@ js/evernoteLogin.js
 js/evernoteLogin.map
 js/evernoteSvc.js
 js/evernoteSvc.map
+js/popupContent.js
+js/popupContent.map
