@@ -8,6 +8,8 @@
   .when "/evernote/authenticate",
     templateUrl: "templates/evernote_authenticate.html"
     controller: @EvernoteLoginCntl
+  .when "/action=gotOAuth.html",
+    redirectTo: "/evernote/authenticate"
   .when "/",
     redirectTo: "/evernote/authenticate"
 )
