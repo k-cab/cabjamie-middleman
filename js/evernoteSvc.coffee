@@ -10,6 +10,9 @@
       obj.authToken = localStorage.getItem 'evernote_authToken'
       obj.noteStoreURL = localStorage.getItem 'evernote_noteStoreURL'
 
+      debugger
+      throw "couldn't intialise from localStorage" unless obj.authToken and obj.noteStoreURL
+
       noteStoreTransport = new Thrift.BinaryHttpTransport(obj.noteStoreURL)
       noteStoreProtocol = new Thrift.BinaryProtocol(noteStoreTransport)
       @noteStore = new NoteStoreClient(noteStoreProtocol)
@@ -37,6 +40,8 @@
       # sourceApplication TODO
 
       @noteStore.findNotesMetadata @authToken, filter, 0, pageSize, spec, (notesMetadata) =>
+        throw notesMetadata if notesMetadata.type == "error"
+
         $log.info { msg: "fetched notes", filter, spec, notesMetadata }
         if notesMetadata.notes.length > 1
           $log.warn
@@ -87,16 +92,19 @@
 
         note.guid = args.guid
         @noteStore.updateNote @authToken, note, (callback) ->
+          throw { callback } if callback.type == "error"
+
           $log.info { msg: 'note updated', callback }
 
           args.callback note if args.callback
       else
         @noteStore.createNote @authToken, note, (callback) ->
+          throw { callback } if callback.type == "error"
+
           $log.info { msg: 'note saved', callback }
           note.guid = callback.guid
 
           args.callback note if args.callback
 
 
-  obj.init()
   obj

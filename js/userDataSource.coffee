@@ -6,6 +6,9 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
 @appModule.factory 'userDataSource', ($log, $http, evernote) ->
   obj = 
+    init: ->
+      evernote.init()
+      
     # FIXME redundant
     fetch: (dataType, params, resultHandler) ->
       switch dataType

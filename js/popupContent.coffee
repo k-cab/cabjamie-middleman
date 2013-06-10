@@ -55,27 +55,30 @@
     promise = new RSVP.Promise (resolve, reject) ->
       runtime.withCurrentResource (tab)->
         userDataSource.fetch 'page', tab, (pages) ->
-          page = pages[0]
-          page.title = tab.title
-          $scope.page = page
+          try
+            page = pages[0]
+            page.title = tab.title
+            $scope.page = page
 
-          resolve $scope.page
-
-          # TODO error case
+            resolve $scope.page
+          catch e
+            reject e
 
   $scope.fetchStickers = (page)->    
 
     promise = new RSVP.Promise (resolve, reject) ->
       userDataSource.fetch 'stickers', [], (stickers) ->
+        try
 
-        $scope.stickers = stickers
+          $scope.stickers = stickers
 
-        # this seems redundant now, but sweep for regressions
-        # $scope.$apply()
+          # this seems redundant now, but sweep for regressions
+          # $scope.$apply()
 
-        resolve stickers
-
-        # TODO error case
+          resolve stickers
+        catch e
+          reject e
+        
 
 
   $scope.update = ->
@@ -86,11 +89,18 @@
     .then ->
       $scope.$apply()
     .then null, (error) ->
-      $log.error error
+      $log.error { msg: 'boom', error }
+
+      debugger
+
       $location.path "/login"
       $scope.$apply()
 
     return null
 
-
-  $scope.update()
+  try 
+    userDataSource.init()
+    $scope.update()
+  catch e
+    $location.path "/login"
+    
