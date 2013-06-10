@@ -20,11 +20,19 @@
     ##
 
     listTags: (callback) ->
+      debugger
       @noteStore.listTags @authToken, callback
     
-    # fetchTags: (guids, callback) ->
-      
-    #   callback tags
+    createTag: (name) ->
+      new RSVP.Promise (resolve, reject) ->
+        tag = new Tag()
+        tag.name = name
+        @noteStore.createTag @authToken, tag, (results) ->
+          if results.type == 'error'
+            reject results
+          else
+            resolve results
+        
     
     fetchNote: (args) ->
       pageSize = 10;
@@ -58,12 +66,14 @@
           # @noteStore.getNote @authToken, guid, withContent, withResourcesData, withResourcesRecognition, withResourcesAlternateData, (note) ->
           #   args.callback note
 
-          fetchTags = noteMd.tagGuids.map (tagGuid) =>
+          fetchTags = noteMd.tagGuids?.map (tagGuid) =>
             new RSVP.Promise (resolve, reject) =>
               @noteStore.getTag @authToken, tagGuid, (tag) ->
+                reject tag if tag.type == "error"
+
                 resolve tag
             
-          RSVP.all(fetchTags)
+          RSVP.all(fetchTags ? fetchTags : [])
           .then (tags)->
             note = 
               guid: noteMd.guid
@@ -82,7 +92,14 @@
         <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>#{args.content}</div>
         </en-note>
         """
-      note.tagNames = args.tags.map (tag) -> tag.name
+      note.tagNames = args.tags.map (tag) -> 
+        throw "invalid tag: #{tag}" unless tag.name
+
+        if tag.name.match /^##/
+          tag.name 
+        else
+          "##" + tag.name
+
       attrs = new NoteAttributes()
       attrs.sourceURL = args.url
       note.attributes = attrs

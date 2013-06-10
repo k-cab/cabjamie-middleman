@@ -8,7 +8,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
   obj = 
     init: ->
       evernote.init()
-      
+
     # FIXME redundant
     fetch: (dataType, params, resultHandler) ->
       switch dataType
@@ -17,7 +17,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         when 'items'
           @fetchItems params, resultHandler
         when 'page'
-          @fetchPage { url: params }, resultHandler
+          @fetchPage params, resultHandler
         else
           throw "unknown data type #{dataType}"
 
@@ -139,6 +139,8 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
     fetchStickers_evernote: (page, resultHandler) ->
       if page == null
         evernote.listTags (tags) ->
+          throw tags if tags.type == "error"
+          
           $log.info tags
           stickers = tags.filter (tag) -> tag.name.match /^##/
           resultHandler stickers
@@ -233,7 +235,12 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           #   tagNames: modelObj.stickers.map (sticker) -> sticker.name          
 
         when 'sticker'
-          throw "unimplemented"
+          evernote.createTag( '##' + modelObj.name )
+          .then (tag) ->
+            $log.info { msg: "created new tag", tag }
+          
+            resultHandler tag
+          
 
       # # post note
       # $http.post(url, data)

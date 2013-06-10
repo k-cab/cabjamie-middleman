@@ -21,6 +21,8 @@
   ## controller actions
 
   $scope.toggleSticker = (sticker) ->
+    debugger
+
     unless $scope.page.hasSticker sticker
       $scope.addSticker sticker
     else
@@ -40,10 +42,12 @@
   $scope.createNewSticker = ->
     $log.info {msg: "new sticker", sticker:$scope.newSticker}
 
-    userDataSource.persist 'sticker', $scope.newSticker, (newSticker) ->
-      $scope.stickers.push newSticker
-      $scope.$apply()
-      
+    # userDataSource.persist 'sticker', $scope.newSticker, (newSticker) ->
+    #   $scope.stickers.push newSticker
+    #   $scope.$apply()
+    
+    $scope.stickers.push $scope.newSticker
+
     # TODO error case
 
     # $scope.fetchStickers()
