@@ -40,6 +40,9 @@
 
   
   $scope.createNewSticker = ->
+    $scope.newSticker.name = "##" + $scope.newSticker.name unless $scope.newSticker.name.match /^##/
+
+
     $log.info {msg: "new sticker", sticker:$scope.newSticker}
 
     # userDataSource.persist 'sticker', $scope.newSticker, (newSticker) ->

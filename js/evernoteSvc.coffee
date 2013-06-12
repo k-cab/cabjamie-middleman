@@ -95,10 +95,7 @@
       note.tagNames = args.tags.map (tag) -> 
         throw "invalid tag: #{tag}" unless tag.name
 
-        if tag.name.match /^##/
-          tag.name 
-        else
-          "##" + tag.name
+        tag.name
 
       attrs = new NoteAttributes()
       attrs.sourceURL = args.url
