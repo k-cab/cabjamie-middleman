@@ -218,9 +218,9 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           evernote.saveNote
             guid: modelObj.note?.guid
             title: modelObj.title
-            content: "On #{new Date()}, you clipped '#{modelObj.title}', at #{modelObj.url}"
+            content: "On #{new Date()}, you tagged at <a href='#{modelObj.url}'>'#{modelObj.title}'</a>."
             tags: modelObj.stickers.concat { name: 'Mackerel' }
-
+            thumbnail: modelObj.thumbnailUrl
             url: modelObj.url
             callback: resultHandler
 

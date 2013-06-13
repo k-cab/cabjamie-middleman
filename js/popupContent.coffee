@@ -21,8 +21,6 @@
   ## controller actions
 
   $scope.toggleSticker = (sticker) ->
-    debugger
-
     unless $scope.page.hasSticker sticker
       $scope.addSticker sticker
     else
@@ -66,8 +64,21 @@
             page = pages[0]
             page.title = tab.title
             $scope.page = page
+            
 
-            resolve $scope.page
+            # chrome.pageCapture.saveAsMHTML( { tabId: tab.id } )
+            # .then (mhtmlData) ->
+            #   page.pageContent = mhtmlData
+              # $log.info { msg: " got the visual representation.", mhtml:mhtmlData }
+
+            runtime.captureTab(tab)
+            .then (dataUrl) ->
+              $log.info { msg: " got the visual representation.", dataUrl }
+
+              $scope.page.thumbnailUrl = dataUrl
+
+              resolve $scope.page
+
           catch e
             reject e
 
@@ -96,9 +107,7 @@
     .then ->
       $scope.$apply()
     .then null, (error) ->
-      $log.error { msg: 'boom', error }
-
-      debugger
+      $log.error error
 
       $location.path "/login"
       $scope.$apply()

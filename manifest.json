@@ -9,8 +9,9 @@
   ,"default_locale":"en"
   ,"permissions":[
     "tabs",
-    "https://sandbox.evernote.com/*",
-    "webRequest", "webRequestBlocking"
+    "webRequest", "webRequestBlocking", // to override x-frame-options from evernote oauth
+    // "https://sandbox.evernote.com/*",
+    "<all_urls>" // for screen captures
   ]
   ,"icons": {
     "16": "images/context menu icon.png"

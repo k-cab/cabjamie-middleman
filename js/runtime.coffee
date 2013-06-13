@@ -10,6 +10,13 @@
         url: 'http://out-of-chrome-stub-url'
         title: 'stub url title'
 
+  captureTab: ->
+    if chrome.extension
+      @captureTab_chrome()
+    else
+      throw "unimplemented out of chrome"
+
+
   sendMsg: (params, callback)->
     if chrome.extension
       @sendMsg_chrome params, callback
@@ -30,9 +37,16 @@
     chrome.windows.getCurrent {}, (chromeWindow) -> 
       chrome.tabs.query {windowId: chromeWindow.id, active: true}, (tabs) =>
         $log.info tabs
-        callback
-          url: tabs[0].url
-          title: tabs[0].title
+        callback tabs[0]
+  
+  captureTab_chrome: ->
+    promise = new RSVP.Promise (resolve, reject) =>
+      try
+        chrome.tabs.captureVisibleTab null, null, (dataUrl) ->
+          resolve dataUrl
+      catch e
+        reject e
+      
   
   # callback sig:
   sendMsg_chrome: (params, callback)->
