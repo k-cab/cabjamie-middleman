@@ -3,12 +3,16 @@
   "name":"mackerel-chrome"
   ,"version":"0.2"
   ,"description":"Does something awesome"
-  ,"background":"background.html"
+  ,"background": {
+    // "page": "background.html",
+    "scripts": [ "js/background.js" ]
+  }
   ,"options_page":"options.html"
   ,"minimum_chrome_version":"16"
   ,"default_locale":"en"
   ,"permissions":[
     "tabs",
+    "background",
     "webRequest", "webRequestBlocking", // to override x-frame-options from evernote oauth
     // "https://sandbox.evernote.com/*",
     "<all_urls>" // for screen captures

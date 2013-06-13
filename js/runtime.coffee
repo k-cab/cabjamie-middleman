@@ -17,17 +17,17 @@
       new RSVP.Promise (resolve, reject) =>
         resolve "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBY"
 
-  sendMsg: (params, callback)->
+  sendMsg: (msgType, params, callback)->
     if chrome.extension
-      @sendMsg_chrome params, callback
+      @sendMsg_chrome msgType, params, callback
     else
       $log.info { params, callback }
 
-  onMsg: (params, callback)->
+  onMsg: (msgType, callback)->
     if chrome.extension
-      @onMsg_chrome params, callback
+      @onMsg_chrome msgType, callback
     else
-      $log.info { params, callback }
+      $log.info { msgType, callback }
 
 
   ## chrome extension environment
@@ -49,9 +49,16 @@
       
   
   # callback sig:
-  sendMsg_chrome: (params, callback)->
-    chrome.extension.sendMessage params, callback
-
+  sendMsg_chrome: (msgType, params, callback)->
+    params ||= {}
+    params.msgType = msgType
+    chrome.runtime.sendMessage null, params, callback
   # callback sig: 
-  onMsg_chrome: (callback) ->
-    chrome.extension.onMessage.addListener callback
+  onMsg_chrome: (msgType, callback) ->
+    chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
+      if request.msgType == msgType
+        callback request, sender, sendResponse
+      else
+        $log.info "#{this} got a message of type #{request.msgType} and will ignore."
+    
+    

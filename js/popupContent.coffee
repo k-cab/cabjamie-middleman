@@ -127,7 +127,7 @@
     .then null, (error) ->
       $log.error error
       $rootScope.msg = error
-      
+
       $location.path "/login"
       $scope.$apply()
 
@@ -141,3 +141,10 @@
   catch e
     $location.path "/login"
     
+  # runtime.onMsg 'testType', (args...) ->
+  #   console.log "onMsg args: #{args}"
+  
+  # runtime.sendMsg 'testType', null, (response) ->
+  #   console.log "got response: #{response}"
+  
+  
