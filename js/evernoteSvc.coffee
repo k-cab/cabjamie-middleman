@@ -21,7 +21,7 @@
         callback: (result)->
           pageData = 
             url:  params.url
-            stickers: result.tags?.map (tag) ->
+            stickers: result?.tags?.map (tag) ->
               name: tag.name
               guid: tag.guid
             note: result
