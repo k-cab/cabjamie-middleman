@@ -109,13 +109,12 @@
           ia[i] = thumbnailData.charCodeAt(i)
         thumbnailData = ia
 
-        thumbnailMd5 = b64_md5 thumbnailData.toString()
-        thumbnailMd5Hex = hex_md5 thumbnailData.toString()
-
+        thumbnailMd5Hex = faultylabs.MD5 thumbnailData
+        
         data = new Data()
         data.size = thumbnailData.length
         data.body = thumbnailData
-        data.bodyHash = thumbnailMd5
+        data.bodyHash = thumbnailMd5Hex
 
         resource = new Resource()
         resource.mime = 'image/jpeg'
@@ -127,7 +126,7 @@
           <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
           <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
             <div>#{args.content}</div>
-            <en-media type="image/jpeg" hash="#{thumbnailMd5Hex}" width="300" height="300"/>
+            <en-media type="image/jpeg" hash="#{thumbnailMd5Hex}" width="100%"/>
           </en-note>
           """
 
