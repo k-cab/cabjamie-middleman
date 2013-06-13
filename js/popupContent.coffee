@@ -22,12 +22,18 @@
 
   $scope.toggleSticker = (sticker) ->
     doit = ->
+      $rootScope.msg = "Saving..."
+
       unless $scope.page.hasSticker sticker
         $scope.addSticker sticker
       else
         $scope.removeSticker sticker
 
     doit()
+    .then (result) ->
+      $rootScope.msg = "Saved."
+      $rootScope.$apply()
+
     .then null, (error) ->
       $log.error error
       $rootScope.msg =
@@ -109,25 +115,29 @@
 
 
   $scope.update = ->
+    $rootScope.msg = "Fetching data..."
+
     RSVP.all([ 
       $scope.fetchPage(), 
-      $scope.fetchStickers() 
+      $scope.fetchStickers()
     ])
     .then ->
+      $rootScope.msg = ""
       $scope.$apply()
     .then null, (error) ->
       $log.error error
-
+      $rootScope.msg = error
+      
       $location.path "/login"
       $scope.$apply()
 
     return null
 
   try 
+    $rootScope.msg = "Test msg."
+
     userDataSource.init()
     $scope.update()
-
-    $rootScope.msg = "test"
   catch e
     $location.path "/login"
     
