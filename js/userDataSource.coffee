@@ -1,4 +1,4 @@
-# TODO factor out into multiple implementations of the interface.
+# TODO factor out the parse impl
 # TODO resolve API inconsistency
 # TODO factor out attr <-> prop.
 
@@ -21,20 +21,53 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         else
           throw "unknown data type #{dataType}"
 
+
     # FIXME resultHandler interface should deal with single page.
     fetchPage: (params, resultHandler) ->
-      @fetchPage_evernote params, resultHandler
+      evernote.fetchPage_evernote params, (result) =>
+        page = new @Page result
+        @attrsToProps page, 'url', 'stickers', 'note'
+
+        resultHandler [ page ]
 
     fetchStickers: (page, resultHandler) ->
-      @fetchStickers_evernote page, resultHandler
+      evernote.fetchStickers_evernote page, resultHandler
 
     fetchItems: (params, resultHandler) ->
       @fetchItems_parse params, resultHandler
 
     persist: (type, modelObj, resultHandler) ->
-      @persist_evernote type, modelObj, resultHandler
+      evernote.persist_evernote type, modelObj, resultHandler
 
-          
+
+    #=
+
+    fetchPage_stub: (params, resultHandler) ->
+      result = new @Page()
+      result.url = params.url
+      result.stickers = []
+
+      resultHandler [ result ]
+
+
+    fetchStickers_stub: (page, resultHandler) ->
+      results = [
+        {
+            name: "stub-sticker-1",
+        },
+        {
+            name: "stub-sticker-2",
+        },
+        {
+            name: "stub-sticker-3"
+        },
+      ]
+
+      resultHandler results
+
+
+    #=     
+     
     fetchPage_parse: (params, resultHandler) ->
       url = params.url
 
@@ -68,48 +101,6 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           # deferred.notify error
           resultHandler error
 
-    fetchPage_evernote: (params, resultHandler) ->
-      that = this
-      evernote.fetchNote
-        url: params.url
-        callback: (result)->
-          page = new that.Page()
-          page.url = params.url
-
-          unless result
-            # no previous note for this url
-            page.stickers = []            
-          else
-            page.note = result
-            page.stickers = result.tags.map (tag) ->
-              name: tag.name
-              guid: tag.guid
-
-          resultHandler [ page ]            
-
-    fetchPage_stub: (params, resultHandler) ->
-      result = new @Page()
-      result.url = params.url
-      result.stickers = []
-
-      resultHandler [ result ]
-
-
-    fetchStickers_stub: (page, resultHandler) ->
-      results = [
-        {
-            name: "stub-sticker-1",
-        },
-        {
-            name: "stub-sticker-2",
-        },
-        {
-            name: "stub-sticker-3"
-        },
-      ]
-
-      resultHandler results
-
     fetchStickers_parse: (page, resultHandler) ->
       if page == null
         query = new Parse.Query(@Sticker)
@@ -135,19 +126,6 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
         error: (error) ->
           $log.error error
-
-    fetchStickers_evernote: (page, resultHandler) ->
-      if page == null
-        evernote.listTags (tags) ->
-          throw tags if tags.type == "error"
-          
-          $log.info tags
-          stickers = tags.filter (tag) -> tag.name.match /^##/
-          resultHandler stickers
-
-      else
-        throw "don't call me for page stickers."
-
 
     fetchItems_parse: (params, resultHandler) ->
     
@@ -208,50 +186,6 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
         error: (theObj) ->
           $log.error theObj
-
-    persist_evernote: (type, modelObj, resultHandler) ->
-      # FIXME update the note after creation on multiple stickerings.
-
-      switch type
-        when 'page'
-
-          htmlSafeUrl = _.escape modelObj.url
-
-          return evernote.saveNote
-            guid: modelObj.note?.guid
-            title: modelObj.title
-            content: "On #{new Date()}, you tagged at <a href='#{encodeURI(htmlSafeUrl)}'>'#{modelObj.title}'</a>."
-            tags: modelObj.stickers.concat { name: 'Mackerel' }
-            thumbnail: modelObj.thumbnailUrl
-            url: modelObj.url
-
-          # url = "http://localhost:8081/notes"
-          # data = 
-          #   title: modelObj.url
-          #   content: """
-          #     <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
-          #     <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>useful content from page to go here...</div>
-          #     </en-note>
-          #     """
-          #   tagNames: modelObj.stickers.map (sticker) -> sticker.name          
-
-        when 'sticker'
-          evernote.createTag( '##' + modelObj.name )
-          .then (tag) ->
-            $log.info { msg: "created new tag", tag }
-          
-            resultHandler tag
-          
-
-      # # post note
-      # $http.post(url, data)
-      #   .success (data, status, headers, config) -> 
-      #     $log.info data
-      #     resultHandler modelObj
-
-      #   .error (data, status, headers, config) ->
-      #     throw { data, status, headers, config }
-
 
     ##
 

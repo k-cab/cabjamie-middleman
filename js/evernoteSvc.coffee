@@ -1,5 +1,84 @@
 @appModule.factory 'evernote', ($log, $http) ->
   obj = 
+    #= userDataSource interface realisation
+
+    fetchStickers_evernote: (page, resultHandler) ->
+      if page == null
+        obj.listTags (tags) ->
+          throw tags if tags.type == "error"
+          
+          $log.info tags
+          stickers = tags.filter (tag) -> tag.name.match /^##/
+          resultHandler stickers
+
+      else
+        throw "don't call me for page stickers."
+
+
+    fetchPage_evernote: (params, resultHandler) ->
+      obj.fetchNote
+        url: params.url
+        callback: (result)->
+          pageData = 
+            url:  params.url
+            stickers: result.tags?.map (tag) ->
+              name: tag.name
+              guid: tag.guid
+            note: result
+
+          # if no previous note for this url
+          pageData.stickers ||= []
+
+          resultHandler pageData
+
+
+    persist_evernote: (type, modelObj, resultHandler) ->
+      # FIXME update the note after creation on multiple stickerings.
+
+      switch type
+        when 'page'
+
+          htmlSafeUrl = _.escape modelObj.url
+
+          return obj.saveNote
+            guid: modelObj.note?.guid
+            title: modelObj.title
+            content: "On #{new Date()}, you tagged at <a href='#{encodeURI(htmlSafeUrl)}'>'#{modelObj.title}'</a>."
+            tags: modelObj.stickers.concat { name: 'Mackerel' }
+            thumbnail: modelObj.thumbnailUrl
+            url: modelObj.url
+
+          # url = "http://localhost:8081/notes"
+          # data = 
+          #   title: modelObj.url
+          #   content: """
+          #     <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+          #     <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>useful content from page to go here...</div>
+          #     </en-note>
+          #     """
+          #   tagNames: modelObj.stickers.map (sticker) -> sticker.name          
+
+        when 'sticker'
+          obj.createTag( '##' + modelObj.name )
+          .then (tag) ->
+            $log.info { msg: "created new tag", tag }
+          
+            resultHandler tag
+          
+
+      # # post note
+      # $http.post(url, data)
+      #   .success (data, status, headers, config) -> 
+      #     $log.info data
+      #     resultHandler modelObj
+
+      #   .error (data, status, headers, config) ->
+      #     throw { data, status, headers, config }
+
+
+
+    #= Evernote service abstraction
+
     options:
       consumerKey: "sohocoke"
       consumerSecret: "80af1fd7b40f65d0"
@@ -14,18 +93,18 @@
 
       noteStoreTransport = new Thrift.BinaryHttpTransport(obj.noteStoreURL)
       noteStoreProtocol = new Thrift.BinaryProtocol(noteStoreTransport)
-      @noteStore = new NoteStoreClient(noteStoreProtocol)
+      obj.noteStore = new NoteStoreClient(noteStoreProtocol)
 
     ##
 
     listTags: (callback) ->
-      @noteStore.listTags @authToken, callback
+      obj.noteStore.listTags obj.authToken, callback
     
     createTag: (name) ->
       new RSVP.Promise (resolve, reject) ->
         tag = new Tag()
         tag.name = name
-        @noteStore.createTag @authToken, tag, (results) ->
+        obj.noteStore.createTag obj.authToken, tag, (results) ->
           if results.type == 'error'
             reject results
           else
@@ -45,7 +124,7 @@
 
       # sourceApplication TODO
 
-      @noteStore.findNotesMetadata @authToken, filter, 0, pageSize, spec, (notesMetadata) =>
+      obj.noteStore.findNotesMetadata obj.authToken, filter, 0, pageSize, spec, (notesMetadata) =>
         throw notesMetadata if notesMetadata.type == "error"
 
         $log.info { msg: "fetched notes", filter, spec, notesMetadata }
@@ -61,12 +140,12 @@
           # withResourcesData = false
           # withResourcesRecognition = false
           # withResourcesAlternateData = false
-          # @noteStore.getNote @authToken, guid, withContent, withResourcesData, withResourcesRecognition, withResourcesAlternateData, (note) ->
+          # obj.noteStore.getNote obj.authToken, guid, withContent, withResourcesData, withResourcesRecognition, withResourcesAlternateData, (note) ->
           #   args.callback note
 
           fetchTags = noteMd.tagGuids?.map (tagGuid) =>
             new RSVP.Promise (resolve, reject) =>
-              @noteStore.getTag @authToken, tagGuid, (tag) ->
+              obj.noteStore.getTag obj.authToken, tagGuid, (tag) ->
                 reject tag if tag.type == "error"
 
                 resolve tag
@@ -134,14 +213,14 @@
           # update the note.
 
           note.guid = args.guid
-          @noteStore.updateNote @authToken, note, (callback) ->
+          obj.noteStore.updateNote obj.authToken, note, (callback) ->
             reject callback if callback.type == "error" or callback.name?.match /Exception/
 
             $log.info { msg: 'note updated', callback }
 
             resolve note
         else
-          @noteStore.createNote @authToken, note, (callback) ->
+          obj.noteStore.createNote obj.authToken, note, (callback) ->
             reject callback if callback.type == "error" or callback.name?.match /Exception/
 
             $log.info { msg: 'note saved', callback }
