@@ -222,7 +222,6 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
             tags: modelObj.stickers.concat { name: 'Mackerel' }
             thumbnail: modelObj.thumbnailUrl
             url: modelObj.url
-            callback: resultHandler
 
           # url = "http://localhost:8081/notes"
           # data = 

@@ -89,64 +89,68 @@
           args.callback null          
     
     saveNote: (args) ->
-      note = new Note()
-      note.title = args.title
-      note.tagNames = args.tags.map (tag) -> 
-        throw "invalid tag: #{tag}" unless tag.name
-        tag.name
+      new RSVP.Promise (resolve, reject) =>
 
-      attrs = new NoteAttributes()
-      attrs.sourceURL = args.url
-      note.attributes = attrs
+        note = new Note()
+        note.title = args.title
+        note.tagNames = args.tags.map (tag) -> 
+          throw "invalid tag: #{tag}" unless tag.name
+          tag.name
 
-      thumbnailDataB64 = _(args.thumbnail.split(',')).last()
-      thumbnailData = atob thumbnailDataB64
-      ab = new ArrayBuffer(thumbnailData.length)
-      ia = new Uint8Array(ab)
-      for e, i in thumbnailData
-        ia[i] = thumbnailData.charCodeAt(i)
-      thumbnailData = ia
+        attrs = new NoteAttributes()
+        attrs.sourceURL = args.url
+        note.attributes = attrs
 
-      thumbnailMd5 = b64_md5 thumbnailData.toString()
-      thumbnailMd5Hex = hex_md5 thumbnailData.toString()
+        thumbnailDataB64 = _(args.thumbnail.split(',')).last()
+        thumbnailData = atob thumbnailDataB64
+        ab = new ArrayBuffer(thumbnailData.length)
+        ia = new Uint8Array(ab)
+        for e, i in thumbnailData
+          ia[i] = thumbnailData.charCodeAt(i)
+        thumbnailData = ia
 
-      data = new Data()
-      data.size = thumbnailData.length
-      data.body = thumbnailData
-      data.bodyHash = thumbnailMd5
+        thumbnailMd5 = b64_md5 thumbnailData.toString()
+        thumbnailMd5Hex = hex_md5 thumbnailData.toString()
 
-      resource = new Resource()
-      resource.mime = 'image/jpeg'
-      resource.data = data
+        data = new Data()
+        data.size = thumbnailData.length
+        data.body = thumbnailData
+        data.bodyHash = thumbnailMd5
 
-      note.resources = [ resource ]
+        resource = new Resource()
+        resource.mime = 'image/jpeg'
+        resource.data = data
 
-      note.content = """
-        <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
-        <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
-          <div>#{args.content}</div>
-          <en-media type="image/jpeg" hash="#{thumbnailMd5Hex}" width="300" height="300"/>
-        </en-note>
-        """
+        note.resources = [ resource ]
 
-      if args.guid
-        # update the note.
+        note.content = """
+          <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+          <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
+            <div>#{args.content}</div>
+            <en-media type="image/jpeg" hash="#{thumbnailMd5Hex}" width="300" height="300"/>
+          </en-note>
+          """
 
-        note.guid = args.guid
-        @noteStore.updateNote @authToken, note, (callback) ->
-          throw callback if callback.type == "error" or callback.name?.match /Exception/
+        if args.guid
+          # update the note.
 
-          $log.info { msg: 'note updated', callback }
+          note.guid = args.guid
+          @noteStore.updateNote @authToken, note, (callback) ->
+            reject callback if callback.type == "error" or callback.name?.match /Exception/
 
-          args.callback note if args.callback
-      else
-        @noteStore.createNote @authToken, note, (callback) ->
-          throw callback if callback.type == "error" or callback.name?.match /Exception/
+            $log.info { msg: 'note updated', callback }
 
-          $log.info { msg: 'note saved', callback }
-          note.guid = callback.guid
+            resolve note if args.callback
+        else
+          @noteStore.createNote @authToken, note, (callback) ->
+            reject callback if callback.type == "error" or callback.name?.match /Exception/
 
-          args.callback note if args.callback
+            $log.info { msg: 'note saved', callback }
+            note.guid = callback.guid
+
+            resolve note if args.callback
 
       # FIXME wrap in a promise so we can report errors during client-server interaction.
+
+
   obj
