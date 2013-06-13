@@ -28,3 +28,9 @@ task :deploy do
   puts "*** Deploying the extension ***"
   system "rsync -avz --exclude '.git' --delete . #{target_dir}"
 end
+
+
+
+## copy from *.src folders:
+# rsync -av styles.src/ styles/
+# rsync -av assets.src/ assets/

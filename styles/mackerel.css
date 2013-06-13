@@ -13,7 +13,10 @@
 }
 
 .on-page-true {
-  background-color: pink;
+  background-image: url("../assets/sticker-on.png")
+}
+.on-page-false {
+  background-image: url("../assets/sticker-off.png")
 }
 
 .mouseover-true {
