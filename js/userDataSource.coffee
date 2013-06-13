@@ -215,7 +215,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       switch type
         when 'page'
 
-          htmlSafeUrl = modelObj.url.replace(/'/g,"%27")
+          htmlSafeUrl = _.escape modelObj.url
 
           evernote.saveNote
             guid: modelObj.note?.guid
