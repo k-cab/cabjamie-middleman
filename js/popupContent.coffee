@@ -16,15 +16,24 @@
     redirectTo: "/stickers"
 )
 
-@AppCntl = ($scope, $location, $log, userDataSource, runtime) ->
+@AppCntl = ($scope, $location, $log, $rootScope, userDataSource, runtime) ->
 
   ## controller actions
 
   $scope.toggleSticker = (sticker) ->
-    unless $scope.page.hasSticker sticker
-      $scope.addSticker sticker
-    else
-      $scope.removeSticker sticker
+    doit = ->
+      unless $scope.page.hasSticker sticker
+        $scope.addSticker sticker
+      else
+        $scope.removeSticker sticker
+
+    doit()
+    .then null, (error) ->
+      $log.error error
+      $rootScope.msg =
+        msg: "error"
+        error: error
+        url: $scope.page.url
 
   $scope.addSticker = (sticker) -> 
     $scope.page.addSticker sticker
@@ -117,6 +126,8 @@
   try 
     userDataSource.init()
     $scope.update()
+
+    $rootScope.msg = "test"
   catch e
     $location.path "/login"
     
