@@ -215,10 +215,12 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
       switch type
         when 'page'
 
+          htmlSafeUrl = modelObj.url.replace(/'/g,"%27")
+
           evernote.saveNote
             guid: modelObj.note?.guid
             title: modelObj.title
-            content: "On #{new Date()}, you tagged at <a href='#{modelObj.url}'>'#{modelObj.title}'</a>."
+            content: "On #{new Date()}, you tagged at <a href='#{encodeURI(htmlSafeUrl)}'>'#{modelObj.title}'</a>."
             tags: modelObj.stickers.concat { name: 'Mackerel' }
             thumbnail: modelObj.thumbnailUrl
             url: modelObj.url
