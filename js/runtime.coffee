@@ -14,8 +14,8 @@
     if chrome.extension
       @captureTab_chrome()
     else
-      throw "unimplemented out of chrome"
-
+      new RSVP.Promise (resolve, reject) =>
+        resolve "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBY"
 
   sendMsg: (params, callback)->
     if chrome.extension
