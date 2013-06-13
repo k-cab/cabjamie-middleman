@@ -15,3 +15,5 @@ js/evernoteSvc.map
 js/popupContent.js
 js/popupContent.map
 node_modules
+assets.src
+styles.src

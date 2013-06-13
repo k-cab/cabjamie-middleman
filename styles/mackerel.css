@@ -1,0 +1,21 @@
+/** popup */
+
+.sticker {
+  display: inline-block;
+  vertical-align: middle;
+
+  margin: 10px;
+
+  width: 70px;
+  height: 70px;
+
+  border-style: solid;
+}
+
+.on-page-true {
+  background-color: pink;
+}
+
+.mouseover-true {
+  background-color: blue;
+}
