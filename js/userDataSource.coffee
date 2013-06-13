@@ -217,7 +217,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
           htmlSafeUrl = _.escape modelObj.url
 
-          evernote.saveNote
+          return evernote.saveNote
             guid: modelObj.note?.guid
             title: modelObj.title
             content: "On #{new Date()}, you tagged at <a href='#{encodeURI(htmlSafeUrl)}'>'#{modelObj.title}'</a>."

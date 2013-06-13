@@ -139,7 +139,7 @@
 
             $log.info { msg: 'note updated', callback }
 
-            resolve note if args.callback
+            resolve note
         else
           @noteStore.createNote @authToken, note, (callback) ->
             reject callback if callback.type == "error" or callback.name?.match /Exception/
@@ -147,7 +147,7 @@
             $log.info { msg: 'note saved', callback }
             note.guid = callback.guid
 
-            resolve note if args.callback
+            resolve note
 
       # FIXME wrap in a promise so we can report errors during client-server interaction.
 
