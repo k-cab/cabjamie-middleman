@@ -22,15 +22,17 @@ task :iced do
   end
 end
 
-target_dir = "~/Dropbox/bigbearlabs/builds/mackerel-chrome"
 desc "copy to a dropbox folder"
+target_dir = "~/Dropbox/bigbearlabs/builds/mackerel-chrome"
 task :deploy do
   puts "*** Deploying the extension ***"
   system "rsync -avz --exclude '.git' --delete . #{target_dir}"
 end
 
 
-
-## copy from *.src folders:
-# rsync -av styles.src/ styles/
-# rsync -av assets.src/ assets/
+desc "copy files from .src dirs to right place"
+task :cpsrc do
+  puts "*** Copying from *.src dir's ***"
+  system "rsync -av styles.src/ styles/"
+  system "rsync -av assets.src/ assets/"
+end

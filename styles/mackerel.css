@@ -9,16 +9,23 @@
   width: 70px;
   height: 70px;
 
-  border-style: solid;
+  /*border-style: solid;*/
+}
+
+.on-page-false {
+  background-image: url("../assets/sticker-off.png");
+  background-position: center;
+  background-size: 100%;
+  background-repeat: no-repeat;
 }
 
 .on-page-true {
-  background-image: url("../assets/sticker-on.png")
-}
-.on-page-false {
-  background-image: url("../assets/sticker-off.png")
+  background-image: url("../assets/sticker-on.png");
+  background-position: center;
+  background-size: 100%;
+  background-repeat: no-repeat;
 }
 
 .mouseover-true {
-  background-color: blue;
+  /*background-color: blue;*/
 }
