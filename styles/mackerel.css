@@ -13,6 +13,11 @@
   
   /*border-style: solid;*/
 }
+.sticker:hover {
+  background-color: rgba(128, 128, 128, 0.45);
+  border-radius: 5px 5px 5px 5px;
+  transition: all 0.2s;
+}
 
 .absolute-positioning-container {
   position: relative;
@@ -23,26 +28,17 @@
   bottom: 0;
 }
 
-.on-page-false {
-  background-image: url("../assets/sticker-off.png");
-  background-position: center;
-  background-size: 80%;
-  background-repeat: no-repeat;
+.transition-image {
+  opacity: 0;
+  transition: all 1s ease-in-out;
+}
 
-  transition: all 1s;
+.transition-image-active {
+  opacity: 1;
+}
+
+.on-page-false {
 }
 
 .on-page-true {
-  background-image: url("../assets/sticker-on.png");
-  background-position: center;
-  background-size: 80%;
-  background-repeat: no-repeat;
-
-  transition: all 1s;
-}
-
-.mouseover-true {
-  background-color: rgba(128, 128, 128, 0.45);
-  border-radius: 5px 5px 5px 5px;
-  transition: all 0.1s;
 }

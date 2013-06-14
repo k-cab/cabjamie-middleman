@@ -3,17 +3,25 @@
 <div class="row">
 
   <ul id="sticker-list" class="sticker-group">
-    <li ng-repeat="sticker in stickers" class="sticker on-page-{{page.hasSticker(sticker)}} mouseover-{{mouseOver}}" ng-mouseenter="mouseOver = true" ng-mouseleave="mouseOver = false">
-      <a ng-click="toggleSticker(sticker)" class="fit-parent absolute-positioning-container">
+
+    <li class="sticker on-page-{{page.hasSticker(sticker)}}"
+      data-ng-repeat="sticker in stickers">
+
+      <a class="fit-parent absolute-positioning-container"
+        data-ng-click="toggleSticker(sticker)">
+        <img src="assets/sticker-on.png"
+          data-ng-if="page.hasSticker(sticker)" data-ng-animate="'transition-image'">
+        <img src="assets/sticker-off.png"
+          data-ng-if="! page.hasSticker(sticker)" data-ng-animate="'transition-image'">
         <div class="sticker-label">{{sticker.name}}</div>
       </a>
-      <!-- FIXME abstract away parse / backbone impl details -->
+
     </li>
 
     <li>
       <form id="new-sticker-form">
-        <input ng-model="newSticker.name" placeholder="new sticker...">
-        <button ng-click="createNewSticker()">Create</button>
+        <input data-ng-model="newSticker.name" placeholder="new sticker...">
+        <button data-ng-click="createNewSticker()">Create</button>
         <!-- TODO validation / reactive states -->
       </form>
     </li>
@@ -23,7 +31,7 @@
 
 <div class="row">
   <h3>Page details</h3>
-  <input type="text" name="page-url" value="{{page.url}}" placeholder=""
-    ng-change="fetchPage()"
+  <input type="text" placeholder=""
+    data-ng-model="page.url" data-ng-change="fetchPage()"
   >
 </div>
