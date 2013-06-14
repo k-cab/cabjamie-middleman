@@ -1,5 +1,30 @@
 require 'find'
  
+
+task :default => :build
+task :build => [:cpsrc, :deploy]
+
+#=
+
+desc "copy to a dropbox folder"
+target_dir = "~/Dropbox/bigbearlabs/builds/mackerel-chrome"
+task :deploy do
+  date = `date`.strip
+  system "touch '.built-at-#{date}'"
+  puts "*** Deploying the extension ***"
+  system "rsync -avz --exclude '.git' --delete . #{target_dir}"
+end
+
+
+desc "copy files from .src dirs to right place"
+task :cpsrc do
+  puts "*** Copying from *.src dir's ***"
+  system "rsync -av styles.src/ styles/"
+  system "rsync -av assets.src/ assets/"
+end
+
+#=
+
 desc 'Compile CoffeeScript files to JavaScript'
 task :iced do
   files_to_compile = []
@@ -20,19 +45,4 @@ task :iced do
     
     `iced -c --runtime window #{files_to_compile.join(' ')}`
   end
-end
-
-desc "copy to a dropbox folder"
-target_dir = "~/Dropbox/bigbearlabs/builds/mackerel-chrome"
-task :deploy do
-  puts "*** Deploying the extension ***"
-  system "rsync -avz --exclude '.git' --delete . #{target_dir}"
-end
-
-
-desc "copy files from .src dirs to right place"
-task :cpsrc do
-  puts "*** Copying from *.src dir's ***"
-  system "rsync -av styles.src/ styles/"
-  system "rsync -av assets.src/ assets/"
 end
