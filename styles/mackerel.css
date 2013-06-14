@@ -26,14 +26,14 @@
 .on-page-false {
   background-image: url("../assets/sticker-off.png");
   background-position: center;
-  background-size: 100%;
+  background-size: 80%;
   background-repeat: no-repeat;
 }
 
 .on-page-true {
   background-image: url("../assets/sticker-on.png");
   background-position: center;
-  background-size: 100%;
+  background-size: 80%;
   background-repeat: no-repeat;
 }
 
