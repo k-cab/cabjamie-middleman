@@ -28,6 +28,8 @@
   background-position: center;
   background-size: 80%;
   background-repeat: no-repeat;
+
+  transition: all 1s;
 }
 
 .on-page-true {
@@ -35,8 +37,12 @@
   background-position: center;
   background-size: 80%;
   background-repeat: no-repeat;
+
+  transition: all 1s;
 }
 
 .mouseover-true {
-  /*background-color: blue;*/
+  background-color: rgba(128, 128, 128, 0.45);
+  border-radius: 5px 5px 5px 5px;
+  transition: all 0.1s;
 }
