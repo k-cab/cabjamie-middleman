@@ -1,5 +1,3 @@
-#FIXME time to clean up the backbone / prop api mismatch.
-
 @appModule = angular.module("appModule", [ ], ($routeProvider, $locationProvider) ->
   $routeProvider
   .when "/stickers",
@@ -12,7 +10,7 @@
     redirectTo: "/evernote/authenticate"
   .when "/login",
     redirectTo: "/evernote/authenticate"
-  .when "/",
+  .otherwise
     redirectTo: "/stickers"
 )
 
