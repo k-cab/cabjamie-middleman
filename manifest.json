@@ -1,14 +1,21 @@
 {
   "manifest_version": 2,
   "name":"mackerel-chrome"
-  ,"version":"0.1"
+  ,"version":"0.2"
   ,"description":"Does something awesome"
-  ,"background":"background.html"
+  ,"background": {
+    // "page": "background.html",
+    "scripts": [ "js/background.js" ]
+  }
   ,"options_page":"options.html"
   ,"minimum_chrome_version":"16"
   ,"default_locale":"en"
   ,"permissions":[
-    "tabs"
+    "tabs",
+    "background",
+    "webRequest", "webRequestBlocking", // to override x-frame-options from evernote oauth
+    // "https://sandbox.evernote.com/*",
+    "<all_urls>" // for screen captures
   ]
   ,"icons": {
     "16": "images/context menu icon.png"

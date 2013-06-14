@@ -6,20 +6,28 @@
       @withCurrentResource_chrome callback
     else
       $log.info "not running as chrome extension"
-      url = 'out-of-chrome-stub-url'
-      callback url
+      callback
+        url: 'http://out-of-chrome-stub-url'
+        title: 'stub url title'
 
-  sendMsg: (params, callback)->
+  captureTab: ->
     if chrome.extension
-      @sendMsg_chrome params, callback
+      @captureTab_chrome()
+    else
+      new RSVP.Promise (resolve, reject) =>
+        resolve "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBY"
+
+  sendMsg: (msgType, params, callback)->
+    if chrome.extension
+      @sendMsg_chrome msgType, params, callback
     else
       $log.info { params, callback }
 
-  onMsg: (params, callback)->
+  onMsg: (msgType, callback)->
     if chrome.extension
-      @onMsg_chrome params, callback
+      @onMsg_chrome msgType, callback
     else
-      $log.info { params, callback }
+      $log.info { msgType, callback }
 
 
   ## chrome extension environment
@@ -29,14 +37,28 @@
     chrome.windows.getCurrent {}, (chromeWindow) -> 
       chrome.tabs.query {windowId: chromeWindow.id, active: true}, (tabs) =>
         $log.info tabs
-        url = tabs[0].url
-        $log.info {msg: "chrome env", url: url}
-        callback url
+        callback tabs[0]
+  
+  captureTab_chrome: ->
+    promise = new RSVP.Promise (resolve, reject) =>
+      try
+        chrome.tabs.captureVisibleTab null, null, (dataUrl) ->
+          resolve dataUrl
+      catch e
+        reject e
+      
   
   # callback sig:
-  sendMsg_chrome: (params, callback)->
-    chrome.extension.sendMessage params, callback
-
+  sendMsg_chrome: (msgType, params, callback)->
+    params ||= {}
+    params.msgType = msgType
+    chrome.runtime.sendMessage null, params, callback
   # callback sig: 
-  onMsg_chrome: (callback) ->
-    chrome.extension.onMessage.addListener callback
+  onMsg_chrome: (msgType, callback) ->
+    chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
+      if request.msgType == msgType
+        callback request, sender, sendResponse
+      else
+        $log.info "#{this} got a message of type #{request.msgType} and will ignore."
+    
+    

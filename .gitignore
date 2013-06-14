@@ -8,3 +8,12 @@ js/centre.map
 js/popup.map
 js/runtime.map
 js/userDataSource.map
+js/evernoteLogin.js
+js/evernoteLogin.map
+js/evernoteSvc.js
+js/evernoteSvc.map
+js/popupContent.js
+js/popupContent.map
+node_modules
+assets.src
+styles.src
