@@ -17,3 +17,5 @@ js/popupContent.map
 node_modules
 assets.src
 styles.src
+background.map
+.built*

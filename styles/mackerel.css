@@ -9,13 +9,34 @@
   width: 70px;
   height: 70px;
 
-  border-style: solid;
+  text-align: center
+  
+  /*border-style: solid;*/
+}
+
+.absolute-positioning-container {
+  position: relative;
+}
+.sticker-label {
+  /*vertical-align: bottom;*/
+  position: absolute;
+  bottom: 0;
+}
+
+.on-page-false {
+  background-image: url("../assets/sticker-off.png");
+  background-position: center;
+  background-size: 80%;
+  background-repeat: no-repeat;
 }
 
 .on-page-true {
-  background-color: pink;
+  background-image: url("../assets/sticker-on.png");
+  background-position: center;
+  background-size: 80%;
+  background-repeat: no-repeat;
 }
 
 .mouseover-true {
-  background-color: blue;
+  /*background-color: blue;*/
 }

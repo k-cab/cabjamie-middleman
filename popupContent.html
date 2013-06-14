@@ -49,11 +49,12 @@
     <a href="centre.html" target="_blank">Centre</a>
   </div>
 
-  <div class="row" id="msg-container">
+  <div ng-cloak ng-view></div>
+
+  <div class="row" id="msg-container" class="msg-container">
+    <h3>Messages</h2>
     <p>{{$root.msg}}</p>
   </div>
-
-  <div ng-cloak ng-view></div>
 
 
   <!-- Included JS Files (Uncompressed) -->

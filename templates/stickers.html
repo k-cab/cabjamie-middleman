@@ -4,7 +4,9 @@
 
   <ul id="sticker-list" class="sticker-group">
     <li ng-repeat="sticker in stickers" class="sticker on-page-{{page.hasSticker(sticker)}} mouseover-{{mouseOver}}" ng-mouseenter="mouseOver = true" ng-mouseleave="mouseOver = false">
-      <a ng-click="toggleSticker(sticker)" class="fit-parent">{{sticker.name}}</a>
+      <a ng-click="toggleSticker(sticker)" class="fit-parent absolute-positioning-container">
+        <div class="sticker-label">{{sticker.name}}</div>
+      </a>
       <!-- FIXME abstract away parse / backbone impl details -->
     </li>
 
@@ -19,4 +21,9 @@
 
 </div>
 
-
+<div class="row">
+  <h2>Page details</h2>
+  <input type="text" name="page-url" value="{{page.url}}" placeholder=""
+    ng-change="fetchPage()"
+  >
+</div>
