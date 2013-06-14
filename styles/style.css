@@ -1,3 +1,9 @@
+/**** styling-per-convention */
+msg-container {
+  /* TODO show at bottom of screen of bottom of page, whichever is smaller.*/
+
+}
+
 /**** expressing ui functionality */
 
 /* pinched from quora.com */
