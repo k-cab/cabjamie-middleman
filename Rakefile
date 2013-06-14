@@ -6,17 +6,17 @@ task :build => [:cpsrc, :deploy]
 
 #=
 
-desc "copy to a dropbox folder"
+desc "## copy to a dropbox folder"
 target_dir = "~/Dropbox/bigbearlabs/builds/mackerel-chrome"
 task :deploy do
   date = `date`.strip
-  system "touch '.built-at-#{date}'"
+  system "rm .built*; touch '.built-at-#{date}'"
   puts "*** Deploying the extension ***"
   system "rsync -avz --exclude '.git' --delete . #{target_dir}"
 end
 
 
-desc "copy files from .src dirs to right place"
+desc "## copy files from .src dirs to right place"
 task :cpsrc do
   puts "*** Copying from *.src dir's ***"
   system "rsync -av styles.src/ styles/"
