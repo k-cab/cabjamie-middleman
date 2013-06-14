@@ -18,16 +18,14 @@
     "<all_urls>" // for screen captures
   ]
   ,"icons": {
-    "16": "images/context menu icon.png"
-    ,"19": "images/browser action icon.png"
-    ,"48": "images/small app icon.png"
-    ,"128":"images/big app icon.png"
+    "16": "assets/context menu icon.png"
+    ,"19": "assets/browser action icon.png"
+    ,"48": "assets/small app icon.png"
+    ,"128":"assets/big app icon.png"
   }
   ,"browser_action": {
     "default_popup": "popup.html",
-    "default_icon": "images/small app icon.png"
+    "default_icon": "assets/small app icon.png"
   }
   ,"content_security_policy": "script-src 'self' http://localhost 'unsafe-eval'; object-src 'self'"
-
-
 }
