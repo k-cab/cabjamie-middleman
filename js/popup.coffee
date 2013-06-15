@@ -56,6 +56,7 @@
     #   $scope.$apply()
     
     $scope.stickers.push $scope.newSticker
+    $scope.newSticker = null
 
     # TODO error case
 
