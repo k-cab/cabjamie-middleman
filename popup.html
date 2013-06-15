@@ -49,18 +49,19 @@
 </head>
 
 
-<body ng-app="appModule">
+<body data-ng-app="appModule">
 
   <div class="row">
     <a href="#/login">Login</a>
     <a href="centre.html" target="_blank" class="disabled">Centre</a>
   </div>
 
-  <div ng-cloak ng-view></div>
-
   <div class="row msg-container" id="msg-container">
     <h3>Messages</h3>
     <p>{{$root.msg}}</p>
+  </div>
+
+  <div data-ng-cloak data-ng-view>
   </div>
 
 

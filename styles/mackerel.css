@@ -19,9 +19,6 @@
   transition: all 0.2s;
 }
 
-.absolute-positioning-container {
-  position: relative;
-}
 .sticker-label {
   /*vertical-align: bottom;*/
   position: absolute;
@@ -60,8 +57,12 @@
 }
 
 
-/* TODO 
+.msg-container {
+  height: 70px;
+}
 
+
+/* TODO 
 
 refactor to less or sass.
 

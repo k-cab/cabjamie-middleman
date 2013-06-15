@@ -1,17 +1,32 @@
-<h1>Stickers</h1>
+<!-- TODO rename to 'tagger' -->
+
+<!-- this only needed when page context needs explicit creation from user. -->
+<div class="row"
+  data-ng-show="showPageDetails()">
+
+  <h1>Page</h1>
+
+  <input type="text" placeholder=""
+    data-ng-model="page.url" data-ng-change="fetchPage()">
+  <!-- TODO delay handler invocation. -->
+
+</div>
+
 
 <div class="row">
+
+  <h1>Stickers</h1>
 
   <ul id="sticker-list" class="sticker-group">
 
     <li class="sticker on-page-{{page.hasSticker(sticker)}}"
       data-ng-repeat="sticker in stickers">
 
-      <a alt="{{sticker.name}}" class="fit-parent absolute-positioning-container"
+      <a class="fit-parent absolute-positioning-container"
         data-ng-click="toggleSticker(sticker)">
-        <img src="assets/sticker-on.png" alt="sticker on"
+        <img src="assets/sticker-on.png" alt="The page is stickered with {{sticker.name}}."
           data-ng-if="page.hasSticker(sticker)" data-ng-animate="'transition-image'">
-        <img src="assets/sticker-off.png" alt="sticker off"
+        <img src="assets/sticker-off.png" alt="The page is not stickered with {{sticker.name}}."
           data-ng-if="! page.hasSticker(sticker)" data-ng-animate="'transition-image'">
         <div class="sticker-label">{{sticker.name}}</div>
       </a>
@@ -29,9 +44,3 @@
 
 </div>
 
-<div class="row">
-  <h3>Page details</h3>
-  <input type="text" placeholder=""
-    data-ng-model="page.url" data-ng-change="fetchPage()">
-  <!-- TODO delay handler invocation. -->
-</div>

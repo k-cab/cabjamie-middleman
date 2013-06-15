@@ -67,20 +67,26 @@
   $scope.fetchPage = ->
 
     promise = new RSVP.Promise (resolve, reject) ->
-      runtime.withCurrentResource (tab)->
-        userDataSource.fetch 'page', tab, (pages) ->
-          try
-            page = pages[0]
-            page.title = tab.title
-            $scope.page = page
-            
+      url = if $scope.page 
+          $scope.page.url 
+        else
+          window.location.href
 
-            # chrome.pageCapture.saveAsMHTML( { tabId: tab.id } )
+      runtime.pageForUrl url, (page)->
+        userDataSource.fetch 'page', page, (pages) ->
+          try
+            fetchedPage = pages[0]
+            fetchedPage.title = page.title
+
+            $scope.page = fetchedPage
+            $scope.$apply()
+
+            # chrome.pageCapture.saveAsMHTML( { tabId: page.id } )
             # .then (mhtmlData) ->
             #   page.pageContent = mhtmlData
               # $log.info { msg: " got the visual representation.", mhtml:mhtmlData }
 
-            runtime.captureTab(tab)
+            runtime.capturePageThumbnail(page)
             .then (dataUrl) ->
               $log.info { msg: " got the visual representation.", dataUrl }
 
@@ -105,7 +111,6 @@
           resolve stickers
         catch e
           reject e
-        
 
 
   $scope.update = ->
@@ -128,7 +133,13 @@
     # save the location so the oauth module can redirect back.
     $location.path "/login"
 
-  localStorage.setItem "oauth_success_redirect_path", location.href
+
+  $scope.showPageDetails = ->
+    ! runtime.hasRealPageContext()
+
+
+  ## doit
+
   try 
     $rootScope.msg = "Test msg."
 
@@ -138,6 +149,7 @@
     $rootScope.msg = error
 
     # do the login thing.
+    localStorage.setItem "oauth_success_redirect_path", location.href
     $scope.login()
 
     

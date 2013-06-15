@@ -38,7 +38,11 @@ z-index: 101;
   list-style: none;
 }
 
- 
+.absolute-positioning-container {
+ position: relative;
+}
+
+
 /**** expressing styles */
 
 .fit-parent {

@@ -1,21 +1,30 @@
 @appModule.factory 'runtime', ($log)->
 
-  withCurrentResource: (callback)->
+  pageForUrl: (url, callback)->
     # init chrome-specific
     if chrome.extension
-      @withCurrentResource_chrome callback
+      @pageForUrl_chrome url, callback
     else
       $log.info "not running as chrome extension"
+      url ||= 'http://out-of-chrome-stub-url' 
       callback
-        url: 'http://out-of-chrome-stub-url'
+        url: url
         title: 'stub url title'
 
-  captureTab: ->
+  capturePageThumbnail: ->
     if chrome.extension
-      @captureTab_chrome()
+      @capturePageThumbnail_chrome()
     else
       new RSVP.Promise (resolve, reject) =>
+        console.log "returning a stub image for the page."
+
         resolve "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBY"
+
+  hasRealPageContext: ->
+    if chrome.extension
+      true
+    else
+      false
 
   sendMsg: (msgType, params, callback)->
     if chrome.extension
@@ -32,14 +41,14 @@
 
   ## chrome extension environment
 
-  withCurrentResource_chrome: (callback) ->
+  pageForUrl_chrome: (url, callback) ->
     $log.info "initializing chrome extension environment"
     chrome.windows.getCurrent {}, (chromeWindow) -> 
       chrome.tabs.query {windowId: chromeWindow.id, active: true}, (tabs) =>
         $log.info tabs
         callback tabs[0]
   
-  captureTab_chrome: ->
+  capturePageThumbnail_chrome: ->
     promise = new RSVP.Promise (resolve, reject) =>
       try
         chrome.tabs.captureVisibleTab null, null, (dataUrl) ->
