@@ -82,7 +82,7 @@
     options:
       consumerKey: "sohocoke"
       consumerSecret: "80af1fd7b40f65d0"
-      evernoteHostName: "https://sandbox.evernote.com"
+      evernoteHostName: "https://www.evernote.com"
 
 
     init: ->

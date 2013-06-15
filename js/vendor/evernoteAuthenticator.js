@@ -23,7 +23,7 @@ var noteStoreURL, authTokenEvernote;
 var evernoteAuthenticator = {
     consumerKey : 'sohocoke',
     consumerSecret : '80af1fd7b40f65d0',
-    evernoteHostName : 'https://sandbox.evernote.com', // change this to https://www.evernote.com to switch to production
+    evernoteHostName : 'https://www.evernote.com', // change this to https://www.evernote.com to switch to production
     callbackUrl: window.location.origin + window.location.pathname + "#/action=gotOAuth.html",
     // callbackUrl: "stub-callback-url!!",
 
