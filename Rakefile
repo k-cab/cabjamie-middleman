@@ -7,16 +7,29 @@ task :build => [:cpsrc, :deploy]
 #=
 
 desc "## copy to a dropbox folder"
+excludes = [
+  '.git',
+  'Rakefile',
+  '*.sublime-*',
+  '*.src',
+  '*.coffee',
+  'node_modules'
+]
 target_dir = "~/Dropbox/bigbearlabs/builds/mackerel-chrome"
+target_dir_2 = "../mackerel-rails/public/mackerel-chrome"
+
+exclude_opts = excludes.map{|p| "--exclude '#{p}'"}.join ' '
 task :deploy do
   date = `date`.strip
   system "rm .built*; touch '.built-at-#{date}'"
   puts "*** Deploying the extension ***"
-  system "rsync -avz --exclude '.git' --delete . #{target_dir}"
+  puts "* exclude_opts: #{exclude_opts}"
+  system "rsync -av --delete #{exclude_opts} . #{target_dir}"
+  system "rsync -av --delete #{exclude_opts} . #{target_dir_2}"
 end
 
 
-desc "** snapshot a build for future use"
+desc "** snapshot a build for later reference"
 # get the file to increment as a file.
 task :snapshot => [ :increment, :build ]
 
