@@ -18,7 +18,82 @@ end
 
 desc "** snapshot a build for future use"
 # get the file to increment as a file.
+task :snapshot => [ :increment, :build ]
 
+
+# @return a DurableValue
+class DurableValue
+  attr_reader :val
+
+  def initialize identifier
+    @identifier = identifier
+
+    # load from filename
+    if File.exists? filename
+      data = File.read filename
+    else
+      data = ""
+    end
+
+    @val = data.to_i
+  end
+
+  def change new_val
+    @val = new_val
+
+    # TODO save out.
+    File.open filename, "w" do |file|
+      file.write @val.to_s
+    end
+  end
+
+  def filename
+    ".#{@identifier}.durable"
+  end
+
+  def save
+    
+  end
+end
+
+
+class File
+  def self.current_dir
+    File.new '.'
+  end
+
+  # TODO error cases
+  def self.replace_content filename, token, str
+    text = File.read(filename)
+    text.gsub!(token, str)
+    File.open(filename, "w") { |file| file.puts text }
+  end
+
+  def apply filenames_in_scope, &block
+    filenames_in_scope.map do |filename|
+      block.call filename
+    end
+  end
+
+end
+
+
+desc "** increment build number"
+task :increment do
+  # increment the version.
+  build_number_durable = DurableValue.new 'build_number'
+  previous_build_number = build_number_durable.val
+  current_build_number = build_number_durable.val + 1
+  build_number_durable.change current_build_number
+
+  build_number_pattern = '"build_number":"%no%"'
+  previous_build_number_pattern = build_number_pattern.gsub '%no%', previous_build_number.to_s
+  current_build_number_pattern = build_number_pattern.gsub '%no%', current_build_number.to_s
+
+  File.current_dir.apply [ 'manifest.json' ] do |file|
+    File.replace_content file, previous_build_number_pattern, current_build_number_pattern
+  end
+end
  
 desc "## copy files from .src dirs to right place"
 task :cpsrc do
