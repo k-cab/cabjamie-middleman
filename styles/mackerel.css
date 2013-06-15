@@ -1,5 +1,13 @@
 /** popup */
 
+.msg-container {
+  position: fixed;
+  bottom: 0;
+  height: 70px;
+  margin: 10px;
+}
+
+
 .sticker {
   display: inline-block;
   vertical-align: middle;
@@ -56,10 +64,6 @@
 .on-page-true {
 }
 
-
-.msg-container {
-  height: 70px;
-}
 
 
 /* TODO 
