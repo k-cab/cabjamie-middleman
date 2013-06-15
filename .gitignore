@@ -19,3 +19,4 @@ assets.src
 styles.src
 background.map
 .built*
+login_evernote.js
