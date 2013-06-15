@@ -16,6 +16,10 @@ task :deploy do
 end
 
 
+desc "** snapshot a build for future use"
+# get the file to increment as a file.
+
+ 
 desc "## copy files from .src dirs to right place"
 task :cpsrc do
   puts "*** Copying from *.src dir's ***"
