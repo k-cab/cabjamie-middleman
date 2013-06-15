@@ -146,7 +146,7 @@
     userDataSource.init()
     $scope.update()
   catch e
-    $rootScope.msg = error
+    $rootScope.msg = e
 
     # do the login thing.
     localStorage.setItem "oauth_success_redirect_path", location.href
