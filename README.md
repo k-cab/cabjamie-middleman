@@ -5,9 +5,7 @@
 
 ## Known issues
 
-* can't create new stickers yet. Log into the Evernote sandbox instance and tag some notes with tags prefixed with '##', e.g. '##marketing'. these tags will show up on Mackerel.
-
-* authentication flow gets triggered every time the popup opens.
+none.
 
 
 ## Build

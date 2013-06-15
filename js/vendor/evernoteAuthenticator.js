@@ -24,6 +24,9 @@ var evernoteAuthenticator = {
     consumerKey : 'sohocoke',
     consumerSecret : '80af1fd7b40f65d0',
     evernoteHostName : 'https://sandbox.evernote.com', // change this to https://www.evernote.com to switch to production
+    callbackUrl: window.location.origin + window.location.pathname + "#/action=gotOAuth.html",
+    // callbackUrl: "stub-callback-url!!",
+
     // Application Constructor
     initialize: function() {
         this.bindEvents();
@@ -82,6 +85,7 @@ var evernoteAuthenticator = {
              
          }
          else {
+            // step 4
              var querystring = evernoteAuthenticator.getQueryParams(data.text);
              noteStoreURL = querystring.edam_noteStoreUrl;
              authTokenEvernote = querystring.oauth_token; 
@@ -99,7 +103,7 @@ var evernoteAuthenticator = {
             consumerKey: evernoteAuthenticator.consumerKey,
             consumerSecret: evernoteAuthenticator.consumerSecret,
             // callbackUrl : "gotOAuth.html",
-            callbackUrl : window.location.origin + window.location.pathname + "#/action=gotOAuth.html",
+            callbackUrl : evernoteAuthenticator.callbackUrl,
             signatureMethod : "HMAC-SHA1"
         };
         oauth = OAuth(options);
@@ -181,6 +185,7 @@ var evernoteAuthenticator = {
     },
 
     postAuthenticationCallback: function() {
+        // stub
         this.listNotebooksAndCreateNewNote();
     }
 };

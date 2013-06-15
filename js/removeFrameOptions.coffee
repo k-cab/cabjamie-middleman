@@ -1,4 +1,4 @@
-
+# use the chrome extension api to override x-frame-options of vendor's oauth pages so it can display inside an iframe.
 if chrome.webRequest
   chrome.webRequest.onHeadersReceived.addListener ((info) ->
     headers = info.responseHeaders
@@ -13,3 +13,5 @@ if chrome.webRequest
     urls: ["*://*/*"] # Pattern to match all http(s) pages
     types: ["main_frame", "sub_frame"]
   , ["blocking", "responseHeaders"]
+else
+  console.warn "couldn't find chrome.webRequest - OAuth will not work inside a frame!"

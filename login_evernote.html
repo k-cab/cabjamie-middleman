@@ -1,0 +1,25 @@
+<!doctype html5>
+
+<!-- use inside an iframe - the script will set the parent window's location on successful oauth. -->
+
+<html>
+<head>
+	<title>Evernote Login</title>
+
+	<script src="js/vendor/angular.min.js"></script>
+	<script src="js/vendor/rsvp.js"></script>
+
+	<script src="js/vendor/evernote-sdk-minified.js"></script>
+	<script src="js/vendor/jsOAuth-1.3.6.min.js"></script>
+	<script src="js/vendor/evernoteAuthenticator.js"></script>
+	<script src="js/evernoteLogin.js"></script>
+	<script src="js/evernoteSvc.js"></script>
+
+</head>
+
+<body data-ng-app="appModule" data-ng-controller="EvernoteLoginCntl">
+
+	<button id="login" data-ng-click="loginWithEvernote()">Login</button>
+
+</body>
+</html>

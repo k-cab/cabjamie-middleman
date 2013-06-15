@@ -1,3 +1,4 @@
+<!doctype html5>
 <html class="no-js" lang="en">
 
 <head>
@@ -15,16 +16,97 @@
     }
   </style>
 
+  
+  <!-- Included CSS Files (Uncompressed) -->
+  <!--
+  <link rel="stylesheet" href="stylesheets/foundation.css">
+  -->
+  
+  <!-- Included CSS Files (Compressed) -->
+  <link rel="stylesheet" href="foundation/stylesheets/foundation.min.css">
+  <link rel="stylesheet" href="foundation/stylesheets/app.css">
+
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/mackerel.css">
+
+  <script src="js/vendor/parse-1.2.7.js"></script>
+  <script src="js/vendor/underscore.js"></script>
+  <script src="js/vendor/jquery.min.js"></script>
+  <script src="js/vendor/angular.min.js"></script>
+  <script src="js/vendor/rsvp.js"></script>
+  <script src="js/vendor/evernote-sdk-minified.js"></script>
+  <script src="js/vendor/md5.js"></script>
+  <script src="js/vendor/jsOAuth-1.3.6.min.js"></script>
+  <script src="js/vendor/evernoteAuthenticator.js"></script>
+
+  <script src="js/popupContent.js"></script>
+
+  <script src="js/evernoteSvc.js"></script>
+  <script src="js/runtime.js"></script>
+  <script src="js/userDataSource.js"></script>
+
+  <script src="foundation/javascripts/modernizr.foundation.js"></script>
+
 </head>
 
 
-<body>
+<body ng-app="appModule">
 
-  <script src="js/popup.js">
-  </script>
-  <iframe id="content-frame" src="./popupContent.html" style="width:100%; height:100%; border:none">
-  </iframe>
+  <div class="row">
+    <a href="#/login">Login</a>
+    <a href="centre.html" target="_blank" class="disabled">Centre</a>
+  </div>
 
-      
+  <div ng-cloak ng-view></div>
+
+  <div class="row msg-container" id="msg-container">
+    <h3>Messages</h3>
+    <p>{{$root.msg}}</p>
+  </div>
+
+
+  <!-- Included JS Files (Uncompressed) -->
+  <!--
+  
+  <script src="foundation/javascripts/jquery.foundation.mediaQueryToggle.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.forms.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.reveal.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.orbit.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.navigation.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.buttons.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.tabs.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.tooltips.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.accordion.js"></script>
+  
+  <script src="foundation/javascripts/jquery.placeholder.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.alerts.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.topbar.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.joyride.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.clearing.js"></script>
+  
+  <script src="foundation/javascripts/jquery.foundation.magellan.js"></script>
+  
+  -->
+  
+  <!-- Included JS Files (Compressed) -->
+  <!-- script src="javascripts/jquery.js"></script -->
+  <script src="foundation/javascripts/foundation.min.js"></script>
+  
+  <!-- Initialize JS Plugins -->
+  <script src="foundation/javascripts/app.js"></script>
+
+    
 </body>
 </html>

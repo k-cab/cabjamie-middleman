@@ -7,11 +7,11 @@
     <li class="sticker on-page-{{page.hasSticker(sticker)}}"
       data-ng-repeat="sticker in stickers">
 
-      <a class="fit-parent absolute-positioning-container"
+      <a alt="{{sticker.name}}" class="fit-parent absolute-positioning-container"
         data-ng-click="toggleSticker(sticker)">
-        <img src="assets/sticker-on.png"
+        <img src="assets/sticker-on.png" alt="sticker on"
           data-ng-if="page.hasSticker(sticker)" data-ng-animate="'transition-image'">
-        <img src="assets/sticker-off.png"
+        <img src="assets/sticker-off.png" alt="sticker off"
           data-ng-if="! page.hasSticker(sticker)" data-ng-animate="'transition-image'">
         <div class="sticker-label">{{sticker.name}}</div>
       </a>

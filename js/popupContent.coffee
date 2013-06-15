@@ -3,13 +3,8 @@
   .when "/stickers",
     templateUrl: "templates/stickers.html"
     controller: @AppCntl
-  .when "/evernote/authenticate",
-    templateUrl: "templates/evernote_authenticate.html"
-    controller: @EvernoteLoginCntl
-  .when "/action=gotOAuth.html",
-    redirectTo: "/evernote/authenticate"
   .when "/login",
-    redirectTo: "/evernote/authenticate"
+    templateUrl: "templates/oauth.html"
   .otherwise
     redirectTo: "/stickers"
 )
@@ -124,20 +119,26 @@
       $scope.$apply()
     .then null, (error) ->
       $log.error error
-      $rootScope.msg = error
-
-      $location.path "/login"
-      $scope.$apply()
+      throw error
 
     return null
 
+  $scope.login = ->
+    # save the location so the oauth module can redirect back.
+    $location.path "/login"
+
+  localStorage.setItem "oauth_success_redirect_path", location.href
   try 
     $rootScope.msg = "Test msg."
 
     userDataSource.init()
     $scope.update()
   catch e
-    $location.path "/login"
+    $rootScope.msg = error
+
+    # do the login thing.
+    $scope.login()
+
     
   # runtime.onMsg 'testType', (args...) ->
   #   console.log "onMsg args: #{args}"

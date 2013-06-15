@@ -5,6 +5,10 @@ a { cursor: hand; cursor: pointer; }
 
 /**** expressing ui functionality */
 
+.disabled {
+  display: none;
+}
+
 /* pinched from quora.com */
 .above_page_banner {
 width: 100%;
