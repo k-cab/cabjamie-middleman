@@ -28,13 +28,29 @@
   bottom: 0;
 }
 
-.transition-image {
-  opacity: 0;
-  transition: all 1s ease-in-out;
+
+.transition-image, .transition-image-enter {
+  -webkit-transition:all linear 0.5s;
+  -moz-transition:all linear 0.5s;
+  -ms-transition:all linear 0.5s;
+  -o-transition:all linear 0.5s;
+  transition:all linear 0.5s;
 }
 
-.transition-image-active {
+.transition-image-enter {
+  opacity: 0;
+  /*transition: all 2s ease-in-out;*/
+}
+.transition-image-enter.transition-image-enter-active {
   opacity: 1;
+  /*transition: all 2s ease-in-out;*/
+}
+
+.transition-image-leave {
+  opacity: 1;
+}
+.transition-image-leave.transition-image-leave-active {
+  opacity: 0;
 }
 
 .on-page-false {
@@ -42,3 +58,11 @@
 
 .on-page-true {
 }
+
+
+/* TODO 
+
+
+refactor to less or sass.
+
+*/
