@@ -26,7 +26,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
     fetchPage: (params, resultHandler) ->
       evernote.fetchPage_evernote params, (result) =>
         page = new @Page result
-        @attrsToProps page, 'url', 'stickers', 'note'
+        @attrsToProps page, 'url', 'stickers', 'note'  # FIXME one day we will be able to lift all deps to Parse.
 
         resultHandler [ page ]
 
@@ -94,6 +94,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
           that.attrsToProps result, 'url', 'title'
 
           that.fetchStickers result, (stickers) ->
+
             resultHandler results      
                   
         error: (error) ->
@@ -198,7 +199,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         obj[attr] = val if val
           
 
-    ## REFACTOR
+    ## REFACTOR define obj's using coffeescript classes, create parse obj's separately based on these.
 
     Page: Parse.Object.extend 'Page',
 
