@@ -9,6 +9,10 @@
     redirectTo: "/stickers"
 )
 
+@UserPrefs = 
+  sticker_prefix_pattern: /^\./
+  sticker_prefix: '.'
+
 @AppCntl = ($scope, $location, $log, $rootScope, userDataSource, runtime) ->
 
   ## controller actions
@@ -46,7 +50,7 @@
 
   
   $scope.createNewSticker = ->
-    $scope.newSticker.name = "##" + $scope.newSticker.name unless $scope.newSticker.name.match /^##/
+    $scope.newSticker.name = UserPrefs.sticker_prefix + $scope.newSticker.name unless $scope.newSticker.name.match UserPrefs.sticker_prefix_pattern
 
 
     $log.info {msg: "new sticker", sticker:$scope.newSticker}
