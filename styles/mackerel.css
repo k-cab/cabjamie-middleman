@@ -28,7 +28,11 @@
 }
 
 .sticker-label {
+  /*label on top of sticker*/
   position: absolute;
+  top: 0;
+  left: 0;
+
   line-height: 1em
 }
 
