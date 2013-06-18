@@ -21,3 +21,4 @@ background.map
 .built*
 login_evernote.js
 *.sublime-*
+parseSvc.js
