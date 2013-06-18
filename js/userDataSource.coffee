@@ -67,32 +67,7 @@ class Page
     fetchItems: (params, resultHandler) ->
       @fetchItems_parse params, resultHandler
 
+
     persist: (type, modelObj, resultHandler) ->
       evernote.persist_evernote type, modelObj, resultHandler
-
-
-    #=
-
-    fetchPage_stub: (params, resultHandler) ->
-      result = new Page()
-      result.url = params.url
-      result.stickers = []
-
-      resultHandler [ result ]
-
-
-    fetchStickers_stub: (page, resultHandler) ->
-      results = [
-        {
-            name: "stub-sticker-1",
-        },
-        {
-            name: "stub-sticker-2",
-        },
-        {
-            name: "stub-sticker-3"
-        },
-      ]
-
-      resultHandler results
 
