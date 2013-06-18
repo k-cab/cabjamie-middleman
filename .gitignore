@@ -20,3 +20,4 @@ styles.src
 background.map
 .built*
 login_evernote.js
+*.sublime-*
