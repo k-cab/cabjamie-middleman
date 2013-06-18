@@ -2,7 +2,45 @@
 # TODO resolve API inconsistency
 # TODO factor out attr <-> prop.
 
+
+class Sticker
+  constructor: (data) ->
+    Object.keys(data).map (key) =>
+      this[key] = data[key]  
+
+  name: 'unnamed sticker'
+
+
+class Page
+  constructor: (data) ->
+    Object.keys(data).map (key)=>
+      this[key] = data[key]  
+  
+  url: 'http://stub-url'
+
+  addSticker: (sticker) ->
+
+    this.stickers = [] unless this.stickers
+    this.stickers.push sticker unless _.include this.stickers, sticker
+
+    # $log.info   # TODO factor out as angular module
+    console.log { this:this, stickers: this.stickers }
+
+  removeSticker: (sticker) ->
+    console.log "TODO remove sticker from #{this.url}"
+    this.stickers = this.stickers.filter( (e) -> e.name != sticker.name )
+  
+  hasSticker: (sticker) ->
+    if _.include this.stickers?.map((e) -> e.name), sticker.name
+      true
+    else
+      false
+
+
+
 Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Qeob7MLPGsz3wLFQexlOOgm")
+
+
 
 @appModule.factory 'userDataSource', ($log, $http, evernote) ->
   obj = 
@@ -25,8 +63,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
     # FIXME resultHandler interface should deal with single page.
     fetchPage: (params, resultHandler) ->
       evernote.fetchPage_evernote params, (result) =>
-        page = new @Page result
-        @attrsToProps page, 'url', 'stickers', 'note'  # FIXME one day we will be able to lift all deps to Parse.
+        page = new Page result
 
         resultHandler [ page ]
 
@@ -43,7 +80,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
     #=
 
     fetchPage_stub: (params, resultHandler) ->
-      result = new @Page()
+      result = new Page()
       result.url = params.url
       result.stickers = []
 
@@ -71,7 +108,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
     fetchPage_parse: (params, resultHandler) ->
       url = params.url
 
-      query = new Parse.Query(@Page) 
+      query = new Parse.Query(Page) 
       query.equalTo('url', url)
       # query.include('stickers')
       
@@ -104,7 +141,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
     fetchStickers_parse: (page, resultHandler) ->
       if page == null
-        query = new Parse.Query(@Sticker)
+        query = new Parse.Query(Sticker)
       else
         # in order to prevent saving a possibly unnecessary page, we shortcut to the result handler if page is new.
         if page.isNew()
@@ -131,7 +168,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
     fetchItems_parse: (params, resultHandler) ->
     
       # TODO address abstraction gap between items and pages.
-      query = new Parse.Query(@Page) 
+      query = new Parse.Query(Page) 
       query.equalTo('stickers', params[0])
 
       that = this
@@ -171,7 +208,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
           # create the obj
           unless modelObj.className == 'Sticker'
-            theObj = new @Sticker()
+            theObj = new Sticker()
             theObj.name = modelObj.name
             modelObj = theObj
 
@@ -199,30 +236,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
         obj[attr] = val if val
           
 
-    ## REFACTOR define obj's using coffeescript classes, create parse obj's separately based on these.
+    Page_parse: Parse.Object.extend 'Page'
 
-    Page: Parse.Object.extend 'Page',
-
-      url: 'http://stub-url'
-
-      addSticker: (sticker) ->
-
-        this.stickers = [] unless this.stickers
-        this.stickers.push sticker unless _.include this.stickers, sticker
-
-        # $log.info   # TODO factor out as angular module
-        console.log { this:this, stickers: this.stickers }
-
-      removeSticker: (sticker) ->
-        console.log "TODO remove sticker from #{this.url}"
-        this.stickers = this.stickers.filter( (e) -> e.name != sticker.name )
-      
-      hasSticker: (sticker) ->
-        if _.include this.stickers?.map((e) -> e.name), sticker.name
-          true
-        else
-          false
-
-    Sticker: Parse.Object.extend('Sticker')
-
+    Sticker_parse: Parse.Object.extend 'Sticker'
 
