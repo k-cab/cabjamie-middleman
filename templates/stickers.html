@@ -25,14 +25,13 @@
 
       <a class="fit-parent absolute-positioning-container"
         data-ng-click="toggleSticker(sticker)">
+        <div class="sticker-label"
+          data-ng-click="toggleSticker(sticker)">{{sticker.name}}</div>
         <img src="assets/sticker-on.png" alt="The page is stickered with {{sticker.name}}."
           data-ng-if="page.hasSticker(sticker)" data-ng-animate="'transition-image'">
         <img src="assets/sticker-off.png" alt="The page is not stickered with {{sticker.name}}."
           data-ng-if="! page.hasSticker(sticker)" data-ng-animate="'transition-image'">
       </a>
-      <a class="sticker-label"
-        data-ng-click="toggleSticker(sticker)">{{sticker.name}}</a>
-
     </li>
 
     <!-- new sticker -->

@@ -28,6 +28,7 @@
 }
 
 .sticker-label {
+  position: absolute;
   line-height: 1em
 }
 
