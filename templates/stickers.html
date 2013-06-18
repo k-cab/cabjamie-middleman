@@ -19,6 +19,7 @@
 
   <ul id="sticker-list" class="sticker-group">
 
+    <!-- my stickers -->
     <li class="sticker on-page-{{page.hasSticker(sticker)}}"
       data-ng-repeat="sticker in stickers">
 
@@ -28,15 +29,24 @@
           data-ng-if="page.hasSticker(sticker)" data-ng-animate="'transition-image'">
         <img src="assets/sticker-off.png" alt="The page is not stickered with {{sticker.name}}."
           data-ng-if="! page.hasSticker(sticker)" data-ng-animate="'transition-image'">
-        <div class="sticker-label">{{sticker.name}}</div>
       </a>
+      <a class="sticker-label"
+        data-ng-click="toggleSticker(sticker)">{{sticker.name}}</a>
 
     </li>
 
-    <li>
-      <form id="new-sticker-form">
-        <input data-ng-model="newSticker.name" placeholder="new sticker...">
-        <button data-ng-click="createNewSticker()">Create</button>
+    <!-- new sticker -->
+    <li class="sticker">
+      <a class="fit-parent absolute-positioning-container" style="display:table;"
+        data-ng-click="newSticker.creatingNewSticker = true">
+        <p style="display:table-cell; vertical-align: middle;">+</p>
+      </a>
+      <form id="new-sticker-form"
+        data-ng-show="newSticker.creatingNewSticker">
+        <input placeholder="new sticker" class="new-sticker-name"
+          data-ng-model="newSticker.name">
+        <button data-ng-click="createNewSticker()">OK</button>
+        <button data-ng-click="newSticker.creatingNewSticker = false">Cancel</button>
         <!-- TODO validation / reactive states -->
       </form>
     </li>

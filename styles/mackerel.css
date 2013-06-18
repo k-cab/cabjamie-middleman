@@ -28,11 +28,7 @@
 }
 
 .sticker-label {
-  /*vertical-align: bottom;*/
-  position: absolute;
-  bottom: 0;
 }
-
 
 .transition-image, .transition-image-enter {
   -webkit-transition:all linear 0.5s;
