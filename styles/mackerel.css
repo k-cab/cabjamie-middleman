@@ -1,5 +1,20 @@
 /** popup */
 
+body {
+  background-color: orange; /* TODO */
+}
+
+h1, h2, h3, h4 {
+  color: pink; /* TODO */
+  /* TODO font */
+}
+
+a {
+  color: pink; /* TODO */
+  /* TODO font */
+}
+
+
 .msg-container {
   position: fixed;
   bottom: 0;
@@ -17,7 +32,7 @@
   width: 70px;
   height: 70px;
 
-  text-align: center
+  text-align: center;
   
   /*border-style: solid;*/
 }
@@ -33,8 +48,9 @@
   top: 0;
   left: 0;
 
-  line-height: 1em
+  line-height: 1em;
 }
+
 
 .transition-image, .transition-image-enter {
   -webkit-transition:all linear 0.5s;
