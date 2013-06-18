@@ -28,6 +28,7 @@
 }
 
 .sticker-label {
+  line-height: 1em
 }
 
 .transition-image, .transition-image-enter {
