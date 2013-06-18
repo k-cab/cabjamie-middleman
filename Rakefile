@@ -25,7 +25,10 @@ task :deploy do
   puts "*** Deploying the extension ***"
   puts "* exclude_opts: #{exclude_opts}"
   system "rsync -av --delete #{exclude_opts} . #{target_dir}"
+
   system "rsync -av --delete #{exclude_opts} . #{target_dir_2}"
+
+  # system "rsync -av --delete #{target_dir_2}}" asset_dir"
 end
 
 
