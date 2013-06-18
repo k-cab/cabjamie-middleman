@@ -43,7 +43,7 @@
           return obj.saveNote
             guid: modelObj.note?.guid
             title: modelObj.title
-            content: "On #{new Date()}, you tagged at <a href='#{encodeURI(htmlSafeUrl)}'>'#{modelObj.title}'</a>."
+            content: "On #{new Date()}, you stickered the page <a href='#{encodeURI(htmlSafeUrl)}'>'#{modelObj.title}'</a>."
             tags: modelObj.stickers.concat { name: 'Mackerel' }
             thumbnail: modelObj.thumbnailUrl
             url: modelObj.url
