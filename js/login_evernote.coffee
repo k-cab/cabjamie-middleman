@@ -4,7 +4,7 @@
     #   controller: EvernoteLoginCntl
   )
 
-  @EvernoteLoginCntl = ($scope, $location, $log, evernote) ->
+  @EvernoteLoginCntl = ($scope, $location, $log, evernoteSvc) ->
 
     $scope.loginWithEvernote = ->
       window.evernoteAuthenticator.initialize()
@@ -26,18 +26,18 @@
         localStorage.setItem 'evernote_authToken', window.authTokenEvernote
         localStorage.setItem 'evernote_noteStoreURL', window.noteStoreURL
 
-        evernote.init()
+        evernoteSvc.init()
 
         $log.info
           msg: "got access token from evernote"
-          svc: evernote
+          svc: evernoteSvc
         
         # # change $location fragment.
         # $location.path '/stickers'
         # $scope.$apply()
 
-        # set the parent's evernote. framed architecture is really embedding itself here..
-        window.parent.evernote = evernote
+        # set the parent's evernoteSvc. framed architecture is really embedding itself here..
+        window.parent.evernoteSvc = evernoteSvc
 
         redirect_url = localStorage.getItem "oauth_success_redirect_path"
 
