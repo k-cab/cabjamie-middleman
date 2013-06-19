@@ -30,8 +30,14 @@ a {
   text-align: center;
 }
 
+.sticker-group {
+  font-size: 0; /* make inline-block items space-agnostic */
+}
 .sticker {
+  /*border-style: solid;*/
+
   display: inline-block;
+  
   vertical-align: middle;
 
   margin: 10px;
@@ -40,10 +46,8 @@ a {
   height: 90px;
 
   text-align: center;
-  
-  border-style: solid;
 }
-.sticker>a {
+.sticker-image {
   display: block;
 }
 .sticker>a:hover {
@@ -60,7 +64,7 @@ a {
 */
   line-height: 1em;
 }
-.new-sticker-image {
+.sticker-image-new {
   opacity: 0.5;
 }
 .new-sticker-name {

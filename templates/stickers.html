@@ -20,7 +20,7 @@
   <ul id="sticker-list" class="sticker-group">
 
     <!-- my stickers -->
-    <li class="sticker on-page-{{page.hasSticker(sticker)}} absolute-positioning-container"
+    <li class="sticker on-page-{{page.hasSticker(sticker)}}"
       data-ng-repeat="sticker in stickers">
 
       <a class="sticker-image"
@@ -35,12 +35,11 @@
     </li>
 
     <!-- new sticker -->
-    <li class="sticker absolute-positioning-container">
-      <a class="absolute-positioning-container" style="display:table;"
+    <li class="sticker">
+      <a class="sticker-image-new absolute-positioning-container" style="display:table;"
         data-ng-click="newSticker.creatingNewSticker = true">
 
-        <img src="assets/sticker-off.png" alt="New sticker..." class="new-sticker-image"
-          >
+        <img src="assets/sticker-off.png" alt="New sticker...">
       </a>
       <div class="new-sticker-form"
         data-ng-show="newSticker.creatingNewSticker">
