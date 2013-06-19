@@ -37,9 +37,12 @@ that = this
       resultHandler results
 
     fetchItems: (params, resultHandler) ->
-      $log.warn "stub fetchItems called"
+      new RSVP.Promise (resolve, reject) ->
+        $log.error "stub fetchItems called"
+        resolve null
 
     persist: (type, modelObj, resultHandler) ->
-      $log.warn "stub persist called"
-
+      new RSVP.Promise (resolve, reject) ->
+        $log.error "stub persist called"
+        resolve null
   obj
