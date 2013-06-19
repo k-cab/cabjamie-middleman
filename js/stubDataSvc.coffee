@@ -1,18 +1,22 @@
+that = this
+
 @appModule.factory 'stubDataSvc', ($log, $http) ->
   
   obj = 
     #= userDataSource interface realisation
      
     fetchPage: (params, resultHandler) ->
-      result = new Page()
-      result.url = params.url
-      result.stickers = [
-        {
-          name: "stub-sticker-3"
-        }
-      ]
+      new RSVP.Promise (resolve, reject) ->
 
-      resultHandler [ result ]
+        result = new that.Page()
+        result.url = params.url
+        result.stickers = [
+          {
+            name: "stub-sticker-3"
+          }
+        ]
+
+        resolve [ result ]
 
 
     fetchStickers: (page, resultHandler) ->

@@ -1,73 +1,30 @@
 # TODO resolve API inconsistency
 
 
-class Sticker
-  constructor: (data) ->
-    Object.keys(data).map (key) =>
-      this[key] = data[key]  
-
-  name: 'unnamed sticker'
-
-
-class Page
-  constructor: (data) ->
-    Object.keys(data).map (key)=>
-      this[key] = data[key]  
-  
-  url: 'http://stub-url'
-
-  addSticker: (sticker) ->
-
-    this.stickers = [] unless this.stickers
-    this.stickers.push sticker unless _.include this.stickers, sticker
-
-    # $log.info   # TODO factor out as angular module
-    console.log { this:this, stickers: this.stickers }
-
-  removeSticker: (sticker) ->
-    console.log "TODO remove sticker from #{this.url}"
-    this.stickers = this.stickers.filter( (e) -> e.name != sticker.name )
-  
-  hasSticker: (sticker) ->
-    if _.include this.stickers?.map((e) -> e.name), sticker.name
-      true
-    else
-      false
-
-
-
-@appModule.factory 'userDataSource', ($log, $http, evernote) ->
+@appModule.factory 'userDataSource', ($log, $http, evernote, stubDataSvc) ->
   obj = 
     init: ->
       evernote.init()
 
-    # FIXME redundant
-    fetch: (dataType, params, resultHandler) ->
-      switch dataType
-        when 'stickers'
-          @fetchStickers null, resultHandler
-        when 'items'
-          @fetchItems params, resultHandler
-        when 'page'
-          @fetchPage params, resultHandler
-        else
-          throw "unknown data type #{dataType}"
-
 
     # FIXME resultHandler interface should deal with single page.
-    fetchPage: (params, resultHandler) ->
-      evernote.fetchPage_evernote params, (result) =>
+    fetchPage: (pageSpec, resultHandler) ->
+      stubDataSvc.fetchPage( pageSpec)
+      .then (result) =>
         page = new Page result
 
-        resultHandler [ page ]
+        resolve [ page ]
+
+        # TODO err
+
 
     fetchStickers: (page, resultHandler) ->
-      evernote.fetchStickers_evernote page, resultHandler
+      stubDataSvc.fetchStickers page, resultHandler
 
     fetchItems: (params, resultHandler) ->
-      @fetchItems_parse params, resultHandler
+      stubDataSvc.fetchItems params, resultHandler
 
 
     persist: (type, modelObj, resultHandler) ->
-      evernote.persist_evernote type, modelObj, resultHandler
+      stubDataSvc.persist type, modelObj, resultHandler
 

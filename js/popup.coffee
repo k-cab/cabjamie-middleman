@@ -72,35 +72,37 @@
         else
           window.location.href
 
-      runtime.pageForUrl url, (page)->
-        userDataSource.fetch 'page', page, (pages) ->
-          try
-            fetchedPage = pages[0]
-            fetchedPage.title = page.title
+      runtime.pageForUrl( url )
+      .then (page)->
+        userDataSource.fetchPage page
+      .then (pages) ->
+        try
+          fetchedPage = pages[0]
+          fetchedPage.title = page.title
 
-            $scope.page = fetchedPage
-            $scope.$apply()
+          $scope.page = fetchedPage
+          $scope.$apply()
 
-            # chrome.pageCapture.saveAsMHTML( { tabId: page.id } )
-            # .then (mhtmlData) ->
-            #   page.pageContent = mhtmlData
-              # $log.info { msg: " got the visual representation.", mhtml:mhtmlData }
+          # chrome.pageCapture.saveAsMHTML( { tabId: page.id } )
+          # .then (mhtmlData) ->
+          #   page.pageContent = mhtmlData
+            # $log.info { msg: " got the visual representation.", mhtml:mhtmlData }
 
-            runtime.capturePageThumbnail(page)
-            .then (dataUrl) ->
-              $log.info { msg: " got the visual representation.", dataUrl }
+          runtime.capturePageThumbnail(page)
+          .then (dataUrl) ->
+            $log.info { msg: " got the visual representation.", dataUrl }
 
-              $scope.page.thumbnailUrl = dataUrl
+            $scope.page.thumbnailUrl = dataUrl
 
-              resolve $scope.page
+            resolve $scope.page
 
-          catch e
-            reject e
+        catch e
+          reject e
 
   $scope.fetchStickers = (page)->    
 
     promise = new RSVP.Promise (resolve, reject) ->
-      userDataSource.fetch 'stickers', [], (stickers) ->
+      userDataSource.fetchStickers null, (stickers) ->
         try
 
           $scope.stickers = stickers
