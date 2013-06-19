@@ -1,15 +1,22 @@
 @appModule.factory 'runtime', ($log)->
 
   pageForUrl: (url, callback)->
-    # init chrome-specific
-    if chrome.extension
-      @pageForUrl_chrome url, callback
-    else
-      $log.info "not running as chrome extension"
-      url ||= 'http://out-of-chrome-stub-url' 
-      callback
-        url: url
-        title: 'stub url title'
+
+    url = url
+    new RSVP.Promise (resolve, reject)=>
+      # init chrome-specific
+      if chrome?.extension
+        @pageForUrl_chrome url, (page) ->
+          resolve page
+          
+      else
+
+        $log.info "not running as chrome extension"
+        url ||= 'http://out-of-chrome-stub-url'
+
+        resolve
+          url: url
+          title: 'stub url title'
 
   capturePageThumbnail: ->
     if chrome.extension

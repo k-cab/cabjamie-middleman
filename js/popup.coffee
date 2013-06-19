@@ -73,12 +73,11 @@
           window.location.href
 
       runtime.pageForUrl( url )
-      .then (page)->
-        userDataSource.fetchPage page
+      .then (pageSpec)->
+        userDataSource.fetchPage pageSpec
       .then (pages) ->
         try
           fetchedPage = pages[0]
-          fetchedPage.title = page.title
 
           $scope.page = fetchedPage
           $scope.$apply()
@@ -88,7 +87,7 @@
           #   page.pageContent = mhtmlData
             # $log.info { msg: " got the visual representation.", mhtml:mhtmlData }
 
-          runtime.capturePageThumbnail(page)
+          runtime.capturePageThumbnail(fetchedPage)
           .then (dataUrl) ->
             $log.info { msg: " got the visual representation.", dataUrl }
 

@@ -9,11 +9,10 @@
 
     # FIXME resultHandler interface should deal with single page.
     fetchPage: (pageSpec, resultHandler) ->
-      stubDataSvc.fetchPage( pageSpec)
-      .then (result) =>
+      stubDataSvc.fetchPage pageSpec, (result) =>
         page = new Page result
 
-        resolve [ page ]
+        resultHandler [ page ]
 
         # TODO err
 
