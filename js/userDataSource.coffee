@@ -1,14 +1,17 @@
 # TODO resolve API inconsistency
 
 
-@appModule.factory 'userDataSource', ($log, $http, evernote, stubDataSvc) ->
+@appModule.factory 'userDataSource', (
+  $log, $http, 
+  evernoteSvc, stubDataSvc
+  ) ->
   
   impl = stubDataSvc
   impl = evernote
 
   obj = 
     init: ->
-      evernote.init()
+      impl.init()
 
 
     # FIXME resultHandler interface should deal with single page.

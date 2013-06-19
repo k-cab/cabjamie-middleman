@@ -1,4 +1,4 @@
-@appModule.factory 'evernote', ($log, $http) ->
+@appModule.factory 'evernoteSvc', ($log, $http) ->
   
   obj = 
     #= userDataSource interface realisation

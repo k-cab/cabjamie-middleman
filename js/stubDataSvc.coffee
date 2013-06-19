@@ -4,7 +4,9 @@ that = this
   
   obj = 
     #= userDataSource interface realisation
-     
+    
+    init: ->
+      
     fetchPage: (params) ->
       new RSVP.Promise (resolve, reject) ->
 
