@@ -1,5 +1,24 @@
 /** popup */
 
+body {
+  background-color: #FFF; /* Done <- TODO */
+}
+
+h1, h2, h3, h4 {
+  color: #1f3b69; /* TODO */
+  font-family:Bell Gothic std, Tahoma, sans-serif; /* Done <- TODO font */
+}
+ h1 {font-size: 32px}
+ h2 {font-size: 28px}
+ h3 {font-size: 24px}  
+ h4 {font-size: 18px}
+
+a {
+  color: #000; /* Done <- TODO */
+    font:10px arial, Helvetica, sans-serif; /* Done <- TODO font */
+}
+
+
 .msg-container {
   position: fixed;
   bottom: 0;
@@ -17,7 +36,7 @@
   width: 70px;
   height: 70px;
 
-  text-align: center
+  text-align: center;
   
   /*border-style: solid;*/
 }
@@ -28,8 +47,14 @@
 }
 
 .sticker-label {
-  line-height: 1em
+  /*label on top of sticker*/
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  line-height: 1em;
 }
+
 
 .transition-image, .transition-image-enter {
   -webkit-transition:all linear 0.5s;

@@ -21,7 +21,7 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
   ## load the stickers
 
-  userDataSource.fetch 'stickers', null, (stickers) ->
+  userDataSource.fetchStickers null, (stickers) ->
 
     $scope.stickers = stickers
 

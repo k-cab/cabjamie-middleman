@@ -20,7 +20,7 @@
   <ul id="sticker-list" class="sticker-group">
 
     <!-- my stickers -->
-    <li class="sticker on-page-{{page.hasSticker(sticker)}}"
+    <li class="sticker on-page-{{page.hasSticker(sticker)}} absolute-positioning-container"
       data-ng-repeat="sticker in stickers">
 
       <a class="fit-parent absolute-positioning-container"
@@ -32,7 +32,6 @@
       </a>
       <a class="sticker-label"
         data-ng-click="toggleSticker(sticker)">{{sticker.name}}</a>
-
     </li>
 
     <!-- new sticker -->
