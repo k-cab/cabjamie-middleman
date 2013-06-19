@@ -75,11 +75,9 @@
       runtime.pageForUrl( url )
       .then (pageSpec)->
         userDataSource.fetchPage pageSpec
-      .then (pages) ->
+      .then (page) ->
         try
-          fetchedPage = pages[0]
-
-          $scope.page = fetchedPage
+          $scope.page = page
           $scope.$apply()
 
           # chrome.pageCapture.saveAsMHTML( { tabId: page.id } )
@@ -87,7 +85,7 @@
           #   page.pageContent = mhtmlData
             # $log.info { msg: " got the visual representation.", mhtml:mhtmlData }
 
-          runtime.capturePageThumbnail(fetchedPage)
+          runtime.capturePageThumbnail(page)
           .then (dataUrl) ->
             $log.info { msg: " got the visual representation.", dataUrl }
 

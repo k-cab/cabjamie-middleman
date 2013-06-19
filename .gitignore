@@ -23,3 +23,4 @@ login_evernote.js
 *.sublime-*
 parseSvc.js
 stubDataSvc.js
+model.js

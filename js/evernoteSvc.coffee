@@ -3,7 +3,7 @@
   obj = 
     #= userDataSource interface realisation
 
-    fetchStickers_evernote: (page, resultHandler) ->
+    fetchStickers: (page, resultHandler) ->
       if page == null
         obj.listTags (tags) ->
           throw tags if tags.type == "error"
@@ -16,24 +16,27 @@
         throw "don't call me for page stickers."
 
 
-    fetchPage_evernote: (params, resultHandler) ->
-      obj.fetchNote
-        url: params.url
-        callback: (result)->
-          pageData = 
-            url:  params.url
-            stickers: result?.tags?.map (tag) ->
-              name: tag.name
-              guid: tag.guid
-            note: result
+    fetchPage: (params) ->
 
-          # if no previous note for this url
-          pageData.stickers ||= []
+      new RSVP.Promise (resolve, reject) ->
 
-          resultHandler pageData
+        obj.fetchNote
+          url: params.url
+          callback: (result)->
+            pageData = 
+              url:  params.url
+              stickers: result?.tags?.map (tag) ->
+                name: tag.name
+                guid: tag.guid
+              note: result
+
+            # if no previous note for this url
+            pageData.stickers ||= []
+
+            resolve pageData
 
 
-    persist_evernote: (type, modelObj, resultHandler) ->
+    persist: (type, modelObj, resultHandler) ->
       # FIXME update the note after creation on multiple stickerings.
 
       switch type

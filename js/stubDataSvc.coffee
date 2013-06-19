@@ -5,7 +5,7 @@ that = this
   obj = 
     #= userDataSource interface realisation
      
-    fetchPage: (params, resultHandler) ->
+    fetchPage: (params) ->
       new RSVP.Promise (resolve, reject) ->
 
         result = new that.Page()
@@ -16,7 +16,7 @@ that = this
           }
         ]
 
-        resolve [ result ]
+        resolve result
 
 
     fetchStickers: (page, resultHandler) ->
@@ -35,9 +35,9 @@ that = this
       resultHandler results
 
     fetchItems: (params, resultHandler) ->
-      $log.info "stub fetchItems called"
+      $log.warn "stub fetchItems called"
 
     persist: (type, modelObj, resultHandler) ->
-      $log.info "stub persist called"
+      $log.warn "stub persist called"
 
   obj
