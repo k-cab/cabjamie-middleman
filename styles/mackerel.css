@@ -26,6 +26,9 @@ a {
   margin: 10px;
 }
 
+.stickers-container {
+  text-align: center;
+}
 
 .sticker {
   display: inline-block;
@@ -34,13 +37,16 @@ a {
   margin: 10px;
 
   width: 70px;
-  height: 70px;
+  height: 90px;
 
   text-align: center;
   
-  /*border-style: solid;*/
+  border-style: solid;
 }
-.sticker:hover {
+.sticker>a {
+  display: block;
+}
+.sticker>a:hover {
   background-color: rgba(128, 128, 128, 0.45);
   border-radius: 5px 5px 5px 5px;
   transition: all 0.2s;
@@ -54,7 +60,12 @@ a {
 */
   line-height: 1em;
 }
-
+.new-sticker-image {
+  opacity: 0.5;
+}
+.new-sticker-name {
+  width: 80%;
+}
 
 .transition-image, .transition-image-enter {
   -webkit-transition:all linear 0.5s;
