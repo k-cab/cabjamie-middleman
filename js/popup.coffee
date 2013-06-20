@@ -1,4 +1,4 @@
-@appModule = angular.module("appModule", [ ], ($routeProvider, $locationProvider) ->
+@appModule = angular.module("appModule", ['ui'], ($routeProvider, $locationProvider) ->
   $routeProvider
   .when "/stickers",
     templateUrl: "templates/stickers.html"
@@ -16,7 +16,7 @@
 @AppCntl = ($scope, $location, $log, $rootScope, userDataSource, runtime) ->
 
   ## controller actions
-
+  
   $scope.toggleSticker = (sticker) ->
     doit = ->
       $rootScope.msg = "Saving..."
