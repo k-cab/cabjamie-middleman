@@ -10,11 +10,11 @@
   impl = evernoteSvc
 
   obj = 
+    
     init: ->
       impl.init()
 
 
-    # FIXME resultHandler interface should deal with single page.
     fetchPage: (pageSpec) ->
       new RSVP.Promise (resolve, reject) ->
 
