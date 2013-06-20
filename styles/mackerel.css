@@ -1,46 +1,54 @@
 /** popup */
 
 body {
-  background-color: #FFF; /* Done <- TODO */
+  background-color: #FFF;
 }
 
 h1, h2, h3, h4 {
-  color: #1f3b69; /* TODO */
-  font-family:Bell Gothic std, Tahoma, sans-serif; /* Done <- TODO font */
+  display: none;
+
+  color: #1f3b69;
+  font-family:Bell Gothic std, Tahoma, sans-serif;
 }
- h1 {font-size: 32px}
- h2 {font-size: 28px}
- h3 {font-size: 24px}  
- h4 {font-size: 18px}
 
 a {
-  color: #000; /* Done <- TODO */
-    font:10px arial, Helvetica, sans-serif; /* Done <- TODO font */
+  color: #000;
+  font:10px arial, Helvetica, sans-serif;
 }
 
 
 .msg-container {
   position: fixed;
   bottom: 0;
-  height: 70px;
-  margin: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
+.stickers-container {
+  text-align: center;
+}
 
+.sticker-group {
+  font-size: 0; /* make inline-block items space-agnostic */
+}
 .sticker {
+  /*border-style: solid;*/
+
   display: inline-block;
+  
   vertical-align: middle;
 
   margin: 10px;
 
   width: 70px;
-  height: 70px;
+  height: 90px;
 
   text-align: center;
-  
-  /*border-style: solid;*/
 }
-.sticker:hover {
+.sticker-image {
+  display: block;
+}
+.sticker>a:hover {
   background-color: rgba(128, 128, 128, 0.45);
   border-radius: 5px 5px 5px 5px;
   transition: all 0.2s;
@@ -54,7 +62,12 @@ a {
 */
   line-height: 1em;
 }
-
+.sticker-image-new {
+  opacity: 0.5;
+}
+.new-sticker-name {
+  width: 80%;
+}
 
 .transition-image, .transition-image-enter {
   -webkit-transition:all linear 0.5s;

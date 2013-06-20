@@ -17,6 +17,7 @@ class Page
   url: 'http://stub-url'
 
   addSticker: (sticker) ->
+    console.log "add sticker #{sticker} to #{this.url}"
 
     this.stickers = [] unless this.stickers
     this.stickers.push sticker unless _.include this.stickers, sticker
@@ -25,7 +26,7 @@ class Page
     console.log { this:this, stickers: this.stickers }
 
   removeSticker: (sticker) ->
-    console.log "TODO remove sticker from #{this.url}"
+    console.log "remove sticker #{sticker} from #{this.url}"
     this.stickers = this.stickers.filter( (e) -> e.name != sticker.name )
   
   hasSticker: (sticker) ->

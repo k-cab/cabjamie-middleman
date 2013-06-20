@@ -7,7 +7,7 @@
   ) ->
   
   impl = stubDataSvc
-  impl = evernote
+  impl = evernoteSvc
 
   obj = 
     init: ->
