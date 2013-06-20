@@ -37,6 +37,8 @@ desc "** snapshot a build for later reference"
 task :snapshot => [ :increment, :build ]
 
 
+# REFACTOR
+# 
 # @return a DurableValue
 class DurableValue
   attr_reader :val
@@ -93,6 +95,16 @@ class File
 
 end
 
+# END REFACTOR
+
+
+desc "** build for chrome"
+task build:chrome do
+  # for each directive, process files 
+  # fetch remote scripts
+  # maybe concatenate and minify
+  # zip up
+end
 
 desc "** increment build number"
 task :increment do

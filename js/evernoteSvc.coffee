@@ -1,3 +1,5 @@
+UserPrefs = @UserPrefs
+
 @appModule.factory 'evernoteSvc', ($log, $http) ->
   
   obj = 
@@ -9,7 +11,7 @@
           throw tags if tags.type == "error"
           
           $log.info tags
-          stickers = tags.filter (tag) -> tag.name.match /^##/
+          stickers = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
           resultHandler stickers
 
       else
@@ -64,7 +66,7 @@
           #   tagNames: modelObj.stickers.map (sticker) -> sticker.name          
 
         when 'sticker'
-          obj.createTag( '##' + modelObj.name )
+          obj.createTag( UserPrefs.sticker_prefix + modelObj.name )
           .then (tag) ->
             $log.info { msg: "created new tag", tag }
           
