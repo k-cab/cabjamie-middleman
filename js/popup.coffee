@@ -16,7 +16,9 @@
 @AppCntl = ($scope, $location, $log, $rootScope, userDataSource, runtime) ->
 
   ## controller actions
-  
+  $scope.onDragEnded = ->
+    # TODO persist the sticker order list.
+
   $scope.toggleSticker = (sticker) ->
     doit = ->
       $rootScope.msg = "Saving..."
@@ -105,6 +107,8 @@
     promise = new RSVP.Promise (resolve, reject) ->
       userDataSource.fetchStickers null, (stickers) ->
         try
+
+          # TODO apply the sticker order list.
 
           $scope.stickers = stickers
 
