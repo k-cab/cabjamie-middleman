@@ -461,4 +461,5 @@ app.get('/sync-chunk', function(req, res){
   });
 });
 
-app.listen(config.serverPort);
+var port = process.env.PORT || config.serverPort;
+app.listen(port);
