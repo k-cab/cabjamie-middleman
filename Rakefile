@@ -99,7 +99,7 @@ end
 
 
 desc "** build for chrome"
-task build:chrome do
+task 'build:chrome' do
   # for each directive, process files 
   # fetch remote scripts
   # maybe concatenate and minify
