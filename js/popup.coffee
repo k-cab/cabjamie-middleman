@@ -12,8 +12,8 @@
 )
 
 @UserPrefs = 
-  sticker_prefix_pattern: /^\./
-  sticker_prefix: '.'
+  sticker_prefix_pattern: /^##/
+  sticker_prefix: '##'
 
   update: (key, val) ->
     if val == undefined
