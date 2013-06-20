@@ -1,3 +1,5 @@
+# FIXME modularise mixed concerns (popup, stickers).
+
 @appModule = angular.module("appModule", ['ui'], ($routeProvider, $locationProvider) ->
   $routeProvider
   .when "/stickers",
@@ -13,11 +15,22 @@
   sticker_prefix_pattern: /^\./
   sticker_prefix: '.'
 
+  update: (key, val) ->
+    if val == undefined
+      throw "value for key #{key} is undefined"
+
+    self[key] = val
+    localStorage.setItem key, JSON.stringify val
+  
+  get: (k) ->
+    val = localStorage.getItem k
+    if val then JSON.parse(val) else null
+  
+
+that = this
 @AppCntl = ($scope, $location, $log, $rootScope, userDataSource, runtime) ->
 
   ## controller actions
-  $scope.onDragEnded = ->
-    # TODO persist the sticker order list.
 
   $scope.toggleSticker = (sticker) ->
     doit = ->
@@ -70,6 +83,32 @@
     # FIXME get delta of stickers
 
 
+  $scope.sortableOptions =
+    stop: (e, ui)->
+      $log.info "drag-drop finished."
+      $scope.saveStickerOrder()
+
+  $scope.saveStickerOrder = ->
+    # persist the sticker order list.
+    that.UserPrefs.update 'stickerOrder',
+      $scope.stickers.map (sticker)-> sticker.name
+
+  $scope.orderedStickers = (stickers)->
+    # apply the sticker order list.
+    stickerOrder = that.UserPrefs.get 'stickerOrder'
+    stickerOrder = [] if ! stickerOrder
+
+    orderedStickers = stickerOrder.map (name) ->
+      stickers.filter((sticker) -> sticker.name == name)[0]
+    orderedStickers = _.without orderedStickers, undefined
+
+    # add stickers not found in order list at the end.
+    stickers.map (sticker) ->
+      orderedStickers.push sticker unless _.contains orderedStickers, sticker
+
+    orderedStickers
+
+
   $scope.fetchPage = ->
 
     promise = new RSVP.Promise (resolve, reject) ->
@@ -108,14 +147,14 @@
       userDataSource.fetchStickers null, (stickers) ->
         try
 
-          # TODO apply the sticker order list.
+          orderedStickers = $scope.orderedStickers stickers
 
-          $scope.stickers = stickers
+          $scope.stickers = orderedStickers
 
           # this seems redundant now, but sweep for regressions
           # $scope.$apply()
 
-          resolve stickers
+          resolve $scope.stickers
         catch e
           reject e
 
@@ -135,6 +174,7 @@
       throw error
 
     return null
+
 
   $scope.login = ->
     # save the location so the oauth module can redirect back.
