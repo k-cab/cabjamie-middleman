@@ -34,30 +34,15 @@
       </a>
 
       <a class="sticker-label"
-        data-ng-show="! sticker.editing" 
         data-ng-click="toggleSticker(sticker)">
         {{sticker.name}}
       </a>
 
       <a class="text-label sticker-edit-control"
-        data-ng-show="! sticker.editing" 
-        data-ng-click="sticker.editing = true">
+        data-ng-click="editSticker(sticker)">
         ...
       </a>
-      
-      <div class="sticker-label edit-sticker-form"
-        data-ng-show="sticker.editing" 
-        >
-        <input class="text-label sticker-name-field" 
-          data-ng-model="sticker.name"/>
-        <button data-ng-click="finishEditingSticker()">OK</button>
-        <button data-ng-click="sticker.editing = false">Cancel</button>
-      </div>
 
-
-<!--       <a class="sticker-edit-colour-control"
-        data-ng-show="sticker.editing">Change colour...</a>
- -->
     </li>
 
     <!-- new sticker -->

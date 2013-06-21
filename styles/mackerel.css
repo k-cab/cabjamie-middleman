@@ -124,6 +124,9 @@ h1, h2, h3, h4 {
 .on-page-true {
 }
 
+.colour-selected-true {
+  border-style: solid;
+}
 
 
 /* TODO 

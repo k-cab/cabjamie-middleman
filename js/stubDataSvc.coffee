@@ -34,6 +34,9 @@ that = this
         },
       ]
 
+      results = results.map (e) ->
+        new that.Sticker e
+
       resultHandler results
 
     fetchItems: (params, resultHandler) ->

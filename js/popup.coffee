@@ -65,6 +65,7 @@ that = this
 
   #### controller actions
 
+
   ## stickering
 
   $scope.toggleSticker = (sticker) ->
@@ -237,6 +238,33 @@ that = this
   $scope.isHighlighted = (sticker) ->
     $scope.highlightedSticker == sticker
 
+  $scope.colours = [
+    {
+      name: 'yellow'
+    }
+    {
+      name: 'red'
+    }
+    {
+      name: 'black'
+    }
+  ]
+
+
+  ## sticker editing
+
+  $scope.editSticker = (sticker) ->
+    $scope.editedSticker = that.clone sticker
+
+  $scope.finishEditingSticker =  ->
+    #  replace the sticker in the collection with editedSticker.
+  
+    $scope.editedSticker = null
+
+  $scope.cancelEditingSticker = ->
+    $scope.editedSticker = null
+
+
   #### doit
 
   try 
@@ -259,4 +287,28 @@ that = this
   # runtime.sendMsg 'testType', null, (response) ->
   #   console.log "got response: #{response}"
   
-  
+
+## REFACTOR
+ 
+# http://coffeescriptcookbook.com/chapters/classes_and_objects/cloning
+@clone = (obj) ->
+  if not obj? or typeof obj isnt 'object'
+    return obj
+
+  if obj instanceof Date
+    return new Date(obj.getTime()) 
+
+  if obj instanceof RegExp
+    flags = ''
+    flags += 'g' if obj.global?
+    flags += 'i' if obj.ignoreCase?
+    flags += 'm' if obj.multiline?
+    flags += 'y' if obj.sticky?
+    return new RegExp(obj.source, flags) 
+
+  newInstance = new obj.constructor()
+
+  for key of obj
+    newInstance[key] = clone obj[key]
+
+  return newInstance
