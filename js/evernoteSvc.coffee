@@ -96,7 +96,7 @@ UserPrefs = @UserPrefs
       obj.authToken = localStorage.getItem 'evernote_authToken'
       obj.noteStoreURL = localStorage.getItem 'evernote_noteStoreURL'
 
-      throw "couldn't intialise from localStorage" unless obj.authToken and obj.noteStoreURL
+      throw "couldn't intialise from localStorage" unless obj.authToken and obj.noteStoreURL and obj.authToken != typeof undefined
 
       noteStoreTransport = new Thrift.BinaryHttpTransport(obj.noteStoreURL)
       noteStoreProtocol = new Thrift.BinaryProtocol(noteStoreTransport)
