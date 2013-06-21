@@ -38,26 +38,31 @@
         data-ng-click="toggleSticker(sticker)">
         {{sticker.name}}
       </a>
-      
-      <a class="sticker-edit-control"
-        data-ng-show="! sticker.editing && isHighlighted(sticker)" 
-        data-ng-click="sticker.editing = true">
-        Edit...
-      </a>
 
-      <div class="edit-sticker-form"
-        data-ng-show="sticker.editing">
-        <input class="sticker-name-field" 
+      <a class="text-label sticker-edit-control"
+        data-ng-show="! sticker.editing" 
+        data-ng-click="sticker.editing = true">
+        ...
+      </a>
+      
+      <div class="sticker-label edit-sticker-form"
+        data-ng-show="sticker.editing" 
+        >
+        <input class="text-label sticker-name-field" 
           data-ng-model="sticker.name"/>
-        <a class="sticker-edit-colourwell">colour</a>
         <button data-ng-click="finishEditingSticker()">OK</button>
         <button data-ng-click="sticker.editing = false">Cancel</button>
       </div>
+
+
+<!--       <a class="sticker-edit-colour-control"
+        data-ng-show="sticker.editing">Change colour...</a>
+ -->
     </li>
 
     <!-- new sticker -->
     <li class="sticker">
-      <a class="sticker-image-new absolute-positioning-container" style="display:table;"
+      <a class="sticker-image sticker-image-new absolute-positioning-container"
         data-ng-click="newSticker.creatingNewSticker = true">
 
         <img src="assets/sticker-off.png" alt="New sticker...">
@@ -65,7 +70,7 @@
       <div class="new-sticker-form"
         data-ng-show="newSticker.creatingNewSticker">
         
-        <input placeholder="new sticker" class="sticker-name-field"
+        <input class="text-label sticker-name-field" placeholder="new sticker"
           data-ng-model="newSticker.name">
         <button data-ng-click="createNewSticker()">OK</button>
         <button data-ng-click="newSticker.creatingNewSticker = false">Cancel</button>          

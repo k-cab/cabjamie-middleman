@@ -11,9 +11,10 @@ h1, h2, h3, h4 {
   font-family:Bell Gothic std, Tahoma, sans-serif;
 }
 
-a {
+.sticker-label, .text-label {
   color: #000;
   font:10px arial, Helvetica, sans-serif;
+  line-height: 1em;
 }
 
 
@@ -38,23 +39,30 @@ a {
   
   vertical-align: middle;
 
-  margin: 10px;
+  width: 90px;
+  height: 110px;
 
-  width: 70px;
-  height: 90px;
-
-  text-align: center;
+  /*text-align: center;*/
+  font-size: 0px;  /* for inline-blocks */
 }
-.sticker-image {
-  display: block;
+/* debug */
+/*.sticker>* { 
+  border-style: solid;
+  border-width: 1px;
 }
-.sticker>a {
-  display: block;
-}
+*/
+/* highlighting on hover*/
 .sticker>a:hover {
   background-color: rgba(128, 128, 128, 0.45);
   border-radius: 5px 5px 5px 5px;
   transition: all 0.2s;
+}
+
+.sticker-image {
+  display: block;
+
+  width: 70px;
+  margin: 10px;
 }
 
 .sticker-label {
@@ -63,13 +71,27 @@ a {
   top: 0;
   left: 0;
 */
-  line-height: 1em;
+  display: inline-block;
+  width: 70px;
+  margin-left: 10px;
+
+  text-align: center;
 }
-.sticker-image-new {
-  opacity: 0.5;
+
+.sticker-edit-control {
+  display: none;
 }
+.sticker:hover .sticker-edit-control {
+  display: inline-block;
+  width: 10px;
+}
+
 .sticker-name-field {
   width: 80%;
+}
+.sticker-image-new {
+  display: table;
+  opacity: 0.5;
 }
 
 .transition-image, .transition-image-enter {
