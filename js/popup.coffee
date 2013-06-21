@@ -63,7 +63,9 @@ that = this
     $scope.update()
 
 
-  ## controller actions
+  #### controller actions
+
+  ## stickering
 
   $scope.toggleSticker = (sticker) ->
     doit = ->
@@ -97,6 +99,8 @@ that = this
     # TODO decouple the writes from the user interaction, coalecse and schedule.
 
   
+  ## sticker creation
+
   $scope.createNewSticker = ->
     $scope.newSticker.name = UserPrefs.sticker_prefix + $scope.newSticker.name unless $scope.newSticker.name.match UserPrefs.sticker_prefix_pattern
 
@@ -115,6 +119,8 @@ that = this
     # $scope.fetchStickers()
     # FIXME get delta of stickers
 
+
+  ## sticker ordering
 
   $scope.sortableOptions =
     stop: (e, ui)->
@@ -141,6 +147,8 @@ that = this
 
     orderedStickers
 
+
+  ## data
 
   $scope.fetchPage = ->
 
@@ -209,6 +217,8 @@ that = this
     return null
 
 
+  ## workflow
+
   $scope.login = ->
     # save the location so the oauth module can redirect back.
     localStorage.setItem "oauth_success_redirect_path", location.href
@@ -216,11 +226,18 @@ that = this
     $location.path "/login"
 
 
+  ## view
+
   $scope.showPageDetails = ->
     ! runtime.hasRealPageContext()
 
+  $scope.highlight = (sticker) ->
+    $scope.highlightedSticker = sticker
+  
+  $scope.isHighlighted = (sticker) ->
+    $scope.highlightedSticker == sticker
 
-  ## doit
+  #### doit
 
   try 
     $rootScope.msg = "Test msg."

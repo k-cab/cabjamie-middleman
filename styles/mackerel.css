@@ -48,6 +48,9 @@ a {
 .sticker-image {
   display: block;
 }
+.sticker>a {
+  display: block;
+}
 .sticker>a:hover {
   background-color: rgba(128, 128, 128, 0.45);
   border-radius: 5px 5px 5px 5px;
@@ -65,7 +68,7 @@ a {
 .sticker-image-new {
   opacity: 0.5;
 }
-.new-sticker-name {
+.sticker-name-field {
   width: 80%;
 }
 

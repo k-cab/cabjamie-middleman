@@ -20,7 +20,10 @@
 
     <!-- my stickers -->
     <li class="sticker on-page-{{page.hasSticker(sticker)}}"
-      data-ng-repeat="sticker in stickers">
+      data-ng-repeat="sticker in stickers"
+      data-ng-mouseover="highlight(sticker)"
+      data-ng-mouseleave="highlight(null)"
+      >
 
       <a class="sticker-image"
         data-ng-click="toggleSticker(sticker)">
@@ -29,8 +32,27 @@
         <img src="assets/sticker-off.png" alt="The page is not stickered with {{sticker.name}}."
           data-ng-if="! page.hasSticker(sticker)" data-ng-animate="'transition-image'">
       </a>
+
       <a class="sticker-label"
-        data-ng-click="toggleSticker(sticker)">{{sticker.name}}</a>
+        data-ng-show="! sticker.editing" 
+        data-ng-click="toggleSticker(sticker)">
+        {{sticker.name}}
+      </a>
+      
+      <a class="sticker-edit-control"
+        data-ng-show="! sticker.editing && isHighlighted(sticker)" 
+        data-ng-click="sticker.editing = true">
+        Edit...
+      </a>
+
+      <div class="edit-sticker-form"
+        data-ng-show="sticker.editing">
+        <input class="sticker-name-field" 
+          data-ng-model="sticker.name"/>
+        <a class="sticker-edit-colourwell">colour</a>
+        <button data-ng-click="finishEditingSticker()">OK</button>
+        <button data-ng-click="sticker.editing = false">Cancel</button>
+      </div>
     </li>
 
     <!-- new sticker -->
@@ -43,7 +65,7 @@
       <div class="new-sticker-form"
         data-ng-show="newSticker.creatingNewSticker">
         
-        <input placeholder="new sticker" class="new-sticker-name"
+        <input placeholder="new sticker" class="sticker-name-field"
           data-ng-model="newSticker.name">
         <button data-ng-click="createNewSticker()">OK</button>
         <button data-ng-click="newSticker.creatingNewSticker = false">Cancel</button>          
