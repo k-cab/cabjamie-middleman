@@ -27,9 +27,9 @@
 
       <a class="sticker-image"
         data-ng-click="toggleSticker(sticker)">
-        <img src="{{sticker.imgOn}}" alt="Page stickered with {{sticker.name}}."
+        <img data-ng-src="{{sticker.imgOn}}" alt="Page stickered with {{sticker.name}}."
           data-ng-if="page.hasSticker(sticker)" data-ng-animate="'transition-image'">
-        <img src="{{sticker.imgOff}}" alt="Page not stickered with {{sticker.name}}."
+        <img data-ng-src="{{sticker.imgOff}}" alt="Page not stickered with {{sticker.name}}."
           data-ng-if="! page.hasSticker(sticker)" data-ng-animate="'transition-image'">
       </a>
 
