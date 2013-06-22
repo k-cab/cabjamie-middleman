@@ -72,13 +72,19 @@
     <p>{{$root.msg}}</p>
   </div>
 
-  <div class="show-error"
+  <div class="show-error overlay"
     data-ng-show="$root.error">
-    <p>Oops, I'm sorry.</p>
-    <p>We just got an error: '{{$root.error}}'</p>
-    <p>Trace: {{$root.error.stack}}</p>
-    <p>Sorry for your inconvinience. We're fixing things all the time - please check <a href="{{resolveError(error)}}">here.</a></p> 
-    <!-- TODO resolveError(error) -->
+    <div class="overlay-content dialog-content">
+      <p>Oops, I'm sorry.</p>
+
+      <p>We just got an error: '{{$root.error}}'</p>
+      <p>Trace: {{$root.error.stack}}</p>
+
+      <p>Sorry for your inconvinience. We're fixing things all the time - please check <a href="{{resolveError(error)}}">here.</a></p> 
+      <!-- TODO resolveError(error) -->
+
+      <button data-ng-click="$root.error = null">Dismiss</button>
+    </div>
   </div>
 
   <!-- Included JS Files (Uncompressed) -->
