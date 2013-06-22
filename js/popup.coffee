@@ -25,7 +25,8 @@
       catch e
         return val
     else
-      throw "'#{k}' doesn't have a default value or localstorage item."
+      console.log "returning null for '#{k}'"
+      null
 
   
   sticker_prefix_pattern: /^##/
