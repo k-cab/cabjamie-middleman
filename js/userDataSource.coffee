@@ -1,35 +1,36 @@
 # TODO resolve API inconsistency
 
-
+# FIXME this class looks silly. move model creation to implementations?
+that = this
 @appModule.factory 'userDataSource', (
-  $log, $http, 
-  evernoteSvc, stubDataSvc
+  $log, $http
   ) ->
+
+  impl: null
   
-  impl = stubDataSvc
-  impl = evernoteSvc
+  init: ->
+    @impl.init()
 
-  obj = 
+
+  fetchPage: (pageSpec) ->
+    new RSVP.Promise (resolve, reject) =>
+
+      @impl.fetchPage( pageSpec)
+      .then (result) =>
+        page = new Page result
+        resolve page
+
+  fetchStickers: (page, resultHandler) ->
+    @impl.fetchStickers page, (stickerData) ->
+      stickers = stickerData.map (e) ->
+        new Sticker e
     
-    init: ->
-      impl.init()
+      resultHandler stickers
+
+  fetchItems: (params, resultHandler) ->
+    @impl.fetchItems params, resultHandler
 
 
-    fetchPage: (pageSpec) ->
-      new RSVP.Promise (resolve, reject) ->
-
-        impl.fetchPage( pageSpec)
-        .then (result) =>
-          page = new Page result
-          resolve page
-
-    fetchStickers: (page, resultHandler) ->
-      impl.fetchStickers page, resultHandler
-
-    fetchItems: (params, resultHandler) ->
-      impl.fetchItems params, resultHandler
-
-
-    persist: (type, modelObj, resultHandler) ->
-      impl.persist type, modelObj, resultHandler
+  persist: (type, modelObj, resultHandler) ->
+    @impl.persist type, modelObj, resultHandler
 

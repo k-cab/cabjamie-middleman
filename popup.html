@@ -64,14 +64,22 @@
     <a href="centre.html" target="_blank" class="disabled">Centre</a>
   </div>
 
+  <div data-ng-cloak data-ng-view>
+  </div>
+
   <div class="row msg-container" id="msg-container">
     <h3>Messages</h3>
     <p>{{$root.msg}}</p>
   </div>
 
-  <div data-ng-cloak data-ng-view>
+  <div class="show-error"
+    data-ng-show="$root.error">
+    <p>Oops, I'm sorry.</p>
+    <p>We just got an error: '{{$root.error}}'</p>
+    <p>Trace: {{$root.error.stack}}</p>
+    <p>Sorry for your inconvinience. We're fixing things all the time - please check <a href="{{resolveError(error)}}">here.</a></p> 
+    <!-- TODO resolveError(error) -->
   </div>
-
 
   <!-- Included JS Files (Uncompressed) -->
   <!--
