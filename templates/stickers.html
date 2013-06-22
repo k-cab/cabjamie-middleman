@@ -8,8 +8,6 @@
 
   <input type="text" placeholder=""
     data-ng-model="page.url" data-ng-change="fetchPage()">
-  <!-- TODO delay handler invocation. -->
-
 </div>
 
 
@@ -54,6 +52,23 @@
       </div>
     </li>
   </ul>
+
+  <div class="edit-sticker"
+    data-ng-show="editedSticker">
+
+    <img data-ng-src="{{editedSticker.imgOn}}" alt="{{editedSticker.name}}" class="edit-sticker-img">
+    <input data-ng-model="editedSticker.name"/>
+    <ul class="edit-sticker-colours">
+      <li class="colour colour-selected-{{editedSticker.isColour(colour)}}"
+        data-ng-repeat="colour in colours"
+        data-ng-click="editedSticker.setColour(colour)">
+          {{colour.name}}
+      </li>
+    </ul>
+
+    <button data-ng-click="finishEditingSticker()">OK</button>
+    <button data-ng-click="cancelEditingSticker()">Cancel</button>
+  </div>
 
 </div>
 

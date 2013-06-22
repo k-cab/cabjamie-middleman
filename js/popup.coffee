@@ -1,5 +1,38 @@
 # FIXME modularise mixed concerns (popup, stickers).
 
+@UserPrefs = 
+  update: (key, val) ->
+    if val == undefined
+      throw "value for key #{key} is undefined"
+
+    @[key] = val
+    localStorage.setItem key, JSON.stringify val
+  
+  get: (k) ->
+    val = localStorage.getItem k
+    if val and val != 'undefined'
+      # update my properties.
+      @[k] = val
+    else
+      # shouldn't set - it would be circular.
+
+      # default to current properties.
+      val = @[k]
+
+    if val
+      try 
+        parsed = JSON.parse(val)
+      catch e
+        return val
+    else
+      throw "'#{k}' doesn't have a default value or localstorage item."
+
+  
+  sticker_prefix_pattern: /^##/
+  sticker_prefix: '##'
+
+
+ 
 @appModule = angular.module("appModule", ['ui'], ($routeProvider, $locationProvider) ->
   $routeProvider
   .when "/stickers",
@@ -11,24 +44,23 @@
     redirectTo: "/stickers"
 )
 
-@UserPrefs = 
-  sticker_prefix_pattern: /^##/
-  sticker_prefix: '##'
-
-  update: (key, val) ->
-    if val == undefined
-      throw "value for key #{key} is undefined"
-
-    self[key] = val
-    localStorage.setItem key, JSON.stringify val
-  
-  get: (k) ->
-    val = localStorage.getItem k
-    if val then JSON.parse(val) else null
-  
 
 that = this
-@AppCntl = ($scope, $location, $log, $rootScope, userDataSource, runtime) ->
+@AppCntl = ($scope, $location, $log, $rootScope, 
+  userDataSource, runtime,
+  stubDataSvc, evernoteSvc
+  ) ->
+
+  that.appModule.env = (newEnv) ->
+    if newEnv == 'dev'
+      userDataSource.impl = stubDataSvc
+    else
+      userDataSource.impl = evernoteSvc
+
+    # all state refreshes.
+    userDataSource.init()
+    $scope.update()
+
 
   ## controller actions
 
@@ -178,6 +210,8 @@ that = this
 
   $scope.login = ->
     # save the location so the oauth module can redirect back.
+    localStorage.setItem "oauth_success_redirect_path", location.href
+
     $location.path "/login"
 
 
@@ -190,14 +224,15 @@ that = this
   try 
     $rootScope.msg = "Test msg."
 
-    userDataSource.init()
-    $scope.update()
+    that.appModule.env 'production'
   catch e
-    $rootScope.msg = e
+    $log.error e
+
+    $rootScope.msg = "error: #{e}"
+    $rootScope.error = e
 
     # do the login thing.
-    localStorage.setItem "oauth_success_redirect_path", location.href
-    $scope.login()
+    # $scope.login()
 
     
   # runtime.onMsg 'testType', (args...) ->
