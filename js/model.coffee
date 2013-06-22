@@ -8,7 +8,9 @@ class Sticker
 
   name: 'unnamed sticker'
   colour: 'yellow'
-
+  imgOff: 'assets/sticker-off.png'
+  imgOn: 'assets/sticker-on.png'
+  
   isColour: (colour) ->
     return @colour == colour.name if colour.name
     @colour == colour.value

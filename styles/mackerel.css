@@ -94,6 +94,30 @@ h1, h2, h3, h4 {
   opacity: 0.5;
 }
 
+.on-page-false {
+}
+
+.on-page-true {
+}
+
+/* show the edit panel in middle of the viewport. */
+.edit-sticker {
+  position: fixed;
+  width: 90%;
+  max-width: 90%;
+  height: 90%;
+  max-height: 90%;
+  top: 5%;
+  left: 5%;
+}
+
+.colour-selected-true {
+  border-style: solid;
+}
+
+
+
+
 .transition-image, .transition-image-enter {
   -webkit-transition:all linear 0.5s;
   -moz-transition:all linear 0.5s;
@@ -117,17 +141,6 @@ h1, h2, h3, h4 {
 .transition-image-leave.transition-image-leave-active {
   opacity: 0;
 }
-
-.on-page-false {
-}
-
-.on-page-true {
-}
-
-.colour-selected-true {
-  border-style: solid;
-}
-
 
 /* TODO 
 
