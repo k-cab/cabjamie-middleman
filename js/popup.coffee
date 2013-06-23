@@ -32,6 +32,7 @@
   sticker_prefix_pattern: /^##/
   sticker_prefix: '##'
 
+  env: 'production'
 
  
 @appModule = angular.module("appModule", ['ui'], ($routeProvider, $locationProvider) ->
@@ -48,20 +49,22 @@
 
 that = this
 @AppCntl = ($scope, $location, $log, $rootScope, 
-  userDataSource, runtime,
+  runtime,
   stubDataSvc, evernoteSvc
   ) ->
 
-  # REFACTOR
 
+  that.appModule.userDataSource = evernoteSvc
+  
+  # REFACTOR
   that.appModule.env = (newEnv) ->
     if newEnv == 'dev'
-      userDataSource.impl = stubDataSvc
+      that.appModule.userDataSource = stubDataSvc
     else
-      userDataSource.impl = evernoteSvc
+      that.appModule.userDataSource = evernoteSvc
 
     # all state refreshes.
-    userDataSource.init()
+    that.appModule.userDataSource.init()
     $scope.update()
 
   $rootScope.handleError = (e) ->
@@ -96,11 +99,11 @@ that = this
 
   $scope.addSticker = (sticker) -> 
     $scope.page.addSticker sticker
-    userDataSource.persist 'page', $scope.page
+    that.appModule.userDataSource.persist 'page', $scope.page
 
   $scope.removeSticker = (sticker) ->
     $scope.page.removeSticker sticker
-    userDataSource.persist 'page', $scope.page
+    that.appModule.userDataSource.persist 'page', $scope.page
 
     # TODO decouple the writes from the user interaction, coalecse and schedule.
 
@@ -114,7 +117,7 @@ that = this
     $log.info {msg: "new sticker", sticker:$scope.newSticker}
 
     # save the new sticker. FIXME
-    # userDataSource.persist 'sticker', $scope.newSticker, (newSticker) ->
+    # that.appModule.userDataSource.persist 'sticker', $scope.newSticker, (newSticker) ->
     #   $scope.stickers.push newSticker
     #   $scope.$apply()
     
@@ -167,7 +170,7 @@ that = this
 
       runtime.pageForUrl( url )
       .then (pageSpec)->
-        userDataSource.fetchPage pageSpec
+        that.appModule.userDataSource.fetchPage pageSpec
       .then (page) ->
         try
           $scope.page = page
@@ -192,7 +195,7 @@ that = this
   $scope.fetchStickers = (page)->    
 
     promise = new RSVP.Promise (resolve, reject) ->
-      userDataSource.fetchStickers null, (stickers) ->
+      that.appModule.userDataSource.fetchStickers null, (stickers) ->
         try
 
           orderedStickers = $scope.orderedStickers stickers
@@ -263,15 +266,19 @@ that = this
     oldSticker = $scope.stickers.filter( (sticker) -> sticker.id == $scope.editedSticker.id )[0]
 
     # save the changed data.
-    userDataSource.updateSticker($scope.editedSticker)
+    that.appModule.userDataSource.updateSticker($scope.editedSticker)
     .then ->
       #  replace the sticker in the collection with editedSticker.
       i = $scope.stickers.indexOf oldSticker
       $scope.stickers[i] = $scope.editedSticker
 
       $scope.editedSticker = null
+
+      $scope.$apply()
+      
     .then null, (error) ->
       $rootScope.handleError error
+
 
   $scope.cancelEditingSticker = ->
     $scope.editedSticker = null
@@ -282,7 +289,7 @@ that = this
   try 
     $rootScope.msg = "Test msg."
 
-    that.appModule.env 'production'
+    that.appModule.env UserPrefs.get('env')
   catch e
     $rootScope.handleError e
 

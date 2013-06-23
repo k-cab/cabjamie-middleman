@@ -1,5 +1,3 @@
-UserPrefs = @UserPrefs
-
 @appModule.factory 'evernoteSvc', ($log, $http) ->
   
   obj = 
@@ -8,16 +6,18 @@ UserPrefs = @UserPrefs
 
     fetchStickers: (page, resultHandler) ->
       if page == null
-        obj.listTags (tags) ->
+        obj.listTags()
+        .then (tags)->
           throw tags if tags.type == "error"
           
           $log.info tags
-          stickers = tags.filter (tag) -> 
-            if tag.name.match UserPrefs.sticker_prefix_pattern
-              tag.id = tag.guid
-              true
-            else
-              false
+          matchingTags = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
+
+          stickers = matchingTags.map (tag) ->
+            sticker = new Sticker
+              implObj: tag
+              id: tag.guid
+              name: tag.name
 
           resultHandler stickers
 
@@ -43,11 +43,12 @@ UserPrefs = @UserPrefs
             # if no previous note for this url
             pageData.stickers ||= []
 
-            resolve pageData
+            page = new Page pageData
+            resolve page
 
     updateSticker: (newSticker) ->
       obj.persist 'sticker', newSticker
-      
+
 
     persist: (type, modelObj) ->
       # FIXME update the note after creation on multiple stickerings.
@@ -78,7 +79,8 @@ UserPrefs = @UserPrefs
         when 'sticker'
           if modelObj.id
             # update
-            obj.updateTag modelObj
+            modelObj.implObj.name = modelObj.name
+            obj.updateTag modelObj.implObj
           else
             obj.createTag( UserPrefs.sticker_prefix + modelObj.name )
           
@@ -114,8 +116,10 @@ UserPrefs = @UserPrefs
 
     ##
 
-    listTags: (callback) ->
-      obj.noteStore.listTags obj.authToken, callback
+    listTags: ->
+      new RSVP.Promise (resolve, reject) ->
+        obj.noteStore.listTags obj.authToken, (results)->
+          resolve results
     
     createTag: (name) ->
       new RSVP.Promise (resolve, reject) ->
