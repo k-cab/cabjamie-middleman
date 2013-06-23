@@ -113,6 +113,7 @@ that = this
 
     $log.info {msg: "new sticker", sticker:$scope.newSticker}
 
+    # save the new sticker. FIXME
     # userDataSource.persist 'sticker', $scope.newSticker, (newSticker) ->
     #   $scope.stickers.push newSticker
     #   $scope.$apply()
@@ -259,9 +260,18 @@ that = this
     $scope.editedSticker = that.clone sticker
 
   $scope.finishEditingSticker =  ->
-    #  replace the sticker in the collection with editedSticker.
-  
-    $scope.editedSticker = null
+    oldSticker = $scope.stickers.filter( (sticker) -> sticker.id == $scope.editedSticker.id )[0]
+
+    # save the changed data.
+    userDataSource.updateSticker($scope.editedSticker)
+    .then ->
+      #  replace the sticker in the collection with editedSticker.
+      i = $scope.stickers.indexOf oldSticker
+      $scope.stickers[i] = $scope.editedSticker
+
+      $scope.editedSticker = null
+    .then null, (error) ->
+      $rootScope.handleError error
 
   $scope.cancelEditingSticker = ->
     $scope.editedSticker = null

@@ -24,13 +24,16 @@ that = this
     fetchStickers: (page, resultHandler) ->
       results = [
         {
-            name: "stub-sticker-1",
+          id: 1
+          name: "stub-sticker-1",
         },
         {
-            name: "stub-sticker-2",
+          id: 2
+          name: "stub-sticker-2",
         },
         {
-            name: "stub-sticker-3"
+          id: 3
+          name: "stub-sticker-3"
         },
       ]
 
@@ -48,4 +51,5 @@ that = this
       new RSVP.Promise (resolve, reject) ->
         $log.error "stub persist called"
         resolve null
-  obj
+
+  return obj

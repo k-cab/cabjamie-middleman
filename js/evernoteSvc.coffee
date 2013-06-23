@@ -3,6 +3,7 @@ UserPrefs = @UserPrefs
 @appModule.factory 'evernoteSvc', ($log, $http) ->
   
   obj = 
+
     #= userDataSource interface realisation
 
     fetchStickers: (page, resultHandler) ->
@@ -11,7 +12,13 @@ UserPrefs = @UserPrefs
           throw tags if tags.type == "error"
           
           $log.info tags
-          stickers = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
+          stickers = tags.filter (tag) -> 
+            if tag.name.match UserPrefs.sticker_prefix_pattern
+              tag.id = tag.guid
+              true
+            else
+              false
+
           resultHandler stickers
 
       else
@@ -38,8 +45,11 @@ UserPrefs = @UserPrefs
 
             resolve pageData
 
+    updateSticker: (newSticker) ->
+      obj.persist 'sticker', newSticker
+      
 
-    persist: (type, modelObj, resultHandler) ->
+    persist: (type, modelObj) ->
       # FIXME update the note after creation on multiple stickerings.
 
       switch type
@@ -66,11 +76,11 @@ UserPrefs = @UserPrefs
           #   tagNames: modelObj.stickers.map (sticker) -> sticker.name          
 
         when 'sticker'
-          obj.createTag( UserPrefs.sticker_prefix + modelObj.name )
-          .then (tag) ->
-            $log.info { msg: "created new tag", tag }
-          
-            resultHandler tag
+          if modelObj.id
+            # update
+            obj.updateTag modelObj
+          else
+            obj.createTag( UserPrefs.sticker_prefix + modelObj.name )
           
 
       # # post note
@@ -114,9 +124,15 @@ UserPrefs = @UserPrefs
         obj.noteStore.createTag obj.authToken, tag, (results) ->
           obj.ifError results, reject
 
-            resolve results
-        
+          resolve results
     
+    updateTag: (tag) ->
+      new RSVP.Promise (resolve, reject) ->
+        obj.noteStore.updateTag obj.authToken, tag, (err, result) ->
+          obj.ifError err, reject
+
+          resolve result
+        
     fetchNote: (args) ->
       pageSize = 10;
        

@@ -31,6 +31,11 @@ that = this
     @impl.fetchItems params, resultHandler
 
 
-  persist: (type, modelObj, resultHandler) ->
-    @impl.persist type, modelObj, resultHandler
+  updateSticker: (sticker) ->
+    @impl.updateSticker sticker
+
+
+  # FIXME remove from the interface.
+  persist: (type, modelObj) ->
+    @impl.persist type, modelObj
 
