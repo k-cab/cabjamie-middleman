@@ -112,9 +112,8 @@ UserPrefs = @UserPrefs
         tag = new Tag()
         tag.name = name
         obj.noteStore.createTag obj.authToken, tag, (results) ->
-          if results.type == 'error'
-            reject results
-          else
+          obj.ifError results, reject
+
             resolve results
         
     
@@ -153,7 +152,7 @@ UserPrefs = @UserPrefs
           fetchTags = noteMd.tagGuids?.map (tagGuid) =>
             new RSVP.Promise (resolve, reject) =>
               obj.noteStore.getTag obj.authToken, tagGuid, (tag) ->
-                reject tag if tag.type == "error"
+                obj.ifError tag, reject
 
                 resolve tag
           
@@ -221,14 +220,14 @@ UserPrefs = @UserPrefs
 
           note.guid = args.guid
           obj.noteStore.updateNote obj.authToken, note, (callback) ->
-            reject callback if callback.type == "error" or callback.name?.match /Exception/
+            obj.ifError callback, reject
 
             $log.info { msg: 'note updated', callback }
 
             resolve note
         else
           obj.noteStore.createNote obj.authToken, note, (callback) ->
-            reject callback if callback.type == "error" or callback.name?.match /Exception/
+            obj.ifError callback, reject
 
             $log.info { msg: 'note saved', callback }
             note.guid = callback.guid
@@ -236,6 +235,12 @@ UserPrefs = @UserPrefs
             resolve note
 
       # FIXME wrap in a promise so we can report errors during client-server interaction.
+
+    ## helpers
+
+    ifError: (result, reject) ->
+      reject result if result.type == "error" or result.name?.match /Exception/
+    
 
 
   obj

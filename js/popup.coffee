@@ -52,6 +52,8 @@ that = this
   stubDataSvc, evernoteSvc
   ) ->
 
+  # REFACTOR
+
   that.appModule.env = (newEnv) ->
     if newEnv == 'dev'
       userDataSource.impl = stubDataSvc
@@ -61,6 +63,13 @@ that = this
     # all state refreshes.
     userDataSource.init()
     $scope.update()
+
+  $rootScope.handleError = (e) ->
+    $log.error e
+
+    $rootScope.msg = "error: #{e}"
+    $rootScope.error = e
+
 
 
   #### controller actions
@@ -83,11 +92,7 @@ that = this
       $rootScope.$apply()
 
     .then null, (error) ->
-      $log.error error
-      $rootScope.msg =
-        msg: "error"
-        error: error
-        url: $scope.page.url
+      $rootScope.handleError error
 
   $scope.addSticker = (sticker) -> 
     $scope.page.addSticker sticker
@@ -211,9 +216,6 @@ that = this
     .then ->
       $rootScope.msg = ""
       $scope.$apply()
-    .then null, (error) ->
-      $log.error error
-      throw error
 
     return null
 
@@ -272,10 +274,7 @@ that = this
 
     that.appModule.env 'production'
   catch e
-    $log.error e
-
-    $rootScope.msg = "error: #{e}"
-    $rootScope.error = e
+    $rootScope.handleError e
 
     # do the login thing.
     # $scope.login()
