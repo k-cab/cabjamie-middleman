@@ -1,5 +1,4 @@
 
-
 class Sticker
   constructor: (data) ->
     if data
@@ -8,8 +7,11 @@ class Sticker
 
   name: 'unnamed sticker'
   colour: 'yellow'
-  imgOff: 'assets/sticker-off.png'
-  imgOn: 'assets/sticker-on.png'
+
+  imgOff: ->
+    "assets/sticker-off-#{@colour}.png"
+  imgOn: ->
+    "assets/sticker-on-#{@colour}.png"
   
   isColour: (colour) ->
     return @colour == colour.name if colour.name
@@ -21,6 +23,7 @@ class Sticker
     else
       @colour = colour.value
   
+
 class Page
   constructor: (data) ->
     if data

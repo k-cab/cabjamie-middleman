@@ -162,52 +162,42 @@ that = this
 
   $scope.fetchPage = ->
 
-    promise = new RSVP.Promise (resolve, reject) ->
-      url = if $scope.page 
-          $scope.page.url 
-        else
-          window.location.href
+    url = if $scope.page 
+        $scope.page.url 
+      else
+        window.location.href
 
-      runtime.pageForUrl( url )
-      .then (pageSpec)->
-        that.appModule.userDataSource.fetchPage pageSpec
-      .then (page) ->
-        try
-          $scope.page = page
-          $scope.$apply()
+    runtime.pageForUrl( url )
+    .then (pageSpec)->
+      that.appModule.userDataSource.fetchPage pageSpec
 
-          # chrome.pageCapture.saveAsMHTML( { tabId: page.id } )
-          # .then (mhtmlData) ->
-          #   page.pageContent = mhtmlData
-            # $log.info { msg: " got the visual representation.", mhtml:mhtmlData }
+    .then (page) ->
+      $scope.page = page
+      $scope.$apply()
 
-          runtime.capturePageThumbnail(page)
-          .then (dataUrl) ->
-            $log.info { msg: " got the visual representation.", dataUrl }
+      # chrome.pageCapture.saveAsMHTML( { tabId: page.id } )
+      # .then (mhtmlData) ->
+      #   page.pageContent = mhtmlData
+        # $log.info { msg: " got the visual representation.", mhtml:mhtmlData }
 
-            $scope.page.thumbnailUrl = dataUrl
+      runtime.capturePageThumbnail(page)
 
-            resolve $scope.page
+    .then (dataUrl) ->
+      $log.info { msg: " got the visual representation.", dataUrl }
 
-        catch e
-          reject e
+      $scope.page.thumbnailUrl = dataUrl
+      $scope.$apply()
+
 
   $scope.fetchStickers = (page)->    
+    that.appModule.userDataSource.fetchStickers( null)
+    .then (stickers) ->
+      orderedStickers = $scope.orderedStickers stickers
+      orderedStickers = $scope.colouredStickers orderedStickers
 
-    promise = new RSVP.Promise (resolve, reject) ->
-      that.appModule.userDataSource.fetchStickers null, (stickers) ->
-        try
+      $scope.stickers = orderedStickers
 
-          orderedStickers = $scope.orderedStickers stickers
-
-          $scope.stickers = orderedStickers
-
-          # this seems redundant now, but sweep for regressions
-          # $scope.$apply()
-
-          resolve $scope.stickers
-        catch e
-          reject e
+      $scope.$apply()
 
 
   $scope.update = ->
@@ -219,11 +209,10 @@ that = this
     ])
     .then ->
       $rootScope.msg = ""
-      $scope.$apply()
-
-    return null
-
-
+    .then null, (e) ->
+      $rootScope.handleError e
+    
+    
   ## workflow
 
   $scope.login = ->
@@ -243,6 +232,8 @@ that = this
   
   $scope.isHighlighted = (sticker) ->
     $scope.highlightedSticker == sticker
+
+  ## sticker editing
 
   $scope.colours = [
     {
@@ -272,8 +263,6 @@ that = this
   ]
 
 
-  ## sticker editing
-
   $scope.editSticker = (sticker) ->
     $scope.editedSticker = that.clone sticker
 
@@ -283,9 +272,13 @@ that = this
     # save the changed data.
     that.appModule.userDataSource.updateSticker($scope.editedSticker)
     .then ->
-      #  replace the sticker in the collection with editedSticker.
+      # replace the sticker in the collection with editedSticker.
       i = $scope.stickers.indexOf oldSticker
       $scope.stickers[i] = $scope.editedSticker
+
+      # save collection properties.
+      $scope.saveStickerOrder()
+      $scope.saveStickerColours()
 
       $scope.editedSticker = null
 
@@ -298,18 +291,36 @@ that = this
   $scope.cancelEditingSticker = ->
     $scope.editedSticker = null
 
+  $scope.saveStickerColours = ->
+    colours = $scope.stickers.map (e) -> 
+      name: e.name
+      colour: e.colour
+    
+    UserPrefs.update 'stickerColours', colours
 
+  $scope.colouredStickers = (stickers) ->
+
+    colours = UserPrefs.get 'stickerColours'
+    if colours
+      remainingColours = colours
+      stickers.map (sticker) ->
+        colourSpec = remainingColours.filter((e) -> e.name == sticker.name)[0]
+        sticker.colour = colourSpec.colour
+        remainingColours = _.reject remainingColours, (e) -> e == colourSpec
+      
+    stickers
+    
+    
+  
+  
   #### doit
 
-  try 
-    $rootScope.msg = "Test msg."
+  $rootScope.msg = "Test msg."
 
-    that.appModule.env UserPrefs.get('env')
-  catch e
-    $rootScope.handleError e
+  that.appModule.env UserPrefs.get('env')
 
-    # do the login thing.
-    # $scope.login()
+  # do the login thing.
+  # $scope.login()
 
     
   # runtime.onMsg 'testType', (args...) ->

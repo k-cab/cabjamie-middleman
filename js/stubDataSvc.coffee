@@ -21,31 +21,39 @@ that = this
         resolve result
 
 
-    fetchStickers: (page, resultHandler) ->
-      results = [
-        {
-          id: 1
-          name: "stub-sticker-1",
-        },
-        {
-          id: 2
-          name: "stub-sticker-2",
-        },
-        {
-          id: 3
-          name: "stub-sticker-3"
-        },
-      ]
+    fetchStickers: (page) ->
+      new RSVP.Promise (resolve, reject) ->
+        results = [
+          {
+            id: 1
+            name: "stub-sticker-1",
+          },
+          {
+            id: 2
+            name: "stub-sticker-2",
+          },
+          {
+            id: 3
+            name: "stub-sticker-3"
+          },
+        ]
 
-      results = results.map (e) ->
-        new that.Sticker e
+        results = results.map (e) ->
+          new that.Sticker e
 
-      resultHandler results
+        resolve results
 
     fetchItems: (params, resultHandler) ->
       new RSVP.Promise (resolve, reject) ->
         $log.error "stub fetchItems called"
         resolve null
+
+
+    updateSticker: (sticker) ->
+      new RSVP.Promise (resolve, reject)->
+        $log.error "stub updateSticker called"
+        resolve null
+    
 
     persist: (type, modelObj, resultHandler) ->
       new RSVP.Promise (resolve, reject) ->

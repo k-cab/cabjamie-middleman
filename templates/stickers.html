@@ -27,9 +27,9 @@
 
       <a class="sticker-image"
         data-ng-click="toggleSticker(sticker)">
-        <img data-ng-src="{{sticker.imgOn}}" alt="Page stickered with {{sticker.name}}."
+        <img data-ng-src="{{sticker.imgOn()}}" alt="Page stickered with {{sticker.name}}."
           data-ng-if="page.hasSticker(sticker)" data-ng-animate="'transition-image'">
-        <img data-ng-src="{{sticker.imgOff}}" alt="Page not stickered with {{sticker.name}}."
+        <img data-ng-src="{{sticker.imgOff()}}" alt="Page not stickered with {{sticker.name}}."
           data-ng-if="! page.hasSticker(sticker)" data-ng-animate="'transition-image'">
       </a>
 
@@ -50,7 +50,7 @@
       <a class="sticker-image sticker-image-new absolute-positioning-container"
         data-ng-click="newSticker.creatingNewSticker = true">
 
-        <img src="assets/sticker-off.png" alt="New sticker...">
+        <img src="assets/new-sticker.png" alt="New sticker...">
       </a>
       <div class="new-sticker-form"
         data-ng-show="newSticker.creatingNewSticker">
@@ -70,7 +70,7 @@
 
     <div class="overlay-content">
       <img class="edit-sticker-img"
-        data-ng-src="{{editedSticker.imgOn}}" alt="{{editedSticker.name}}">
+        data-ng-src="{{editedSticker.imgOn()}}" alt="{{editedSticker.name}}">
       <input class="edit-sticker-name"
         data-ng-model="editedSticker.name"/>
       <ul class="edit-sticker-colours">

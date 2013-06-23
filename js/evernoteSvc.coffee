@@ -4,22 +4,23 @@
 
     #= userDataSource interface realisation
 
-    fetchStickers: (page, resultHandler) ->
+    fetchStickers: (page) ->
       if page == null
-        obj.listTags()
-        .then (tags)->
-          throw tags if tags.type == "error"
-          
-          $log.info tags
-          matchingTags = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
+        new RSVP.Promise (resolve, reject)->
+          obj.listTags()
+          .then (tags)->
+            obj.ifError tags, reject
+            
+            $log.info tags
+            matchingTags = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
 
-          stickers = matchingTags.map (tag) ->
-            sticker = new Sticker
-              implObj: tag
-              id: tag.guid
-              name: tag.name
+            stickers = matchingTags.map (tag) ->
+              sticker = new Sticker
+                implObj: tag
+                id: tag.guid
+                name: tag.name
 
-          resultHandler stickers
+            resolve stickers
 
       else
         throw "don't call me for page stickers."

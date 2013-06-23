@@ -168,6 +168,7 @@ h1, h2, h3, h4 {
 }
 .colour-selected-true {
   border-style: solid;
+  border-color: white;
 }
 
 
