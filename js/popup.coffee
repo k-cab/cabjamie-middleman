@@ -210,7 +210,11 @@ that = this
     .then ->
       $rootScope.msg = ""
     .then null, (e) ->
-      $rootScope.handleError e
+      # HACK check for authentication error and redirect.
+      if e.errorType == 'authentication'
+        $scope.login()
+      else
+        $rootScope.handleError e
     
     
   ## workflow
@@ -220,7 +224,7 @@ that = this
     localStorage.setItem "oauth_success_redirect_path", location.href
 
     $location.path "/login"
-
+    $scope.$apply()
 
   ## view
 

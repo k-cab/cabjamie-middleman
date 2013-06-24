@@ -9,7 +9,9 @@
         new RSVP.Promise (resolve, reject)->
           obj.listTags()
           .then (tags)->
-            obj.ifError tags, reject
+            if obj.isError tags
+              reject tags
+              return
             
             $log.info tags
             matchingTags = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
@@ -29,23 +31,22 @@
     fetchPage: (params) ->
 
       new RSVP.Promise (resolve, reject) ->
-
-        obj.fetchNote
+        obj.fetchNote(
           url: params.url
-          callback: (result)->
-            pageData = 
-              url: params.url
-              title: params.title
-              stickers: result?.tags?.map (tag) ->
-                name: tag.name
-                guid: tag.guid
-              note: result
+        ).then (result)->
+          pageData = 
+            url: params.url
+            title: params.title
+            stickers: result?.tags?.map (tag) ->
+              name: tag.name
+              guid: tag.guid
+            note: result
 
-            # if no previous note for this url
-            pageData.stickers ||= []
+          # if no previous note for this url
+          pageData.stickers ||= []
 
-            page = new Page pageData
-            resolve page
+          page = new Page pageData
+          resolve page
 
     updateSticker: (newSticker) ->
       obj.persist 'sticker', newSticker
@@ -120,6 +121,9 @@
     listTags: ->
       new RSVP.Promise (resolve, reject) ->
         obj.noteStore.listTags obj.authToken, (results)->
+          if obj.isError results
+            reject results
+            return
           resolve results
     
     createTag: (name) ->
@@ -127,72 +131,81 @@
         tag = new Tag()
         tag.name = name
         obj.noteStore.createTag obj.authToken, tag, (results) ->
-          obj.ifError results, reject
+          if obj.isError results
+            reject results
+            return
 
           resolve results
     
     updateTag: (tag) ->
       new RSVP.Promise (resolve, reject) ->
         obj.noteStore.updateTag obj.authToken, tag, (err, result) ->
-          obj.ifError err, reject
+          if obj.isError err
+            reject err
+            return
 
           resolve result
         
     fetchNote: (args) ->
-      pageSize = 10;
-       
-      filter = new NoteFilter()
-      filter.order = NoteSortOrder.UPDATED
-      filter.words = "sourceURL:#{args.url}"
-      
-      spec = new NotesMetadataResultSpec()
-      spec.includeTitle = true
-      spec.includeTagGuids = true
+      new RSVP.Promise (resolve, reject) ->
+        pageSize = 10;
+         
+        filter = new NoteFilter()
+        filter.order = NoteSortOrder.UPDATED
+        filter.words = "sourceURL:#{args.url}"
+        
+        spec = new NotesMetadataResultSpec()
+        spec.includeTitle = true
+        spec.includeTagGuids = true
 
-      # sourceApplication TODO
+        # sourceApplication TODO
 
-      obj.noteStore.findNotesMetadata obj.authToken, filter, 0, pageSize, spec, (notesMetadata) =>
-        throw notesMetadata if notesMetadata.type == "error"
+        obj.noteStore.findNotesMetadata obj.authToken, filter, 0, pageSize, spec, (notesMetadata) =>
+          if obj.isError notesMetadata
+            reject notesMetadata
+            return
 
-        $log.info { msg: "fetched notes", filter, spec, notesMetadata }
-        if notesMetadata.notes.length > 1
-          $log.warn
-            msg: "multiple results for #{args.url}"
-            notesMetadata
+          $log.info { msg: "fetched notes", filter, spec, notesMetadata }
+          if notesMetadata.notes.length > 1
+            $log.warn
+              msg: "multiple results for #{args.url}"
+              notesMetadata
 
-        noteMd = notesMetadata.notes[0]
-        if noteMd
-          # guid = noteMd.guid
-          # withContent = false
-          # withResourcesData = false
-          # withResourcesRecognition = false
-          # withResourcesAlternateData = false
-          # obj.noteStore.getNote obj.authToken, guid, withContent, withResourcesData, withResourcesRecognition, withResourcesAlternateData, (note) ->
-          #   args.callback note
+          noteMd = notesMetadata.notes[0]
+          if noteMd
+            # guid = noteMd.guid
+            # withContent = false
+            # withResourcesData = false
+            # withResourcesRecognition = false
+            # withResourcesAlternateData = false
+            # obj.noteStore.getNote obj.authToken, guid, withContent, withResourcesData, withResourcesRecognition, withResourcesAlternateData, (note) ->
+            #   args.callback note
 
-          fetchTags = noteMd.tagGuids?.map (tagGuid) =>
-            new RSVP.Promise (resolve, reject) =>
-              obj.noteStore.getTag obj.authToken, tagGuid, (tag) ->
-                obj.ifError tag, reject
+            fetchTags = noteMd.tagGuids?.map (tagGuid) =>
+              new RSVP.Promise (resolve, reject) =>
+                obj.noteStore.getTag obj.authToken, tagGuid, (tag) ->
+                  if obj.isError tag
+                    reject tag
+                    return
 
-                resolve tag
-          
-          note = 
-            guid: noteMd.guid
-            url: args.url
-            tags: []
-                     
-          if fetchTags
-            RSVP.all(fetchTags)
-            .then (tags)->
-              note.tags = tags
+                  resolve tag
+            
+            note = 
+              guid: noteMd.guid
+              url: args.url
+              tags: []
+                       
+            if fetchTags
+              RSVP.all(fetchTags)
+              .then (tags)->
+                note.tags = tags
 
-              args.callback note
+                resolve note
+            else
+              resolve note
           else
-            args.callback note
-        else
-          $log.info "no note matching #{args.url}"
-          args.callback null          
+            $log.info "no note matching #{args.url}"
+            resolve null          
     
     saveNote: (args) ->
       new RSVP.Promise (resolve, reject) =>
@@ -241,14 +254,18 @@
 
           note.guid = args.guid
           obj.noteStore.updateNote obj.authToken, note, (callback) ->
-            obj.ifError callback, reject
+            if obj.isError callback
+              reject callback
+              return
 
             $log.info { msg: 'note updated', callback }
 
             resolve note
         else
           obj.noteStore.createNote obj.authToken, note, (callback) ->
-            obj.ifError callback, reject
+            if obj.isError callback
+              reject callback
+              return
 
             $log.info { msg: 'note saved', callback }
             note.guid = callback.guid
@@ -259,9 +276,16 @@
 
     ## helpers
 
-    ifError: (result, reject) ->
-      reject result if result.type == "error" or result.name?.match /Exception/
-    
+    isError: (result) ->
+      if result.parameter == 'authenticationToken'
+        result.errorType = 'authentication'
+        true
+
+      else
+        result.type == "error" or result.name?.match /Exception/
+
+
+   
 
 
   obj
