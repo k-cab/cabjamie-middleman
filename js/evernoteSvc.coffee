@@ -110,8 +110,11 @@
       obj.authToken = localStorage.getItem 'evernote_authToken'
       obj.noteStoreURL = localStorage.getItem 'evernote_noteStoreURL'
 
-      throw "couldn't intialise service access from localStorage" unless obj.authToken and obj.noteStoreURL and obj.authToken != typeof undefined
-
+      unless obj.authToken and obj.noteStoreURL and obj.authToken != typeof undefined
+        throw 
+          msg: "couldn't intialise service access from localStorage" 
+          errorType: "authentication"
+          
       noteStoreTransport = new Thrift.BinaryHttpTransport(obj.noteStoreURL)
       noteStoreProtocol = new Thrift.BinaryProtocol(noteStoreTransport)
       obj.noteStore = new NoteStoreClient(noteStoreProtocol)
