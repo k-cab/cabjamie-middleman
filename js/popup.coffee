@@ -242,30 +242,37 @@ that = this
   $scope.colours = [
     {
       name: 'yellow'
+      code: '#eeed50'
     }
     {
       name: 'red'
+      code: '#ef4e4e'
     }
     {
-      name: 'black'
+      name: 'violet'
+      code: '#85648c'
     }
     {
-      name: 'black'
+      name: 'pink'
+      code: '#deadb4'
     }
     {
-      name: 'black'
+      name: 'green'
+      code: '#95a666'
     }
     {
-      name: 'black'
+      name: 'khaki'
+      code: '#4f5549'
     }
     {
-      name: 'black'
+      name: 'blue'
+      code: '#82b2c6'
     }
     {
-      name: 'black'
+      name: 'navy'
+      code: '#3a5579'
     }
   ]
-
 
   $scope.editSticker = (sticker) ->
     $scope.editedSticker = that.clone sticker
@@ -309,7 +316,8 @@ that = this
       remainingColours = colours
       stickers.map (sticker) ->
         colourSpec = remainingColours.filter((e) -> e.name == sticker.name)[0]
-        sticker.colour = colourSpec.colour
+        sticker.colour = colourSpec.colour if colourSpec
+
         remainingColours = _.reject remainingColours, (e) -> e == colourSpec
       
     stickers
