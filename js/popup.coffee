@@ -125,7 +125,7 @@ that = this
 
   $scope.createNewSticker = ->
     newSticker = $scope.newSticker
-    newSticker.name = UserPrefs.sticker_prefix + newSticker.name unless newSticker.name.match UserPrefs.sticker_prefix_pattern
+    newSticker.name = $scope.prefixedName newSticker.name
 
     that.appModule.userDataSource.createSticker(newSticker)
     .then (savedSticker)->
@@ -227,6 +227,7 @@ that = this
       $rootScope.msg = ""
       $rootScope.$apply()
     
+
   ## workflow
 
   $scope.login = ->
@@ -235,6 +236,7 @@ that = this
 
     $location.path "/login"
     $scope.$apply()
+
 
   ## view
 
@@ -246,6 +248,7 @@ that = this
   
   $scope.isHighlighted = (sticker) ->
     $scope.highlightedSticker == sticker
+
 
   ## sticker editing
 
@@ -290,6 +293,7 @@ that = this
   $scope.finishEditingSticker =  ->
     oldSticker = $scope.stickers.filter( (sticker) -> sticker.id == $scope.editedSticker.id )[0]
 
+    $scope.editedSticker.name = $scope.prefixedName $scope.editedSticker.name
     # save the changed data.
     that.appModule.userDataSource.updateSticker($scope.editedSticker)
     .then ->
@@ -332,7 +336,9 @@ that = this
       
     stickers
     
-    
+
+  $scope.prefixedName = (name) ->
+    UserPrefs.sticker_prefix + name unless name.match UserPrefs.sticker_prefix_pattern
   
   
   #### doit
