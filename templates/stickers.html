@@ -38,7 +38,7 @@
         {{sticker.name}}
       </a>
 
-      <div class="text-label sticker-edit-control"
+      <div class="control sticker-edit"
         data-ng-click="editSticker(sticker)">
       </div>
 
@@ -56,9 +56,9 @@
         
         <input class="text-label sticker-name-field" placeholder="new sticker"
           data-ng-model="newSticker.name">
-        <button class="control-ok"
+        <button class="control ok"
           data-ng-click="createNewSticker()">OK</button>
-        <button class="control-cancel"
+        <button class="control cancel"
           data-ng-click="newSticker.creatingNewSticker = false">Cancel</button>          
 
         <!-- TODO validation / reactive states -->
@@ -70,21 +70,25 @@
     data-ng-show="editedSticker">
 
     <div class="overlay-content">
+
       <img class="edit-sticker-img"
         data-ng-src="{{editedSticker.imgOn()}}" alt="{{editedSticker.name}}">
+
       <input class="edit-sticker-name"
         data-ng-model="editedSticker.name"/>
+
       <ul class="edit-sticker-colours">
         <li class="colour-item colour-selected-{{editedSticker.isColour(colour)}}"
-          style="background: {{colour.name}};"
+          style="background: {{colour.code}};"
           data-ng-repeat="colour in colours"
           data-ng-click="editedSticker.setColour(colour)">
         </li>
       </ul>
+
       <div class="control-container">
-        <div class="control-cancel"
+        <div class="control cancel"
           data-ng-click="cancelEditingSticker()">Cancel</div>
-        <div class="control-ok"
+        <div class="control ok"
           data-ng-click="finishEditingSticker()">OK</div>
       </div>
     </div>

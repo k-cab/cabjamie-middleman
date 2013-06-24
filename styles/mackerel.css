@@ -57,18 +57,22 @@ h1, h2, h3, h4 {
 .control-container {
   text-align: right;
 }
-.control-ok {
-  display: inline-block;
 
+.control {
+  cursor: hand; cursor: pointer; 
+  display: inline-block;
+  font-size: 0px;
+}
+
+.ok {
   background-image: url("../assets/icon-ok.png");
   width: 50px;
   height: 30px;
   background-repeat: no-repeat;
   background-size: contain;
   
-  font-size: 0px;
 }
-.control-cancel {
+.cancel {
   display: inline-block;
 
   background-image: url("../assets/icon-cancel.png");
@@ -76,8 +80,6 @@ h1, h2, h3, h4 {
   height: 30px;
   background-repeat: no-repeat;
   background-size: contain;
-
-  font-size: 0px;
 }
 
 /* stickers */
@@ -157,12 +159,12 @@ h1, h2, h3, h4 {
 
 /* sticker edit control */
 
-.sticker-edit-control {
+.sticker-edit {
   /*display: none;*/
   display: inline-block;
   height: 10px;
 }
-.sticker:hover .sticker-edit-control {
+.sticker:hover .sticker-edit {
   display: inline-block;
   width: 10px;
   height: 10px;
