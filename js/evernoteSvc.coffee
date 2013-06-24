@@ -6,23 +6,21 @@
 
     fetchStickers: (page) ->
       if page == null
-        new RSVP.Promise (resolve, reject)->
+        Q.fcall ->
           obj.listTags()
-          .then (tags)->
-            if obj.isError tags
-              reject tags
-              return
-            
-            $log.info tags
-            matchingTags = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
+        .then (tags)->
+          obj.ifError tags
+          
+          $log.info tags
+          matchingTags = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
 
-            stickers = matchingTags.map (tag) ->
-              sticker = new Sticker
-                implObj: tag
-                id: tag.guid
-                name: tag.name
+          stickers = matchingTags.map (tag) ->
+            sticker = new Sticker
+              implObj: tag
+              id: tag.guid
+              name: tag.name
 
-            resolve stickers
+          return stickers
 
       else
         throw "don't call me for page stickers."
@@ -30,23 +28,23 @@
 
     fetchPage: (params) ->
 
-      new RSVP.Promise (resolve, reject) ->
-        obj.fetchNote(
+      Q.fcall ->
+        obj.fetchNote
           url: params.url
-        ).then (result)->
-          pageData = 
-            url: params.url
-            title: params.title
-            stickers: result?.tags?.map (tag) ->
-              name: tag.name
-              guid: tag.guid
-            note: result
+      .then (result)->
+        pageData = 
+          url: params.url
+          title: params.title
+          stickers: result?.tags?.map (tag) ->
+            name: tag.name
+            guid: tag.guid
+          note: result
 
-          # if no previous note for this url
-          pageData.stickers ||= []
+        # if no previous note for this url
+        pageData.stickers ||= []
 
-          page = new Page pageData
-          resolve page
+        page = new Page pageData
+        return page
 
     updateSticker: (newSticker) ->
       obj.persist 'sticker', newSticker
@@ -114,7 +112,7 @@
         throw 
           msg: "couldn't intialise service access from localStorage" 
           errorType: "authentication"
-          
+
       noteStoreTransport = new Thrift.BinaryHttpTransport(obj.noteStoreURL)
       noteStoreProtocol = new Thrift.BinaryProtocol(noteStoreTransport)
       obj.noteStore = new NoteStoreClient(noteStoreProtocol)
@@ -122,173 +120,176 @@
     ##
 
     listTags: ->
-      new RSVP.Promise (resolve, reject) ->
-        obj.noteStore.listTags obj.authToken, (results)->
-          if obj.isError results
-            reject results
-            return
-          resolve results
+      deferred = Q.defer()
+
+      obj.noteStore.listTags obj.authToken, (results)->
+        obj.ifError results
+
+        deferred.resolve results
     
+      deferred.promise
+
     createTag: (name) ->
-      new RSVP.Promise (resolve, reject) ->
-        tag = new Tag()
-        tag.name = name
-        obj.noteStore.createTag obj.authToken, tag, (results) ->
-          if obj.isError results
-            reject results
-            return
+      deferred = Q.defer()
 
-          resolve results
+      tag = new Tag()
+      tag.name = name
+      obj.noteStore.createTag obj.authToken, tag, (results) ->
+        obj.ifError results
+
+        deferred.resolve results
     
-    updateTag: (tag) ->
-      new RSVP.Promise (resolve, reject) ->
-        obj.noteStore.updateTag obj.authToken, tag, (err, result) ->
-          if obj.isError err
-            reject err
-            return
+      deferred.promise
 
-          resolve result
+    updateTag: (tag) ->
+      deferred = Q.defer()
+
+      obj.noteStore.updateTag obj.authToken, tag, (err, result) ->
+        obj.ifError err
+
+        deferred.resolve result
+
+      deferred.promise
         
     fetchNote: (args) ->
-      new RSVP.Promise (resolve, reject) ->
-        pageSize = 10;
-         
-        filter = new NoteFilter()
-        filter.order = NoteSortOrder.UPDATED
-        filter.words = "sourceURL:#{args.url}"
-        
-        spec = new NotesMetadataResultSpec()
-        spec.includeTitle = true
-        spec.includeTagGuids = true
+      deferred = Q.defer()
 
-        # sourceApplication TODO
+      pageSize = 10;
+       
+      filter = new NoteFilter()
+      filter.order = NoteSortOrder.UPDATED
+      filter.words = "sourceURL:#{args.url}"
+      
+      spec = new NotesMetadataResultSpec()
+      spec.includeTitle = true
+      spec.includeTagGuids = true
 
-        obj.noteStore.findNotesMetadata obj.authToken, filter, 0, pageSize, spec, (notesMetadata) =>
-          if obj.isError notesMetadata
-            reject notesMetadata
-            return
+      # sourceApplication TODO
 
-          $log.info { msg: "fetched notes", filter, spec, notesMetadata }
-          if notesMetadata.notes.length > 1
-            $log.warn
-              msg: "multiple results for #{args.url}"
-              notesMetadata
+      obj.noteStore.findNotesMetadata obj.authToken, filter, 0, pageSize, spec, (notesMetadata) =>
+        obj.ifError notesMetadata
 
-          noteMd = notesMetadata.notes[0]
-          if noteMd
-            # guid = noteMd.guid
-            # withContent = false
-            # withResourcesData = false
-            # withResourcesRecognition = false
-            # withResourcesAlternateData = false
-            # obj.noteStore.getNote obj.authToken, guid, withContent, withResourcesData, withResourcesRecognition, withResourcesAlternateData, (note) ->
-            #   args.callback note
+        $log.info { msg: "fetched notes", filter, spec, notesMetadata }
+        if notesMetadata.notes.length > 1
+          $log.warn
+            msg: "multiple results for #{args.url}"
+            notesMetadata
 
-            fetchTags = noteMd.tagGuids?.map (tagGuid) =>
-              new RSVP.Promise (resolve, reject) =>
-                obj.noteStore.getTag obj.authToken, tagGuid, (tag) ->
-                  if obj.isError tag
-                    reject tag
-                    return
+        noteMd = notesMetadata.notes[0]
+        if noteMd
+          # guid = noteMd.guid
+          # withContent = false
+          # withResourcesData = false
+          # withResourcesRecognition = false
+          # withResourcesAlternateData = false
+          # obj.noteStore.getNote obj.authToken, guid, withContent, withResourcesData, withResourcesRecognition, withResourcesAlternateData, (note) ->
+          #   args.callback note
 
-                  resolve tag
-            
-            note = 
-              guid: noteMd.guid
-              url: args.url
-              tags: []
-                       
-            if fetchTags
-              RSVP.all(fetchTags)
-              .then (tags)->
-                note.tags = tags
+          fetchTags = noteMd.tagGuids?.map (tagGuid) =>
+            d2 = Q.defer()
+            obj.noteStore.getTag obj.authToken, tagGuid, (tag) ->
+              obj.ifError tag
 
-                resolve note
-            else
-              resolve note
+              d2.resolve tag
+
+            d2.promise
+          
+          note = 
+            guid: noteMd.guid
+            url: args.url
+            tags: []
+                     
+          if fetchTags
+            Q.all(fetchTags)
+            .then (tags)->
+              note.tags = tags
+
+              deferred.resolve note
+
           else
-            $log.info "no note matching #{args.url}"
-            resolve null          
-    
-    saveNote: (args) ->
-      new RSVP.Promise (resolve, reject) =>
-
-        note = new Note()
-        note.title = args.title
-        note.tagNames = args.tags.map (tag) -> 
-          throw "invalid tag: #{tag}" unless tag.name
-          tag.name
-
-        attrs = new NoteAttributes()
-        attrs.sourceURL = args.url
-        note.attributes = attrs
-
-        thumbnailDataB64 = _(args.thumbnail.split(',')).last()
-        thumbnailData = atob thumbnailDataB64
-        ab = new ArrayBuffer(thumbnailData.length)
-        ia = new Uint8Array(ab)
-        for e, i in thumbnailData
-          ia[i] = thumbnailData.charCodeAt(i)
-        thumbnailData = ia
-
-        thumbnailMd5Hex = faultylabs.MD5 thumbnailData
-        
-        data = new Data()
-        data.size = thumbnailData.length
-        data.body = thumbnailData
-        data.bodyHash = thumbnailMd5Hex
-
-        resource = new Resource()
-        resource.mime = 'image/jpeg'
-        resource.data = data
-
-        note.resources = [ resource ]
-
-        note.content = """
-          <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
-          <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
-            <div>#{args.content}</div>
-            <en-media type="image/jpeg" hash="#{thumbnailMd5Hex}" width="100%"/>
-          </en-note>
-          """
-
-        if args.guid
-          # update the note.
-
-          note.guid = args.guid
-          obj.noteStore.updateNote obj.authToken, note, (callback) ->
-            if obj.isError callback
-              reject callback
-              return
-
-            $log.info { msg: 'note updated', callback }
-
-            resolve note
+            deferred.resolve note
         else
-          obj.noteStore.createNote obj.authToken, note, (callback) ->
-            if obj.isError callback
-              reject callback
-              return
+          $log.info "no note matching #{args.url}"
+          deferred.resolve null          
+    
+      deferred.promise
 
-            $log.info { msg: 'note saved', callback }
-            note.guid = callback.guid
 
-            resolve note
+    saveNote: (args) ->
+      deferred = Q.defer()
 
-      # FIXME wrap in a promise so we can report errors during client-server interaction.
+      note = new Note()
+      note.title = args.title
+      note.tagNames = args.tags.map (tag) -> 
+        throw "invalid tag: #{tag}" unless tag.name
+        tag.name
+
+      attrs = new NoteAttributes()
+      attrs.sourceURL = args.url
+      note.attributes = attrs
+
+      thumbnailDataB64 = _(args.thumbnail.split(',')).last()
+      thumbnailData = atob thumbnailDataB64
+      ab = new ArrayBuffer(thumbnailData.length)
+      ia = new Uint8Array(ab)
+      for e, i in thumbnailData
+        ia[i] = thumbnailData.charCodeAt(i)
+      thumbnailData = ia
+
+      thumbnailMd5Hex = faultylabs.MD5 thumbnailData
+      
+      data = new Data()
+      data.size = thumbnailData.length
+      data.body = thumbnailData
+      data.bodyHash = thumbnailMd5Hex
+
+      resource = new Resource()
+      resource.mime = 'image/jpeg'
+      resource.data = data
+
+      note.resources = [ resource ]
+
+      note.content = """
+        <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+        <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
+          <div>#{args.content}</div>
+          <en-media type="image/jpeg" hash="#{thumbnailMd5Hex}" width="100%"/>
+        </en-note>
+        """
+
+      if args.guid
+        # update the note.
+
+        note.guid = args.guid
+        obj.noteStore.updateNote obj.authToken, note, (callback) ->
+          obj.ifError callback
+
+          $log.info { msg: 'note updated', callback }
+
+          deferred.resolve note
+      else
+        obj.noteStore.createNote obj.authToken, note, (callback) ->
+          obj.ifError callback
+
+          $log.info { msg: 'note saved', callback }
+          note.guid = callback.guid
+
+          deferred.resolve note
+
+      deferred.promise
+
 
     ## helpers
 
-    isError: (result) ->
+    ifError: (result) ->
       if result.parameter == 'authenticationToken'
         result.errorType = 'authentication'
-        true
+
+        throw result
 
       else
-        result.type == "error" or result.name?.match /Exception/
+        throw result if result.type == "error" or result.name?.match /Exception/
 
-
-   
 
 
   obj

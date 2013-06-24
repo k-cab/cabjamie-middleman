@@ -2,30 +2,32 @@
 
   pageForUrl: (url, callback)->
 
-    url = url
-    new RSVP.Promise (resolve, reject)=>
-      # init chrome-specific
-      if chrome?.extension
-        @pageForUrl_chrome url, (page) ->
-          resolve page
+    d = Q.defer()
+
+    # init chrome-specific
+    if chrome?.extension
+      @pageForUrl_chrome url, (page) ->
+        d.resolve page
           
-      else
+    else
 
-        $log.info "not running as chrome extension"
-        url ||= 'http://out-of-chrome-stub-url'
+      $log.info "not running as chrome extension"
+      url ||= 'http://out-of-chrome-stub-url'
 
-        resolve
-          url: url
-          title: 'stub url title'
+      d.resolve
+        url: url
+        title: 'stub url title'
+
+    d.promise
 
   capturePageThumbnail: ->
     if chrome.extension
       @capturePageThumbnail_chrome()
     else
-      new RSVP.Promise (resolve, reject) =>
+      Q.fcall =>
         console.log "returning a stub image for the page."
 
-        resolve "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBY"
+        return "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBY"
 
   hasRealPageContext: ->
     if chrome.extension
@@ -56,14 +58,13 @@
         callback tabs[0]
   
   capturePageThumbnail_chrome: ->
-    promise = new RSVP.Promise (resolve, reject) =>
-      try
-        chrome.tabs.captureVisibleTab null, null, (dataUrl) ->
-          resolve dataUrl
-      catch e
-        reject e
+    d = Q.defer()
+
+    chrome.tabs.captureVisibleTab null, null, (dataUrl) ->
+      d.resolve dataUrl
       
-  
+    d.promise
+
   # callback sig:
   sendMsg_chrome: (msgType, params, callback)->
     params ||= {}

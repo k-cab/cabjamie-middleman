@@ -8,7 +8,7 @@ that = this
     init: ->
       
     fetchPage: (params) ->
-      new RSVP.Promise (resolve, reject) ->
+      Q.fcall ->
 
         result = new that.Page()
         result.url = params.url
@@ -18,11 +18,11 @@ that = this
           }
         ]
 
-        resolve result
+        return result
 
 
     fetchStickers: (page) ->
-      new RSVP.Promise (resolve, reject) ->
+      Q.fcall ->
         results = [
           {
             id: 1
@@ -41,23 +41,23 @@ that = this
         results = results.map (e) ->
           new that.Sticker e
 
-        resolve results
+        return results
 
     fetchItems: (params, resultHandler) ->
-      new RSVP.Promise (resolve, reject) ->
+      Q.fcall ->
         $log.error "stub fetchItems called"
-        resolve null
+        return null
 
 
     updateSticker: (sticker) ->
-      new RSVP.Promise (resolve, reject)->
+      Q.fcall ->
         $log.error "stub updateSticker called"
-        resolve null
+        return null
     
 
     persist: (type, modelObj, resultHandler) ->
-      new RSVP.Promise (resolve, reject) ->
+      Q.fcall ->
         $log.error "stub persist called"
-        resolve null
+        return null
 
   return obj

@@ -52,9 +52,9 @@
       # start the oauth workflow.
 
 
-      new RSVP.Promise (resolve, reject)->
+      new Q.fcall ->
         result = $scope.loginWithEvernote()
-        resolve 
+        
       .then null, (err) ->
         $log.error err
 

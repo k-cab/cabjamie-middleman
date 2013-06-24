@@ -1,5 +1,8 @@
 # FIXME modularise mixed concerns (popup, stickers).
 
+# DEV
+Q.longStackSupport = true
+
 @UserPrefs = 
   update: (key, val) ->
     if val == undefined
@@ -64,8 +67,18 @@ that = this
       that.appModule.userDataSource = evernoteSvc
 
     # all state refreshes.
-    that.appModule.userDataSource.init()
-    $scope.update()
+    Q.fcall( ->
+      that.appModule.userDataSource.init()
+      $scope.update()
+    )
+    .fail (e) ->
+      # HACK check for authentication error and redirect.
+      if e.errorType == 'authentication'
+        $scope.login()
+      else
+        $rootScope.handleError e
+    
+
 
   $rootScope.handleError = (e) ->
     $log.error e
@@ -96,6 +109,7 @@ that = this
 
     .then null, (error) ->
       $rootScope.handleError error
+    .done()
 
   $scope.addSticker = (sticker) -> 
     $scope.page.addSticker sticker
@@ -187,6 +201,7 @@ that = this
 
       $scope.page.thumbnailUrl = dataUrl
       $scope.$apply()
+    .done()
 
 
   $scope.fetchStickers = (page)->    
@@ -198,24 +213,19 @@ that = this
       $scope.stickers = orderedStickers
 
       $scope.$apply()
-
+    .done()
 
   $scope.update = ->
     $rootScope.msg = "Fetching data..."
 
-    RSVP.all([ 
+    Q.all([ 
       $scope.fetchPage(), 
       $scope.fetchStickers()
     ])
     .then ->
       $rootScope.msg = ""
-    .then null, (e) ->
-      # HACK check for authentication error and redirect.
-      if e.errorType == 'authentication'
-        $scope.login()
-      else
-        $rootScope.handleError e
-    
+    .done()
+
     
   ## workflow
 
@@ -297,7 +307,8 @@ that = this
       
     .then null, (error) ->
       $rootScope.handleError error
-
+    .done()
+    
 
   $scope.cancelEditingSticker = ->
     $scope.editedSticker = null
