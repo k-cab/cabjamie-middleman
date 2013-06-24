@@ -82,7 +82,10 @@
       <p>Sorry for your inconvinience. We're fixing things all the time - please check <a href="{{resolveError(error)}}">here.</a></p> 
       <!-- TODO resolveError(error) -->
 
-      <button data-ng-click="$root.error = null">Dismiss</button>
+      <div class="control-container">
+        <button class="control-ok"
+          data-ng-click="$root.error = null">Ok</button>
+      </div>
     </div>
   </div>
   <!-- REFACTOR into partials -->

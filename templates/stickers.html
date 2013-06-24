@@ -57,8 +57,10 @@
         
         <input class="text-label sticker-name-field" placeholder="new sticker"
           data-ng-model="newSticker.name">
-        <button data-ng-click="createNewSticker()">OK</button>
-        <button data-ng-click="newSticker.creatingNewSticker = false">Cancel</button>          
+        <button class="control-ok"
+          data-ng-click="createNewSticker()">OK</button>
+        <button class="control-cancel"
+          data-ng-click="newSticker.creatingNewSticker = false">Cancel</button>          
 
         <!-- TODO validation / reactive states -->
       </div>
@@ -80,9 +82,12 @@
           data-ng-click="editedSticker.setColour(colour)">
         </li>
       </ul>
-
-      <button data-ng-click="finishEditingSticker()">OK</button>
-      <button data-ng-click="cancelEditingSticker()">Cancel</button>
+      <div class="control-container">
+        <div class="control-cancel"
+          data-ng-click="cancelEditingSticker()">Cancel</div>
+        <div class="control-ok"
+          data-ng-click="finishEditingSticker()">OK</div>
+      </div>
     </div>
   </div>
 

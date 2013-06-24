@@ -54,6 +54,31 @@ h1, h2, h3, h4 {
   background: white;
 }
 
+.control-container {
+  text-align: right;
+}
+.control-ok {
+  display: inline-block;
+
+  background-image: url("../assets/icon-ok.png");
+  width: 50px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  
+  font-size: 0px;
+}
+.control-cancel {
+  display: inline-block;
+
+  background-image: url("../assets/icon-cancel.png");
+  width: 50px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  font-size: 0px;
+}
 
 /* stickers */
 
