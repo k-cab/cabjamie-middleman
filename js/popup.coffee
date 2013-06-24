@@ -107,7 +107,7 @@ that = this
       $rootScope.msg = "Saved."
       $rootScope.$apply()
 
-    .then null, (error) ->
+    .fail (error) ->
       $rootScope.handleError error
 
   $scope.addSticker = (sticker) -> 
@@ -124,24 +124,27 @@ that = this
   ## sticker creation
 
   $scope.createNewSticker = ->
-    $scope.newSticker.name = UserPrefs.sticker_prefix + $scope.newSticker.name unless $scope.newSticker.name.match UserPrefs.sticker_prefix_pattern
+    newSticker = $scope.newSticker
+    newSticker.name = UserPrefs.sticker_prefix + newSticker.name unless newSticker.name.match UserPrefs.sticker_prefix_pattern
 
+    that.appModule.userDataSource.createSticker(newSticker)
+    .then (savedSticker)->
+      $log.info {msg: "new sticker", sticker:savedSticker}
 
-    $log.info {msg: "new sticker", sticker:$scope.newSticker}
+      # save the new sticker. FIXME
+      # that.appModule.userDataSource.persist 'sticker', $scope.savedSticker, (savedSticker) ->
+      #   $scope.stickers.push savedSticker
+      #   $scope.$apply()
+      
+      $scope.stickers.push savedSticker
+      $scope.newSticker = null
+      $scope.$apply()
 
-    # save the new sticker. FIXME
-    # that.appModule.userDataSource.persist 'sticker', $scope.newSticker, (newSticker) ->
-    #   $scope.stickers.push newSticker
-    #   $scope.$apply()
+      # $scope.fetchStickers()
+      # FIXME get delta of stickers
+    .fail (err) ->
+      $rootScope.handleError err
     
-    $scope.stickers.push $scope.newSticker
-    $scope.newSticker = null
-
-    # TODO error case
-
-    # $scope.fetchStickers()
-    # FIXME get delta of stickers
-
 
   ## sticker ordering
 
@@ -302,7 +305,7 @@ that = this
 
       $scope.$apply()
       
-    .then null, (error) ->
+    .fail (error) ->
       $rootScope.handleError error
 
 

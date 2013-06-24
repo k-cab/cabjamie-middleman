@@ -46,6 +46,9 @@
         page = new Page pageData
         return page
 
+    createSticker: (newSticker) ->
+      obj.persist 'sticker', newSticker
+
     updateSticker: (newSticker) ->
       obj.persist 'sticker', newSticker
 
@@ -80,9 +83,16 @@
           if modelObj.id
             # update
             modelObj.implObj.name = modelObj.name
-            obj.updateTag modelObj.implObj
+            obj.updateTag( modelObj.implObj)
           else
-            obj.createTag( UserPrefs.sticker_prefix + modelObj.name )
+            obj.createTag( modelObj)
+            .then (tag) ->
+              new Sticker
+                id: tag.guid
+                name: tag.name
+                implObj: tag
+            
+            
           
 
       # # post note
@@ -129,15 +139,15 @@
     
       deferred.promise
 
-    createTag: (name) ->
+    createTag: (tagData) ->
       deferred = Q.defer()
 
       tag = new Tag()
-      tag.name = name
-      obj.noteStore.createTag obj.authToken, tag, (results) ->
-        obj.ifError results
+      tag.name = tagData.name
+      obj.noteStore.createTag obj.authToken, tag, (result) ->
+        obj.ifError result
 
-        deferred.resolve results
+        deferred.resolve result
     
       deferred.promise
 
