@@ -186,6 +186,7 @@ h1, h2, h3, h4 {
   margin: 0 auto;
 
   /* TODO size, font style */
+  font-size: 14pt;
 }
 .edit-sticker-colours {
   font-size: 0;
