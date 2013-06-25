@@ -9,7 +9,7 @@
         Q.fcall ->
           obj.listTags()
         .then (tags)->
-          obj.ifError tags
+          obj.ifError tags, Q
           
           $log.info tags
           matchingTags = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
@@ -133,7 +133,7 @@
       deferred = Q.defer()
 
       obj.noteStore.listTags obj.authToken, (results)->
-        obj.ifError results
+        obj.ifError results, deferred
 
         deferred.resolve results
     
@@ -145,7 +145,7 @@
       tag = new Tag()
       tag.name = tagData.name
       obj.noteStore.createTag obj.authToken, tag, (result) ->
-        obj.ifError result
+        obj.ifError result, deferred
 
         deferred.resolve result
     
@@ -155,7 +155,7 @@
       deferred = Q.defer()
 
       obj.noteStore.updateTag obj.authToken, tag, (err, result) ->
-        obj.ifError err
+        obj.ifError err, deferred
 
         deferred.resolve result
 
@@ -177,7 +177,7 @@
       # sourceApplication TODO
 
       obj.noteStore.findNotesMetadata obj.authToken, filter, 0, pageSize, spec, (notesMetadata) =>
-        obj.ifError notesMetadata
+        obj.ifError notesMetadata, deferred
 
         $log.info { msg: "fetched notes", filter, spec, notesMetadata }
         if notesMetadata.notes.length > 1
@@ -198,7 +198,7 @@
           fetchTags = noteMd.tagGuids?.map (tagGuid) =>
             d2 = Q.defer()
             obj.noteStore.getTag obj.authToken, tagGuid, (tag) ->
-              obj.ifError tag
+              obj.ifError tag, d2.reject
 
               d2.resolve tag
 
@@ -272,14 +272,14 @@
 
         note.guid = args.guid
         obj.noteStore.updateNote obj.authToken, note, (callback) ->
-          obj.ifError callback
+          obj.ifError callback, deferred
 
           $log.info { msg: 'note updated', callback }
 
           deferred.resolve note
       else
         obj.noteStore.createNote obj.authToken, note, (callback) ->
-          obj.ifError callback
+          obj.ifError callback, deferred
 
           $log.info { msg: 'note saved', callback }
           note.guid = callback.guid
@@ -291,14 +291,14 @@
 
     ## helpers
 
-    ifError: (result) ->
+    ifError: (result, deferred) ->
       if result.parameter == 'authenticationToken'
         result.errorType = 'authentication'
 
-        throw result
+        deferred.reject result
 
       else
-        throw result if result.type == "error" or result.name?.match /Exception/
+        deferred.reject result if result.type == "error" or result.name?.match /Exception/
 
 
 
