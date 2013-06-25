@@ -13,6 +13,7 @@ excludes = [
   '*.sublime-*',
   '*.src',
   '*.coffee',
+  '*.map',
   'node_modules'
 ]
 target_dir = "~/Dropbox/bigbearlabs/builds/mackerel-chrome"
