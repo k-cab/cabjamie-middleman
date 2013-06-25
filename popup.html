@@ -41,6 +41,7 @@
   <script src="js/vendor/angular-ui.min.js"></script>
 
   <script src="js/popup.js"></script>
+  <script src="js/stickers.js"></script>
 
   <script src="js/vendor/parse-1.2.7.js"></script>
   <script src="js/vendor/evernote-sdk-minified.js"></script>
@@ -58,9 +59,15 @@
 
 <body data-ng-app="appModule">
 
+  <!-- all top-level actions -->
   <div class="row">
-    <a href="#/login">Login</a>
-    <a href="centre.html" target="_blank" class="disabled">Centre</a>
+    <a href="#/login" data-ng-show="">{{authentication.nextAction.message}}</a>
+    <a href="#/about" class="preview">About</a>
+
+    <a href="#/whatsnew" class="preview">What's new</a>
+
+
+    <a href="centre.html" target="_blank" class="preview">Centre</a>
   </div>
 
   <div data-ng-cloak data-ng-view>
@@ -70,6 +77,7 @@
     <h3>Messages</h3>
     <p>{{$root.msg}}</p>
   </div>
+
 
   <div class="show-error overlay"
     data-ng-show="$root.error">
