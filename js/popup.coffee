@@ -338,8 +338,10 @@ that = this
     
 
   $scope.prefixedName = (name) ->
-    UserPrefs.sticker_prefix + name unless name.match UserPrefs.sticker_prefix_pattern
-  
+    if name.match UserPrefs.sticker_prefix_pattern
+      name
+    else
+      UserPrefs.sticker_prefix + name 
   
   #### doit
 
