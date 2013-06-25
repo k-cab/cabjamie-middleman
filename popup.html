@@ -32,7 +32,7 @@
 
   <script src="js/vendor/underscore.js"></script>
   <script src="js/vendor/jquery.min.js"></script>
-  <script src="js/vendor/rsvp.js"></script>
+  <script src="js/vendor/q.min.js"></script>
 
   <script src="js/vendor/angular.min.js"></script>
   <!--script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
@@ -50,7 +50,6 @@
   <script src="js/evernoteSvc.js"></script>
   <script src="js/stubDataSvc.js"></script>
   <script src="js/runtime.js"></script>
-  <script src="js/userDataSource.js"></script>
 
   <script src="foundation/javascripts/modernizr.foundation.js"></script>
 
@@ -72,14 +71,24 @@
     <p>{{$root.msg}}</p>
   </div>
 
-  <div class="show-error"
+  <div class="show-error overlay"
     data-ng-show="$root.error">
-    <p>Oops, I'm sorry.</p>
-    <p>We just got an error: '{{$root.error}}'</p>
-    <p>Trace: {{$root.error.stack}}</p>
-    <p>Sorry for your inconvinience. We're fixing things all the time - please check <a href="{{resolveError(error)}}">here.</a></p> 
-    <!-- TODO resolveError(error) -->
+    <div class="overlay-content dialog-content">
+      <p>Oops, I'm sorry.</p>
+
+      <p>We just got an error: '{{$root.error}}'</p>
+      <p>Trace: {{$root.error.stack}}</p>
+
+      <p>Sorry for your inconvinience. We're fixing things all the time - please check <a href="{{resolveError(error)}}">here.</a></p> 
+      <!-- TODO resolveError(error) -->
+
+      <div class="control-container">
+        <button class="control ok"
+          data-ng-click="$root.error = null">Ok</button>
+      </div>
+    </div>
   </div>
+  <!-- REFACTOR into partials -->
 
   <!-- Included JS Files (Uncompressed) -->
   <!--

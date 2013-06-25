@@ -1,18 +1,26 @@
-UserPrefs = @UserPrefs
-
 @appModule.factory 'evernoteSvc', ($log, $http) ->
   
   obj = 
+
     #= userDataSource interface realisation
 
-    fetchStickers: (page, resultHandler) ->
+    fetchStickers: (page) ->
       if page == null
-        obj.listTags (tags) ->
-          throw tags if tags.type == "error"
+        Q.fcall ->
+          obj.listTags()
+        .then (tags)->
+          obj.ifError tags, Q
           
           $log.info tags
-          stickers = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
-          resultHandler stickers
+          matchingTags = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
+
+          stickers = matchingTags.map (tag) ->
+            sticker = new Sticker
+              implObj: tag
+              id: tag.guid
+              name: tag.name
+
+          return stickers
 
       else
         throw "don't call me for page stickers."
@@ -20,26 +28,32 @@ UserPrefs = @UserPrefs
 
     fetchPage: (params) ->
 
-      new RSVP.Promise (resolve, reject) ->
-
+      Q.fcall ->
         obj.fetchNote
           url: params.url
-          callback: (result)->
-            pageData = 
-              url: params.url
-              title: params.title
-              stickers: result?.tags?.map (tag) ->
-                name: tag.name
-                guid: tag.guid
-              note: result
+      .then (result)->
+        pageData = 
+          url: params.url
+          title: params.title
+          stickers: result?.tags?.map (tag) ->
+            name: tag.name
+            guid: tag.guid
+          note: result
 
-            # if no previous note for this url
-            pageData.stickers ||= []
+        # if no previous note for this url
+        pageData.stickers ||= []
 
-            resolve pageData
+        page = new Page pageData
+        return page
+
+    createSticker: (newSticker) ->
+      obj.persist 'sticker', newSticker
+
+    updateSticker: (newSticker) ->
+      obj.persist 'sticker', newSticker
 
 
-    persist: (type, modelObj, resultHandler) ->
+    persist: (type, modelObj) ->
       # FIXME update the note after creation on multiple stickerings.
 
       switch type
@@ -66,11 +80,19 @@ UserPrefs = @UserPrefs
           #   tagNames: modelObj.stickers.map (sticker) -> sticker.name          
 
         when 'sticker'
-          obj.createTag( UserPrefs.sticker_prefix + modelObj.name )
-          .then (tag) ->
-            $log.info { msg: "created new tag", tag }
-          
-            resultHandler tag
+          if modelObj.id
+            # update
+            modelObj.implObj.name = modelObj.name
+            obj.updateTag( modelObj.implObj)
+          else
+            obj.createTag( modelObj)
+            .then (tag) ->
+              new Sticker
+                id: tag.guid
+                name: tag.name
+                implObj: tag
+            
+            
           
 
       # # post note
@@ -96,7 +118,10 @@ UserPrefs = @UserPrefs
       obj.authToken = localStorage.getItem 'evernote_authToken'
       obj.noteStoreURL = localStorage.getItem 'evernote_noteStoreURL'
 
-      throw "couldn't intialise service access from localStorage" unless obj.authToken and obj.noteStoreURL and obj.authToken != typeof undefined
+      unless obj.authToken and obj.noteStoreURL and obj.authToken != typeof undefined
+        throw 
+          msg: "couldn't intialise service access from localStorage" 
+          errorType: "authentication"
 
       noteStoreTransport = new Thrift.BinaryHttpTransport(obj.noteStoreURL)
       noteStoreProtocol = new Thrift.BinaryProtocol(noteStoreTransport)
@@ -104,21 +129,41 @@ UserPrefs = @UserPrefs
 
     ##
 
-    listTags: (callback) ->
-      obj.noteStore.listTags obj.authToken, callback
+    listTags: ->
+      deferred = Q.defer()
+
+      obj.noteStore.listTags obj.authToken, (results)->
+        obj.ifError results, deferred
+
+        deferred.resolve results
     
-    createTag: (name) ->
-      new RSVP.Promise (resolve, reject) ->
-        tag = new Tag()
-        tag.name = name
-        obj.noteStore.createTag obj.authToken, tag, (results) ->
-          if results.type == 'error'
-            reject results
-          else
-            resolve results
+      deferred.promise
+
+    createTag: (tagData) ->
+      deferred = Q.defer()
+
+      tag = new Tag()
+      tag.name = tagData.name
+      obj.noteStore.createTag obj.authToken, tag, (result) ->
+        obj.ifError result, deferred
+
+        deferred.resolve result
+    
+      deferred.promise
+
+    updateTag: (tag) ->
+      deferred = Q.defer()
+
+      obj.noteStore.updateTag obj.authToken, tag, (err, result) ->
+        obj.ifError err, deferred
+
+        deferred.resolve result
+
+      deferred.promise
         
-    
     fetchNote: (args) ->
+      deferred = Q.defer()
+
       pageSize = 10;
        
       filter = new NoteFilter()
@@ -132,7 +177,7 @@ UserPrefs = @UserPrefs
       # sourceApplication TODO
 
       obj.noteStore.findNotesMetadata obj.authToken, filter, 0, pageSize, spec, (notesMetadata) =>
-        throw notesMetadata if notesMetadata.type == "error"
+        obj.ifError notesMetadata, deferred
 
         $log.info { msg: "fetched notes", filter, spec, notesMetadata }
         if notesMetadata.notes.length > 1
@@ -151,11 +196,13 @@ UserPrefs = @UserPrefs
           #   args.callback note
 
           fetchTags = noteMd.tagGuids?.map (tagGuid) =>
-            new RSVP.Promise (resolve, reject) =>
-              obj.noteStore.getTag obj.authToken, tagGuid, (tag) ->
-                reject tag if tag.type == "error"
+            d2 = Q.defer()
+            obj.noteStore.getTag obj.authToken, tagGuid, (tag) ->
+              obj.ifError tag, d2.reject
 
-                resolve tag
+              d2.resolve tag
+
+            d2.promise
           
           note = 
             guid: noteMd.guid
@@ -163,79 +210,96 @@ UserPrefs = @UserPrefs
             tags: []
                      
           if fetchTags
-            RSVP.all(fetchTags)
+            Q.all(fetchTags)
             .then (tags)->
               note.tags = tags
 
-              args.callback note
+              deferred.resolve note
+
           else
-            args.callback note
+            deferred.resolve note
         else
           $log.info "no note matching #{args.url}"
-          args.callback null          
+          deferred.resolve null          
     
+      deferred.promise
+
+
     saveNote: (args) ->
-      new RSVP.Promise (resolve, reject) =>
+      deferred = Q.defer()
 
-        note = new Note()
-        note.title = args.title
-        note.tagNames = args.tags.map (tag) -> 
-          throw "invalid tag: #{tag}" unless tag.name
-          tag.name
+      note = new Note()
+      note.title = args.title
+      note.tagNames = args.tags.map (tag) -> 
+        throw "invalid tag: #{tag}" unless tag.name
+        tag.name
 
-        attrs = new NoteAttributes()
-        attrs.sourceURL = args.url
-        note.attributes = attrs
+      attrs = new NoteAttributes()
+      attrs.sourceURL = args.url
+      note.attributes = attrs
 
-        thumbnailDataB64 = _(args.thumbnail.split(',')).last()
-        thumbnailData = atob thumbnailDataB64
-        ab = new ArrayBuffer(thumbnailData.length)
-        ia = new Uint8Array(ab)
-        for e, i in thumbnailData
-          ia[i] = thumbnailData.charCodeAt(i)
-        thumbnailData = ia
+      thumbnailDataB64 = _(args.thumbnail.split(',')).last()
+      thumbnailData = atob thumbnailDataB64
+      ab = new ArrayBuffer(thumbnailData.length)
+      ia = new Uint8Array(ab)
+      for e, i in thumbnailData
+        ia[i] = thumbnailData.charCodeAt(i)
+      thumbnailData = ia
 
-        thumbnailMd5Hex = faultylabs.MD5 thumbnailData
-        
-        data = new Data()
-        data.size = thumbnailData.length
-        data.body = thumbnailData
-        data.bodyHash = thumbnailMd5Hex
+      thumbnailMd5Hex = faultylabs.MD5 thumbnailData
+      
+      data = new Data()
+      data.size = thumbnailData.length
+      data.body = thumbnailData
+      data.bodyHash = thumbnailMd5Hex
 
-        resource = new Resource()
-        resource.mime = 'image/jpeg'
-        resource.data = data
+      resource = new Resource()
+      resource.mime = 'image/jpeg'
+      resource.data = data
 
-        note.resources = [ resource ]
+      note.resources = [ resource ]
 
-        note.content = """
-          <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
-          <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
-            <div>#{args.content}</div>
-            <en-media type="image/jpeg" hash="#{thumbnailMd5Hex}" width="100%"/>
-          </en-note>
-          """
+      note.content = """
+        <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+        <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
+          <div>#{args.content}</div>
+          <en-media type="image/jpeg" hash="#{thumbnailMd5Hex}" width="100%"/>
+        </en-note>
+        """
 
-        if args.guid
-          # update the note.
+      if args.guid
+        # update the note.
 
-          note.guid = args.guid
-          obj.noteStore.updateNote obj.authToken, note, (callback) ->
-            reject callback if callback.type == "error" or callback.name?.match /Exception/
+        note.guid = args.guid
+        obj.noteStore.updateNote obj.authToken, note, (callback) ->
+          obj.ifError callback, deferred
 
-            $log.info { msg: 'note updated', callback }
+          $log.info { msg: 'note updated', callback }
 
-            resolve note
-        else
-          obj.noteStore.createNote obj.authToken, note, (callback) ->
-            reject callback if callback.type == "error" or callback.name?.match /Exception/
+          deferred.resolve note
+      else
+        obj.noteStore.createNote obj.authToken, note, (callback) ->
+          obj.ifError callback, deferred
 
-            $log.info { msg: 'note saved', callback }
-            note.guid = callback.guid
+          $log.info { msg: 'note saved', callback }
+          note.guid = callback.guid
 
-            resolve note
+          deferred.resolve note
 
-      # FIXME wrap in a promise so we can report errors during client-server interaction.
+      deferred.promise
+
+
+    ## helpers
+
+    ifError: (result, deferred) ->
+      if result.parameter == 'authenticationToken'
+        result.errorType = 'authentication'
+
+        deferred.reject result
+
+      else
+        deferred.reject result if result.type == "error" or result.name?.match /Exception/
+
 
 
   obj

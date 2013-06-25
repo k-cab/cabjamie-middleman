@@ -1,12 +1,28 @@
 
-
 class Sticker
   constructor: (data) ->
-    Object.keys(data).map (key) =>
-      this[key] = data[key]  
+    if data
+      Object.keys(data).map (key) =>
+        this[key] = data[key]  
 
   name: 'unnamed sticker'
+  colour: 'yellow'
 
+  imgOff: ->
+    "assets/sticker-off-#{@colour}.png"
+  imgOn: ->
+    "assets/sticker-on-#{@colour}.png"
+  
+  isColour: (colour) ->
+    return @colour == colour.name if colour.name
+    @colour == colour.value
+
+  setColour: (colour) ->
+    if colour.name
+      @colour = colour.name
+    else
+      @colour = colour.value
+  
 
 class Page
   constructor: (data) ->

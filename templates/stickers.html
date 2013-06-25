@@ -20,54 +20,78 @@
 
     <!-- my stickers -->
     <li class="sticker on-page-{{page.hasSticker(sticker)}}"
-      data-ng-repeat="sticker in stickers">
+      data-ng-repeat="sticker in stickers"
+      data-ng-mouseover="highlight(sticker)"
+      data-ng-mouseleave="highlight(null)"
+      >
 
       <a class="sticker-image"
         data-ng-click="toggleSticker(sticker)">
-        <img src="assets/sticker-on.png" alt="The page is stickered with {{sticker.name}}."
+        <img data-ng-src="{{sticker.imgOn()}}" alt="Page stickered with {{sticker.name}}."
           data-ng-if="page.hasSticker(sticker)" data-ng-animate="'transition-image'">
-        <img src="assets/sticker-off.png" alt="The page is not stickered with {{sticker.name}}."
+        <img data-ng-src="{{sticker.imgOff()}}" alt="Page not stickered with {{sticker.name}}."
           data-ng-if="! page.hasSticker(sticker)" data-ng-animate="'transition-image'">
       </a>
+
       <a class="sticker-label"
-        data-ng-click="toggleSticker(sticker)">{{sticker.name}}</a>
+        data-ng-click="toggleSticker(sticker)">
+        {{sticker.name}}
+      </a>
+
+      <div class="control sticker-edit"
+        data-ng-click="editSticker(sticker)">
+      </div>
+
     </li>
 
     <!-- new sticker -->
     <li class="sticker">
-      <a class="sticker-image-new absolute-positioning-container" style="display:table;"
+      <a class="sticker-image sticker-image-new absolute-positioning-container"
         data-ng-click="newSticker.creatingNewSticker = true">
 
-        <img src="assets/sticker-off.png" alt="New sticker...">
+        <img src="assets/new-sticker.png" alt="New sticker...">
       </a>
       <div class="new-sticker-form"
         data-ng-show="newSticker.creatingNewSticker">
         
-        <input placeholder="new sticker" class="new-sticker-name"
+        <input class="text-label sticker-name-field" placeholder="new sticker"
           data-ng-model="newSticker.name">
-        <button data-ng-click="createNewSticker()">OK</button>
-        <button data-ng-click="newSticker.creatingNewSticker = false">Cancel</button>          
+        <button class="control ok"
+          data-ng-click="createNewSticker()">OK</button>
+        <button class="control cancel"
+          data-ng-click="newSticker.creatingNewSticker = false">Cancel</button>          
 
         <!-- TODO validation / reactive states -->
       </div>
     </li>
   </ul>
 
-  <div class="edit-sticker"
+  <div class="edit-sticker overlay"
     data-ng-show="editedSticker">
 
-    <img data-ng-src="{{editedSticker.imgOn}}" alt="{{editedSticker.name}}" class="edit-sticker-img">
-    <input data-ng-model="editedSticker.name"/>
-    <ul class="edit-sticker-colours">
-      <li class="colour colour-selected-{{editedSticker.isColour(colour)}}"
-        data-ng-repeat="colour in colours"
-        data-ng-click="editedSticker.setColour(colour)">
-          {{colour.name}}
-      </li>
-    </ul>
+    <div class="overlay-content">
 
-    <button data-ng-click="finishEditingSticker()">OK</button>
-    <button data-ng-click="cancelEditingSticker()">Cancel</button>
+      <img class="edit-sticker-img"
+        data-ng-src="{{editedSticker.imgOn()}}" alt="{{editedSticker.name}}">
+
+      <input class="edit-sticker-name"
+        data-ng-model="editedSticker.name"/>
+
+      <ul class="edit-sticker-colours">
+        <li class="colour-item colour-selected-{{editedSticker.isColour(colour)}}"
+          style="background: {{colour.code}};"
+          data-ng-repeat="colour in colours"
+          data-ng-click="editedSticker.setColour(colour)">
+        </li>
+      </ul>
+
+      <div class="control-container">
+        <div class="control cancel"
+          data-ng-click="cancelEditingSticker()">Cancel</div>
+        <div class="control ok"
+          data-ng-click="finishEditingSticker()">OK</div>
+      </div>
+    </div>
   </div>
 
 </div>

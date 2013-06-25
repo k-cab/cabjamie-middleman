@@ -1,5 +1,8 @@
 # FIXME modularise mixed concerns (popup, stickers).
 
+# DEV
+Q.longStackSupport = true
+
 @UserPrefs = 
   update: (key, val) ->
     if val == undefined
@@ -32,6 +35,7 @@
   sticker_prefix_pattern: /^##/
   sticker_prefix: '##'
 
+  env: 'production'
 
  
 @appModule = angular.module("appModule", ['ui'], ($routeProvider, $locationProvider) ->
@@ -48,22 +52,46 @@
 
 that = this
 @AppCntl = ($scope, $location, $log, $rootScope, 
-  userDataSource, runtime,
+  runtime,
   stubDataSvc, evernoteSvc
   ) ->
 
+
+  that.appModule.userDataSource = evernoteSvc
+  
+  # REFACTOR
   that.appModule.env = (newEnv) ->
     if newEnv == 'dev'
-      userDataSource.impl = stubDataSvc
+      that.appModule.userDataSource = stubDataSvc
     else
-      userDataSource.impl = evernoteSvc
+      that.appModule.userDataSource = evernoteSvc
 
     # all state refreshes.
-    userDataSource.init()
-    $scope.update()
+    Q.fcall ->
+      that.appModule.userDataSource.init()
+      $scope.update()
+    
+    .fail (e) ->
+      # HACK check for authentication error and redirect.
+      if e.errorType == 'authentication'
+        $scope.login()
+      else
+        $rootScope.handleError e
+        $rootScope.$apply()
+    .done()
+
+  $rootScope.handleError = (e) ->
+    $log.error e
+
+    $rootScope.msg = "error: #{e}"
+    $rootScope.error = e
 
 
-  ## controller actions
+
+  #### controller actions
+
+
+  ## stickering
 
   $scope.toggleSticker = (sticker) ->
     doit = ->
@@ -79,42 +107,46 @@ that = this
       $rootScope.msg = "Saved."
       $rootScope.$apply()
 
-    .then null, (error) ->
-      $log.error error
-      $rootScope.msg =
-        msg: "error"
-        error: error
-        url: $scope.page.url
+    .fail (error) ->
+      $rootScope.handleError error
 
   $scope.addSticker = (sticker) -> 
     $scope.page.addSticker sticker
-    userDataSource.persist 'page', $scope.page
+    that.appModule.userDataSource.persist 'page', $scope.page
 
   $scope.removeSticker = (sticker) ->
     $scope.page.removeSticker sticker
-    userDataSource.persist 'page', $scope.page
+    that.appModule.userDataSource.persist 'page', $scope.page
 
     # TODO decouple the writes from the user interaction, coalecse and schedule.
 
   
+  ## sticker creation
+
   $scope.createNewSticker = ->
-    $scope.newSticker.name = UserPrefs.sticker_prefix + $scope.newSticker.name unless $scope.newSticker.name.match UserPrefs.sticker_prefix_pattern
+    newSticker = $scope.newSticker
+    newSticker.name = $scope.prefixedName newSticker.name
 
+    that.appModule.userDataSource.createSticker(newSticker)
+    .then (savedSticker)->
+      $log.info {msg: "new sticker", sticker:savedSticker}
 
-    $log.info {msg: "new sticker", sticker:$scope.newSticker}
+      # save the new sticker. FIXME
+      # that.appModule.userDataSource.persist 'sticker', $scope.savedSticker, (savedSticker) ->
+      #   $scope.stickers.push savedSticker
+      #   $scope.$apply()
+      
+      $scope.stickers.push savedSticker
+      $scope.newSticker = null
+      $scope.$apply()
 
-    # userDataSource.persist 'sticker', $scope.newSticker, (newSticker) ->
-    #   $scope.stickers.push newSticker
-    #   $scope.$apply()
+      # $scope.fetchStickers()
+      # FIXME get delta of stickers
+    .fail (err) ->
+      $rootScope.handleError err
     
-    $scope.stickers.push $scope.newSticker
-    $scope.newSticker = null
 
-    # TODO error case
-
-    # $scope.fetchStickers()
-    # FIXME get delta of stickers
-
+  ## sticker ordering
 
   $scope.sortableOptions =
     stop: (e, ui)->
@@ -142,98 +174,181 @@ that = this
     orderedStickers
 
 
+  ## data
+
   $scope.fetchPage = ->
 
-    promise = new RSVP.Promise (resolve, reject) ->
-      url = if $scope.page 
-          $scope.page.url 
-        else
-          window.location.href
+    url = if $scope.page 
+        $scope.page.url 
+      else
+        window.location.href
 
-      runtime.pageForUrl( url )
-      .then (pageSpec)->
-        userDataSource.fetchPage pageSpec
-      .then (page) ->
-        try
-          $scope.page = page
-          $scope.$apply()
+    runtime.pageForUrl( url )
+    .then (pageSpec)->
+      that.appModule.userDataSource.fetchPage pageSpec
 
-          # chrome.pageCapture.saveAsMHTML( { tabId: page.id } )
-          # .then (mhtmlData) ->
-          #   page.pageContent = mhtmlData
-            # $log.info { msg: " got the visual representation.", mhtml:mhtmlData }
+    .then (page) ->
+      $scope.page = page
+      $scope.$apply()
 
-          runtime.capturePageThumbnail(page)
-          .then (dataUrl) ->
-            $log.info { msg: " got the visual representation.", dataUrl }
+      # chrome.pageCapture.saveAsMHTML( { tabId: page.id } )
+      # .then (mhtmlData) ->
+      #   page.pageContent = mhtmlData
+        # $log.info { msg: " got the visual representation.", mhtml:mhtmlData }
 
-            $scope.page.thumbnailUrl = dataUrl
+      runtime.capturePageThumbnail(page)
 
-            resolve $scope.page
+    .then (dataUrl) ->
+      $log.info { msg: " got the visual representation.", dataUrl }
 
-        catch e
-          reject e
+      $scope.page.thumbnailUrl = dataUrl
+      $scope.$apply()
+
 
   $scope.fetchStickers = (page)->    
+    that.appModule.userDataSource.fetchStickers( null)
+    .then (stickers) ->
+      orderedStickers = $scope.orderedStickers stickers
+      orderedStickers = $scope.colouredStickers orderedStickers
 
-    promise = new RSVP.Promise (resolve, reject) ->
-      userDataSource.fetchStickers null, (stickers) ->
-        try
+      $scope.stickers = orderedStickers
 
-          orderedStickers = $scope.orderedStickers stickers
-
-          $scope.stickers = orderedStickers
-
-          # this seems redundant now, but sweep for regressions
-          # $scope.$apply()
-
-          resolve $scope.stickers
-        catch e
-          reject e
-
+      $scope.$apply()
 
   $scope.update = ->
     $rootScope.msg = "Fetching data..."
+    $rootScope.$apply()
 
-    RSVP.all([ 
+    Q.all([ 
       $scope.fetchPage(), 
       $scope.fetchStickers()
     ])
     .then ->
       $rootScope.msg = ""
-      $scope.$apply()
-    .then null, (error) ->
-      $log.error error
-      throw error
+      $rootScope.$apply()
+    
 
-    return null
-
+  ## workflow
 
   $scope.login = ->
     # save the location so the oauth module can redirect back.
     localStorage.setItem "oauth_success_redirect_path", location.href
 
     $location.path "/login"
+    $scope.$apply()
 
+
+  ## view
 
   $scope.showPageDetails = ->
     ! runtime.hasRealPageContext()
 
+  $scope.highlight = (sticker) ->
+    $scope.highlightedSticker = sticker
+  
+  $scope.isHighlighted = (sticker) ->
+    $scope.highlightedSticker == sticker
 
-  ## doit
 
-  try 
-    $rootScope.msg = "Test msg."
+  ## sticker editing
 
-    that.appModule.env 'production'
-  catch e
-    $log.error e
+  $scope.colours = [
+    {
+      name: 'yellow'
+      code: '#eeed50'
+    }
+    {
+      name: 'red'
+      code: '#ef4e4e'
+    }
+    {
+      name: 'violet'
+      code: '#85648c'
+    }
+    {
+      name: 'pink'
+      code: '#deadb4'
+    }
+    {
+      name: 'green'
+      code: '#95a666'
+    }
+    {
+      name: 'khaki'
+      code: '#4f5549'
+    }
+    {
+      name: 'blue'
+      code: '#82b2c6'
+    }
+    {
+      name: 'navy'
+      code: '#3a5579'
+    }
+  ]
 
-    $rootScope.msg = "error: #{e}"
-    $rootScope.error = e
+  $scope.editSticker = (sticker) ->
+    $scope.editedSticker = that.clone sticker
 
-    # do the login thing.
-    # $scope.login()
+  $scope.finishEditingSticker =  ->
+    oldSticker = $scope.stickers.filter( (sticker) -> sticker.id == $scope.editedSticker.id )[0]
+
+    $scope.editedSticker.name = $scope.prefixedName $scope.editedSticker.name
+    # save the changed data.
+    that.appModule.userDataSource.updateSticker($scope.editedSticker)
+    .then ->
+      # replace the sticker in the collection with editedSticker.
+      i = $scope.stickers.indexOf oldSticker
+      $scope.stickers[i] = $scope.editedSticker
+
+      # save collection properties.
+      $scope.saveStickerOrder()
+      $scope.saveStickerColours()
+
+      $scope.editedSticker = null
+
+      $scope.$apply()
+      
+    .fail (error) ->
+      $rootScope.handleError error
+
+
+  $scope.cancelEditingSticker = ->
+    $scope.editedSticker = null
+
+  $scope.saveStickerColours = ->
+    colours = $scope.stickers.map (e) -> 
+      name: e.name
+      colour: e.colour
+    
+    UserPrefs.update 'stickerColours', colours
+
+  $scope.colouredStickers = (stickers) ->
+
+    colours = UserPrefs.get 'stickerColours'
+    if colours
+      remainingColours = colours
+      stickers.map (sticker) ->
+        colourSpec = remainingColours.filter((e) -> e.name == sticker.name)[0]
+        sticker.colour = colourSpec.colour if colourSpec
+
+        remainingColours = _.reject remainingColours, (e) -> e == colourSpec
+      
+    stickers
+    
+
+  $scope.prefixedName = (name) ->
+    if name.match UserPrefs.sticker_prefix_pattern
+      name
+    else
+      UserPrefs.sticker_prefix + name 
+  
+  #### doit
+
+  that.appModule.env UserPrefs.get('env')
+
+  # do the login thing.
+  # $scope.login()
 
     
   # runtime.onMsg 'testType', (args...) ->
@@ -242,4 +357,28 @@ that = this
   # runtime.sendMsg 'testType', null, (response) ->
   #   console.log "got response: #{response}"
   
-  
+
+## REFACTOR
+ 
+# http://coffeescriptcookbook.com/chapters/classes_and_objects/cloning
+@clone = (obj) ->
+  if not obj? or typeof obj isnt 'object'
+    return obj
+
+  if obj instanceof Date
+    return new Date(obj.getTime()) 
+
+  if obj instanceof RegExp
+    flags = ''
+    flags += 'g' if obj.global?
+    flags += 'i' if obj.ignoreCase?
+    flags += 'm' if obj.multiline?
+    flags += 'y' if obj.sticky?
+    return new RegExp(obj.source, flags) 
+
+  newInstance = new obj.constructor()
+
+  for key of obj
+    newInstance[key] = clone obj[key]
+
+  return newInstance
