@@ -3,7 +3,8 @@ app = appModule
 
 angular.module( 'appModule' )
   .controller 'StickersCntl',
-    ($scope, userPrefs, runtime, globalsSvc) ->
+    ($log, $scope, $rootScope,
+      userPrefs, runtime, globalsSvc) ->
 
       # expose controller
       app.stickersC = 
@@ -36,11 +37,11 @@ angular.module( 'appModule' )
 
       $scope.addSticker = (sticker) -> 
         $scope.page.addSticker sticker
-        that.appModule.userDataSource.persist 'page', $scope.page
+        app.userDataSource.persist 'page', $scope.page
 
       $scope.removeSticker = (sticker) ->
         $scope.page.removeSticker sticker
-        that.appModule.userDataSource.persist 'page', $scope.page
+        app.userDataSource.persist 'page', $scope.page
 
         # TODO decouple the writes from the user interaction, coalecse and schedule.
 
@@ -51,12 +52,12 @@ angular.module( 'appModule' )
         newSticker = $scope.newSticker
         newSticker.name = $scope.prefixedName newSticker.name
 
-        that.appModule.userDataSource.createSticker(newSticker)
+        app.userDataSource.createSticker(newSticker)
         .then (savedSticker)->
           $log.info {msg: "new sticker", sticker:savedSticker}
 
           # save the new sticker. FIXME
-          # that.appModule.userDataSource.persist 'sticker', $scope.savedSticker, (savedSticker) ->
+          # app.userDataSource.persist 'sticker', $scope.savedSticker, (savedSticker) ->
           #   $scope.stickers.push savedSticker
           #   $scope.$apply()
           
@@ -79,12 +80,12 @@ angular.module( 'appModule' )
 
       $scope.saveStickerOrder = ->
         # persist the sticker order list.
-        that.UserPrefs.update 'stickerOrder',
+        userPrefs.update 'stickerOrder',
           $scope.stickers.map (sticker)-> sticker.name
 
       $scope.orderedStickers = (stickers)->
         # apply the sticker order list.
-        stickerOrder = that.UserPrefs.get 'stickerOrder'
+        stickerOrder = userPrefs.get 'stickerOrder'
         stickerOrder = [] if ! stickerOrder
 
         orderedStickers = stickerOrder.map (name) ->
@@ -109,7 +110,7 @@ angular.module( 'appModule' )
 
         runtime.pageForUrl( url )
         .then (pageSpec)->
-          that.appModule.userDataSource.fetchPage pageSpec
+          app.userDataSource.fetchPage pageSpec
 
         .then (page) ->
           $scope.page = page
@@ -130,7 +131,7 @@ angular.module( 'appModule' )
 
 
       $scope.fetchStickers = (page)->    
-        that.appModule.userDataSource.fetchStickers( null)
+        app.userDataSource.fetchStickers( null)
         .then (stickers) ->
           orderedStickers = $scope.orderedStickers stickers
           orderedStickers = $scope.colouredStickers orderedStickers
@@ -209,7 +210,7 @@ angular.module( 'appModule' )
 
         $scope.editedSticker.name = $scope.prefixedName $scope.editedSticker.name
         # save the changed data.
-        that.appModule.userDataSource.updateSticker($scope.editedSticker)
+        app.userDataSource.updateSticker($scope.editedSticker)
         .then ->
           # replace the sticker in the collection with editedSticker.
           i = $scope.stickers.indexOf oldSticker
@@ -235,12 +236,12 @@ angular.module( 'appModule' )
           name: e.name
           colour: e.colour
         
-        UserPrefs.update 'stickerColours', colours
+        userPrefs.update 'stickerColours', colours
 
 
       $scope.colouredStickers = (stickers) ->
 
-        colours = UserPrefs.get 'stickerColours'
+        colours = userPrefs.get 'stickerColours'
         if colours
           remainingColours = colours
           stickers.map (sticker) ->
@@ -253,15 +254,15 @@ angular.module( 'appModule' )
         
 
       $scope.prefixedName = (name) ->
-        if name.match UserPrefs.sticker_prefix_pattern
+        if name.match userPrefs.sticker_prefix_pattern
           name
         else
-          UserPrefs.sticker_prefix + name 
+          userPrefs.sticker_prefix + name 
       
 
       #### doit
 
-      # app.env that.UserPrefs.get('env'), $scope
+      # app.env userPrefs.get('env'), $scope
 
       # userPrefs.apply()
 
