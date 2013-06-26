@@ -9,7 +9,10 @@ Q.longStackSupport = true
     controller: 'AppCntl'
   .when "/login",
     templateUrl: "templates/oauth.html"
-    # controller: 'LoginCntl'
+    controller: 'AuthenticationCntl'
+  .when "/logout",
+    templateUrl: "templates/authentication.html"
+    controller: 'AuthenticationCntl'
   .when "/stickers",
     templateUrl: "templates/stickers.html"
     controller: 'StickersCntl'
@@ -42,9 +45,9 @@ Q.longStackSupport = true
     # globalsSvc.update()
   .then ->
     if $rootScope.authentication.loggedIn
-      $location.path( "/stickers")
+      $location.path "/stickers"
     else
-      $rootScope.authentication.login()
+      $location.path "/login"
 
     $rootScope.$apply()
 

@@ -2,10 +2,10 @@
 @appModule = angular.module("appModule", [ ], ($routeProvider, $locationProvider) ->
 )
 
-# controller used inside the iframe.
+# controller used inside the iframe - i.e. managed by different app.
 @EvernoteLoginCntl = (
   $scope, $rootScope, $location, $log, 
-  evernoteSvc) ->
+  globalsSvc, evernoteSvc) ->
 
   $scope.loginWithEvernote = ->
     window.evernoteAuthenticator.initialize()
@@ -28,7 +28,7 @@
       localStorage.setItem 'evernote_noteStoreURL', window.noteStoreURL
 
       evernoteSvc.init()
-      $rootScope.authentication.setLoggedin()
+      $rootScope.authentication.setLoggedIn()
 
       $log.info
         msg: "got access token from evernote"

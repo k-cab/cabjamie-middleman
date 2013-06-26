@@ -3,7 +3,7 @@ that = this
 @appModule.factory 'globalsSvc', ($log, $rootScope, $location,
   userPrefs) ->
   
-
+  # set up an authentication object under root scope, as ui needs to invoke ops. all controllers must declare this service as an injected dep in order to make authentication flows work.
   $rootScope.authentication =
     
     loginAction:
@@ -14,21 +14,16 @@ that = this
       url: '#/logout'      
       message: 'Logout'
 
-    nextAction: @loginAction
-
-    loggedIn: false
-
-    login: ->
-      # save the location so the oauth module can redirect back.
-      localStorage.setItem "oauth_success_redirect_path", location.href
-
-      $location.path "/login"
-      $rootScope.$apply()
-
-    setLoggedin: ->
+    setLoggedIn: ->
       @loggedIn = true
+      @nextAction = @logoutAction
 
-      # TODO update next action.
+    setLoggedOut: ->
+      @loggedIn = false
+      @nextAction = @loginAction
+
+  $rootScope.authentication.loggedIn = false
+  $rootScope.authentication.nextAction = $rootScope.authentication.loginAction
 
 
   # looking redundant - just use rootscope?
@@ -65,7 +60,7 @@ that = this
     update: ->
       # update all dependents.
       userPrefs.userDataSource.init()
-      $rootScope.authentication.setLoggedin()
+      $rootScope.authentication.setLoggedIn()
       that.appModule.stickersC?.update()
 
 
