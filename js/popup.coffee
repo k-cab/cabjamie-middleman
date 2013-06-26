@@ -1,4 +1,3 @@
-# FIXME modularise mixed concerns (popup, stickers).
 
 # DEV
 Q.longStackSupport = true
@@ -81,43 +80,8 @@ that = this
       @userDataSource = @[env].userDataSource
 
 
-# FIXME move into a service
-@appModule.handleError = (e) ->
-  # $log.error e
 
-  # $rootScope.msg = "error: #{e}"
-  # $rootScope.error = e
-
-  console.warn { msg: 'Exception!!', obj:e }
-
-@appModule.update = ->
-  # update all dependents.
-  that.appModule.userPrefs.userDataSource.init()
-  that.appModule.stickersC.update()
-
-
-# TODO refactor so it's less ugly.
-@appModule.doit = ->
-
-  # all state refreshes.
-  Q.fcall ->
-    that.appModule.userPrefs.apply 'production'
-    that.appModule.update()
-  .fail (e) ->
-    # FIXME we need another place where we can use $scope, $rootscope,
-    # or need to remove these deps.
-    # 
-    # # HACK check for authentication error and redirect.
-    # if e.errorType == 'authentication'
-    #   $scope.login()
-    # else
-    #   $rootScope.handleError e
-    #   $rootScope.$apply()
-
-    @appModule.handleError e
-
-  .done()
-
+# no longer relevant after routing changes.
 @AppCntl = ($scope, $location, $log, $rootScope, 
   runtime,
   stubDataSvc, evernoteSvc
@@ -143,11 +107,12 @@ that = this
 
   #### doit
   Q.fcall ->
-    $location.path( "/stickers")
+    # TODO check if login needed
+    $scope.login()
+    # else
+    #   $location.path( "/stickers")
   .done()
 
-  # do the login thing.
-  # $scope.login()
 
     
   # runtime.onMsg 'testType', (args...) ->

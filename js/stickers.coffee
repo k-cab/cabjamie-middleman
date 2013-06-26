@@ -3,7 +3,7 @@ app = appModule
 
 angular.module( 'appModule' )
   .controller 'StickersCntl',
-    ($scope, userPrefs, runtime) ->
+    ($scope, userPrefs, runtime, globalsSvc) ->
 
       # expose controller
       app.stickersC = 
@@ -32,7 +32,7 @@ angular.module( 'appModule' )
           $rootScope.$apply()
 
         .fail (error) ->
-          app.handleError error
+          globalsSvc.handleError error
 
       $scope.addSticker = (sticker) -> 
         $scope.page.addSticker sticker
@@ -67,7 +67,7 @@ angular.module( 'appModule' )
           # $scope.fetchStickers()
           # FIXME get delta of stickers
         .fail (err) ->
-          app.handleError err
+          globalsSvc.handleError err
         
 
       ## sticker ordering
@@ -224,7 +224,7 @@ angular.module( 'appModule' )
           $scope.$apply()
           
         .fail (error) ->
-          app.handleError error
+          globalsSvc.handleError error
 
 
       $scope.cancelEditingSticker = ->
@@ -265,7 +265,7 @@ angular.module( 'appModule' )
 
       # userPrefs.apply()
 
-      app.doit()
+      globalsSvc.doit()
 
 
 ## REFACTOR
