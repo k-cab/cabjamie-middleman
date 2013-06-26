@@ -80,20 +80,29 @@ that = this
 
       @userDataSource = @[env].userDataSource
 
-      # update all dependents.
-      @userDataSource.init()
-      that.appModule.stickersC.update()
 
+# FIXME move into a service
+@appModule.handleError = (e) ->
+  # $log.error e
+
+  # $rootScope.msg = "error: #{e}"
+  # $rootScope.error = e
+
+  console.warn { msg: 'Exception!!', obj:e }
+
+@appModule.update = ->
+  # update all dependents.
+  that.appModule.userPrefs.userDataSource.init()
+  that.appModule.stickersC.update()
 
 
 # TODO refactor so it's less ugly.
 @appModule.doit = ->
-  that.appModule.userPrefs.apply 'production'
 
   # all state refreshes.
   Q.fcall ->
-    that.appModule.userPrefs.userDataSource.init()
-    that.appModule.stickersC.update()
+    that.appModule.userPrefs.apply 'production'
+    that.appModule.update()
   .fail (e) ->
     # FIXME we need another place where we can use $scope, $rootscope,
     # or need to remove these deps.
@@ -105,9 +114,7 @@ that = this
     #   $rootScope.handleError e
     #   $rootScope.$apply()
 
-    console.log
-      msg: 'TODO'
-      error: e
+    @appModule.handleError e
 
   .done()
 
@@ -121,13 +128,6 @@ that = this
   # that.appModule.stubDataSvc = stubDataSvc
   # that.appModule.evernoteSvc = evernoteSvc
   
-
-  # TODO relocate to appModule.
-  $rootScope.handleError = (e) ->
-    $log.error e
-
-    $rootScope.msg = "error: #{e}"
-    $rootScope.error = e
 
 
   ## REFACTOR

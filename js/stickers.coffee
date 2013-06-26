@@ -32,7 +32,7 @@ angular.module( 'appModule' )
           $rootScope.$apply()
 
         .fail (error) ->
-          $rootScope.handleError error
+          app.handleError error
 
       $scope.addSticker = (sticker) -> 
         $scope.page.addSticker sticker
@@ -67,7 +67,7 @@ angular.module( 'appModule' )
           # $scope.fetchStickers()
           # FIXME get delta of stickers
         .fail (err) ->
-          $rootScope.handleError err
+          app.handleError err
         
 
       ## sticker ordering
@@ -224,7 +224,7 @@ angular.module( 'appModule' )
           $scope.$apply()
           
         .fail (error) ->
-          $rootScope.handleError error
+          app.handleError error
 
 
       $scope.cancelEditingSticker = ->
