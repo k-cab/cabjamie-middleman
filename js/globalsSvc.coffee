@@ -1,6 +1,7 @@
 that = this
 
-@appModule.factory 'globalsSvc', ($log, $rootScope, $location) ->
+@appModule.factory 'globalsSvc', ($log, $rootScope, $location,
+  userPrefs) ->
   
 
   $rootScope.authentication =
@@ -15,22 +16,38 @@ that = this
 
     nextAction: @loginAction
 
-    
+    loggedIn: false
+
+    login: ->
+      # save the location so the oauth module can redirect back.
+      localStorage.setItem "oauth_success_redirect_path", location.href
+
+      $location.path "/login"
+      $rootScope.$apply()
+
+    setLoggedin: ->
+      @loggedIn = true
+
+      # TODO update next action.
+
+
+  # looking redundant - just use rootscope?
   obj = 
 
     doit: ->
 
       # all state refreshes.
       Q.fcall ->
-        that.appModule.userPrefs.apply 'production'
+        userPrefs.apply 'production'
         obj.update()
       .fail (e) ->
         # HACK check for authentication error and redirect.
-        if e.errorType == 'authentication'
-          obj.login()
-        else
-          obj.handleError e
+        # if e.errorType == 'authentication'
+        #   $rootScope.authentication.login()
+        # else
+        #   obj.handleError e
 
+        obj.handleError e
       .done()
 
 
@@ -47,16 +64,10 @@ that = this
 
     update: ->
       # update all dependents.
-      that.appModule.userPrefs.userDataSource.init()
-      that.appModule.stickersC.update()
+      userPrefs.userDataSource.init()
+      $rootScope.authentication.setLoggedin()
+      that.appModule.stickersC?.update()
 
-
-    login: ->
-      # save the location so the oauth module can redirect back.
-      localStorage.setItem "oauth_success_redirect_path", location.href
-
-      $location.path "/login"
-      $rootScope.$apply()
 
 
 @appModule.factory 'userPrefs', ($log

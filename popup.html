@@ -62,7 +62,8 @@
 
   <!-- all top-level actions -->
   <div class="row">
-    <a href="#/login" data-ng-show="">{{authentication.nextAction.message}}</a>
+    <a ng-href="{{$root.authentication.nextAction.url}}">{{$root.authentication.nextAction.message}}</a>
+
     <a href="#/about" class="preview">About</a>
 
     <a href="#/whatsnew" class="preview">What's new</a>

@@ -9,7 +9,7 @@ Q.longStackSupport = true
     controller: 'AppCntl'
   .when "/login",
     templateUrl: "templates/oauth.html"
-    # controller: @appCntl.loginCntl
+    # controller: 'LoginCntl'
   .when "/stickers",
     templateUrl: "templates/stickers.html"
     controller: 'StickersCntl'
@@ -36,12 +36,19 @@ Q.longStackSupport = true
 
 
   #### doit
-  # Q.fcall ->
-  #   # TODO check if login needed
-  #   $scope.login()
-  #   # else
-  #   #   $location.path( "/stickers")
-  # .done()
+  Q.fcall ->
+    # update will set authentication status
+    globalsSvc.doit()
+    # globalsSvc.update()
+  .then ->
+    if $rootScope.authentication.loggedIn
+      $location.path( "/stickers")
+    else
+      $rootScope.authentication.login()
+
+    $rootScope.$apply()
+
+  .done()
 
 
     
