@@ -24,66 +24,92 @@ that = this
 @UserPrefs = @appModule.factory 'userPrefs', ($log
   stubDataSvc, evernoteSvc) ->
 
-  @stubDataSvc = stubDataSvc
-  evernoteSvc = evernoteSvc
+  that.appModule.userPrefs = 
+    stubDataSvc: stubDataSvc
+    evernoteSvc: evernoteSvc
 
-  update: (key, val) ->
-    if val == undefined
-      throw "value for key #{key} is undefined"
+    ## defaults.
 
-    @[key] = val
-    localStorage.setItem key, JSON.stringify val
-  
-  get: (k) ->
-    val = localStorage.getItem k
-    if val and val != 'undefined'
-      # update my properties.
-      @[k] = val
-    else
-      # shouldn't set - it would be circular.
+    env: 'production'
+    
+    sticker_prefix_pattern: /^##/
+    sticker_prefix: '##'
 
-      # default to current properties.
-      val = @[k]
-
-    if val
-      try 
-        parsed = JSON.parse(val)
-      catch e
-        return val
-    else
-      console.log "returning null for '#{k}'"
-      null
+    userDataSource: null
 
 
-  apply: (env = 'production')->
-    console.log "applying env '#{env}'"
+    ## envs.
 
-    @userDataSource = @[env].userDataSource
+    production:
+      userDataSource: evernoteSvc
 
-    # update all dependents.
-    @userDataSource.init()
+    dev:
+      userDataSource: stubDataSvc
+
+
+    update: (key, val) ->
+      if val == undefined
+        throw "value for key #{key} is undefined"
+
+      @[key] = val
+      localStorage.setItem key, JSON.stringify val
+    
+    get: (k) ->
+      val = localStorage.getItem k
+      if val and val != 'undefined'
+        # update my properties.
+        @[k] = val
+      else
+        # shouldn't set - it would be circular.
+
+        # default to current properties.
+        val = @[k]
+
+      if val
+        try 
+          parsed = JSON.parse(val)
+        catch e
+          return val
+      else
+        console.log "returning null for '#{k}'"
+        null
+
+
+    apply: (env = 'production')->
+      console.log "applying env '#{env}'"
+
+      @userDataSource = @[env].userDataSource
+
+      # update all dependents.
+      @userDataSource.init()
+      that.appModule.stickersC.update()
+
+
+
+# TODO refactor so it's less ugly.
+@appModule.doit = ->
+  that.appModule.userPrefs.apply 'production'
+
+  # all state refreshes.
+  Q.fcall ->
+    that.appModule.userPrefs.userDataSource.init()
     that.appModule.stickersC.update()
+  .fail (e) ->
+    # FIXME we need another place where we can use $scope, $rootscope,
+    # or need to remove these deps.
+    # 
+    # # HACK check for authentication error and redirect.
+    # if e.errorType == 'authentication'
+    #   $scope.login()
+    # else
+    #   $rootScope.handleError e
+    #   $rootScope.$apply()
 
+    console.log
+      msg: 'TODO'
+      error: e
 
-  ## defaults.
-
-  env: 'production'
-  
-  sticker_prefix_pattern: /^##/
-  sticker_prefix: '##'
-
-  userDataSource: null
-
-
-  ## envs.
-
-  production:
-    userDataSource: evernoteSvc
-
-  dev:
-    userDataSource: stubDataSvc
-
-
+  .done()
 
 @AppCntl = ($scope, $location, $log, $rootScope, 
   runtime,
@@ -95,30 +121,8 @@ that = this
   # that.appModule.stubDataSvc = stubDataSvc
   # that.appModule.evernoteSvc = evernoteSvc
   
-  # REFACTOR
-  that.appModule.env = (newEnv, updatable) ->
-    # set deps.
 
-    if newEnv == 'dev'
-      that.appModule.userDataSource = stubDataSvc
-    else
-      that.appModule.userDataSource = evernoteSvc
-
-
-    # all state refreshes.
-    Q.fcall ->
-      that.appModule.userDataSource.init()
-      updatable.update()
-    .fail (e) ->
-      # HACK check for authentication error and redirect.
-      if e.errorType == 'authentication'
-        $scope.login()
-      else
-        $rootScope.handleError e
-        $rootScope.$apply()
-    .done()
-
-
+  # TODO relocate to appModule.
   $rootScope.handleError = (e) ->
     $log.error e
 

@@ -5,6 +5,13 @@ angular.module( 'appModule' )
   .controller 'StickersCntl',
     ($scope, userPrefs, runtime) ->
 
+      # expose controller
+      app.stickersC = 
+        update: ->
+          $scope.update()
+
+
+
       #### controller actions
 
 
@@ -252,15 +259,13 @@ angular.module( 'appModule' )
           UserPrefs.sticker_prefix + name 
       
 
-      # expose controller
-      app.stickersC = 
-        update: ->
-          $scope.update()
-
-
       #### doit
+
       # app.env that.UserPrefs.get('env'), $scope
-      userPrefs.apply()
+
+      # userPrefs.apply()
+
+      app.doit()
 
 
 ## REFACTOR
