@@ -132,7 +132,10 @@ that = this
       nextIntroVal? new Date(nextIntroVal).isPast()
 
     setFinishedIntro: ->
-      @update 'nextIntro', Date.tomorrow()
+      @update 'nextIntro', @nextDate()
+
+    nextDate: ->
+      Date.tomorrow() # DEV
 
 
 # REFACTOR
