@@ -1,0 +1,17 @@
+[
+	{
+		"imgUrl": "assets/intro-1.png",
+		"text": "text1.",
+		"subtext": "subtext1."
+	},
+	{
+		"imgUrl": "assets/intro-2.png",
+		"text": "text2.",
+		"subtext": "subtext2."
+	},
+	{
+		"imgUrl": "assets/intro-3.png",
+		"text": "text3.",
+		"subtext": "subtext3."
+	}
+]
