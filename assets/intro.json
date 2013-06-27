@@ -1,17 +1,17 @@
 [
 	{
 		"imgUrl": "assets/intro-1.png",
-		"text": "text1.",
+		"text": "Create stickers for different topics.",
 		"subtext": "subtext1."
 	},
 	{
 		"imgUrl": "assets/intro-2.png",
-		"text": "text2.",
+		"text": "Organize web pages with stickers as you browse.",
 		"subtext": "subtext2."
 	},
 	{
 		"imgUrl": "assets/intro-3.png",
-		"text": "text3.",
+		"text": "Your stickers sync with your Evernote account, so you can always find what you need.",
 		"subtext": "subtext3."
 	}
 ]
