@@ -123,5 +123,24 @@ that = this
       console.log "applying env '#{env}'"
 
       @userDataSource = @[env].userDataSource
+
+      # expose it on the app module. there should be a better way to inject the right impl, but it has to be controllable from this method.
       that.appModule.userDataSource = @userDataSource
 
+    needsIntro: ->
+      nextIntroVal = @get 'nextIntro'
+      nextIntroVal? new Date(nextIntroVal).isPast()
+
+    setFinishedIntro: ->
+      @update 'nextIntro', Date.tomorrow()
+
+
+# REFACTOR
+Date.tomorrow = ->
+  today = new Date()
+  tomorrow = new Date()
+  tomorrow.setDate(today.getDate()+1)
+
+Date::isPast = ->
+  now = new Date()
+  @.getTime() < now.getTime()
