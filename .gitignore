@@ -24,3 +24,6 @@ login_evernote.js
 parseSvc.js
 stubDataSvc.js
 model.js
+js/authentication.js
+js/globalsSvc.js
+js/stickers.js

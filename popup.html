@@ -41,6 +41,9 @@
   <script src="js/vendor/angular-ui.min.js"></script>
 
   <script src="js/popup.js"></script>
+  <script src="js/globalsSvc.js"></script>
+  <script src="js/authentication.js"></script>
+  <script src="js/stickers.js"></script>
 
   <script src="js/vendor/parse-1.2.7.js"></script>
   <script src="js/vendor/evernote-sdk-minified.js"></script>
@@ -58,18 +61,43 @@
 
 <body data-ng-app="appModule">
 
-  <div class="row">
-    <a href="#/login">Login</a>
-    <a href="centre.html" target="_blank" class="disabled">Centre</a>
+  <!-- all top-level actions -->
+  <div class="row top-menu">
+
+    <div class="menu-item">
+      <a ng-href="{{$root.authentication.nextAction.url}}">{{$root.authentication.nextAction.message}}</a>
+    </div>
+
+    <div class="menu-item preview">
+      <a href="centre.html" target="_blank">Centre</a>
+    </div>
+      
+    <div class="menu-item horizontal-spacer"></div>
+
+    <div class="menu-item">
+      <a href="#/intro">Intro</a>
+    </div>
+    
+    <div class="menu-item preview">
+      <a href="#/whatsnew">What's new</a>
+    </div>
+
+    <div class="menu-item preview">
+      <a href="#/about">About</a>
+    </div>
+
   </div>
+
 
   <div data-ng-cloak data-ng-view>
   </div>
+
 
   <div class="row msg-container" id="msg-container">
     <h3>Messages</h3>
     <p>{{$root.msg}}</p>
   </div>
+
 
   <div class="show-error overlay"
     data-ng-show="$root.error">

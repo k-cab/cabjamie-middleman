@@ -1,3 +1,5 @@
+app = @appModule
+
 @appModule.factory 'evernoteSvc', ($log, $http) ->
   
   obj = 
@@ -12,7 +14,7 @@
           obj.ifError tags, Q
           
           $log.info tags
-          matchingTags = tags.filter (tag) -> tag.name.match UserPrefs.sticker_prefix_pattern
+          matchingTags = tags.filter (tag) -> tag.name.match app.userPrefs.sticker_prefix_pattern
 
           stickers = matchingTags.map (tag) ->
             sticker = new Sticker
