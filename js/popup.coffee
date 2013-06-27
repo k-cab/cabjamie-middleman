@@ -41,13 +41,13 @@ userPrefs) ->
   $scope.contentSequence = [
     {
       number: 1
-      imgUrl: "assets/intro-#{@number}.png"
+      imgUrl: -> "assets/intro-#{@number}.png"
       text: 'content to go here.'
       subtext: 'if you need detailed explanation, use this.'
     }
     {
       number: 2
-      imgUrl: "assets/intro-#{@number}.png"
+      imgUrl: -> "assets/intro-#{@number}.png"
       text: 'content 2 to go here.'
       subtext: 'if you need detailed explanation, use this.'
     }
