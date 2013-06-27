@@ -34,6 +34,7 @@ Q.longStackSupport = true
   $compileProvider.urlSanitizationWhitelist(/^\s*(https?|chrome-extension):/) 
 
 
+
 @appModule.controller 'IntroCntl',
 ($scope, $log, $location, $resource
 userPrefs) ->
@@ -62,15 +63,20 @@ userPrefs) ->
     # cap the number
     $scope.content = $scope.contentSequence[$scope.currentSequenceNumber]
   
+  $scope.updateButtonVisibility = ->
+    $scope.showNext = $scope.currentSequenceNumber != $scope.contentSequence.length - 1
+    $scope.showPrevious = $scope.currentSequenceNumber != 0
 
   $scope.next = ->
     $log.info "next"
     $scope.currentSequenceNumber += 1
+    $scope.updateButtonVisibility()
     $scope.refreshContent()
 
   $scope.previous = ->
     $log.info "previous"
     $scope.currentSequenceNumber -= 1
+    $scope.updateButtonVisibility()
     $scope.refreshContent()
 
   $scope.finishIntro = ->
@@ -78,20 +84,16 @@ userPrefs) ->
     $location.path '/'
 
   ## doit
+  $scope.updateButtonVisibility()
   $scope.refreshContent()
   
 
-# no longer relevant after routing changes.
+
 @AppCntl = ($scope, $location, $log, $rootScope,
   globalsSvc, userPrefs,
   runtime,
-  stubDataSvc, evernoteSvc
   ) ->
 
-  # that.appModule.runtime = runtime
-
-  # that.appModule.stubDataSvc = stubDataSvc
-  # that.appModule.evernoteSvc = evernoteSvc
   
   #### doit
 
@@ -110,7 +112,11 @@ userPrefs) ->
       $location.path "/login"
 
     $rootScope.$apply()
-
+  .fail (e)->
+    if e.errorType == 'authentication'
+      $location.path "/login"
+      $rootScope.$apply()
+      
   .done()
 
 
