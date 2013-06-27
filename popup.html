@@ -62,24 +62,36 @@
 <body data-ng-app="appModule">
 
   <!-- all top-level actions -->
-  <div class="row">
-    <a ng-href="{{$root.authentication.nextAction.url}}">{{$root.authentication.nextAction.message}}</a>
+  <div class="row top-menu">
 
-    <a href="centre.html" target="_blank" class="preview">Centre</a>
+    <div class="menu-item">
+      <a ng-href="{{$root.authentication.nextAction.url}}">{{$root.authentication.nextAction.message}}</a>
+    </div>
+
+    <div class="menu-item preview">
+      <a href="centre.html" target="_blank">Centre</a>
+    </div>
+      
+    <div class="menu-item horizontal-spacer"></div>
+
+    <div class="menu-item">
+      <a href="#/intro">Intro</a>
+    </div>
     
-    <span class="horizontal-spacer"></span>
+    <div class="menu-item preview">
+      <a href="#/whatsnew">What's new</a>
+    </div>
 
-    <a href="#/intro" class="preview">Intro</a>
-
-    <a href="#/whatsnew" class="preview">What's new</a>
-
-    <a href="#/about" class="preview">About</a>
-
+    <div class="menu-item preview">
+      <a href="#/about">About</a>
+    </div>
 
   </div>
+
 
   <div data-ng-cloak data-ng-view>
   </div>
+
 
   <div class="row msg-container" id="msg-container">
     <h3>Messages</h3>
