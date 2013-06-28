@@ -102,6 +102,17 @@ userPrefs) ->
     return
     
   Q.fcall ->
+
+    # 1st chance to redirect to content. building up some conventions.
+    # if external resource exists, 
+    ###    
+        externalResource = $location.path().externalResource()
+        if externalResource
+          location.href = externalResource
+          return
+    ###
+
+    ## the main business.
     # update will set authentication status
     globalsSvc.doit()
     # globalsSvc.update()
@@ -116,7 +127,7 @@ userPrefs) ->
     if e.errorType == 'authentication'
       $location.path "/login"
       $rootScope.$apply()
-      
+
   .done()
 
 
