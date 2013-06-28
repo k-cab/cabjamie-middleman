@@ -4,8 +4,6 @@
   width: 380px; 
   height: 480px;
   
-  margin: 10px;
-
   background-color: #FFF;
 }
 
@@ -48,6 +46,10 @@ h1, h2, h3, h4 {
   -webkit-box-flex: 30;
 }
 
+.controller-content {
+  min-width: 95%;
+  margin: 10px;
+}
 
 .msg-container {
   position: fixed;
@@ -65,9 +67,10 @@ h1, h2, h3, h4 {
   height: 100%;
   max-height: 100%;
   top: 0;
+  left: 0;
 
   /* gray-out effect.*/
-  background: rgba(235,235,235,0.7);
+  background: rgba(220,220,220,0.7);
 }
 
 /* overlay container shows is centred in viewport.*/
