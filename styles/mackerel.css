@@ -50,6 +50,10 @@ h1, h2, h3, h4 {
   -webkit-box-flex: 30;
 }
 
+.top-menu .about {
+  /* TODO background-image */
+}
+
 .controller-content {
   min-width: 95%;
   margin: 10px;
