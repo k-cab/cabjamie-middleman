@@ -4,13 +4,16 @@
 	<p>{{content.text}}</p>
 </div>
 <div class="control-container">
-	<button class="control_" 
-		data-ng-click="previous()" data-ng-show="showPrevious">
-		Previous</button>
-	<button class="control_" 
-		data-ng-click="next()" data-ng-show="showNext">
-		Next</button>
-	<button class="control_" 
-		data-ng-click="finishIntro()" data-ng-show="! showNext">
-		Finished</button>
+	<div class="control"
+		data-bbl-assetify 
+		data-ng-click="previous()" data-ng-if="showPrevious">
+		Previous</div>
+	<div class="control"
+		data-bbl-assetify 
+		data-ng-click="next()" data-ng-if="showNext">
+		Next</div>
+	<div class="control"
+		data-bbl-assetify 
+		data-ng-click="finishIntro()" data-ng-if="! showNext">
+		OK</div>
 </div>
