@@ -95,20 +95,27 @@
 
 
   <div class="show-error overlay"
-    data-ng-show="$root.error">
+    data-ng-if="$root.error">
     <div class="overlay-content dialog-content">
-      <p>Oops, I'm sorry.</p>
 
-      <p>We just got an error: '{{$root.error}}'</p>
-      <p>Trace: {{$root.error.stack}}</p>
+      <div
+        data-ng-if="$root.error.userMessage">
+        <p>{{$root.error.userMessage}}</p>
+      <div
+        data-ng-if="! $root.error.userMessage">
+        <p>Oops, I'm sorry.</p>
 
-      <p>Sorry for your inconvinience. We're fixing things all the time - please check <a href="{{resolveError(error)}}">here.</a></p> 
-      <!-- TODO resolveError(error) -->
+        <p>We just got an error: '{{$root.error}}'</p>
+        <p>Trace: {{$root.error.stack}}</p>
+
+        <p>Sorry for your inconvinience. We're fixing things all the time - please check <a href="{{resolveError(error)}}">here.</a></p> 
+        <!-- TODO resolveError(error) -->
+      </div>
 
       <div class="control-container">
         <button class="control ok"
           data-ng-click="$root.error = null">Ok</button>
-      </div>
+      </div>        
     </div>
   </div>
   <!-- REFACTOR into partials -->

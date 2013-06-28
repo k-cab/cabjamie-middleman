@@ -49,7 +49,7 @@ angular.module( 'appModule' )
       ## sticker creation
 
       $scope.startCreateSticker = ->
-        $scope.newSticker =
+        $scope.newSticker = new Sticker
           name: 'Noname'
 
         $scope.editCallback = $scope.finishCreatingSticker
@@ -85,6 +85,7 @@ angular.module( 'appModule' )
           # $scope.fetchStickers()
           # FIXME get delta of stickers
         .fail (err) ->
+          err.userMessage = "Sorry, a sticker named '#{newSticker.name}' already exists."
           globalsSvc.handleError err
         
 
