@@ -21,15 +21,6 @@
   <link rel="stylesheet" href="styles/style.css">
   <link rel="stylesheet" href="styles/mackerel.css">
   
-  <style type="text/css" media="screen">
-    /* chrome extension popup */
-    body { 
-      width: 360px; 
-      height: 480px;
-    }
-  </style>
-
-
   <script src="js/vendor/underscore.js"></script>
   <script src="js/vendor/jquery.min.js"></script>
   <script src="js/vendor/q.min.js"></script>
@@ -60,7 +51,8 @@
 </head>
 
 
-<body data-ng-app="appModule">
+<body class="popup"
+  data-ng-app="appModule">
 
   <!-- all top-level actions -->
   <div class="row top-menu">

@@ -1,6 +1,11 @@
 /** popup */
 
-body {
+.popup {
+  width: 380px; 
+  height: 480px;
+  
+  margin: 10px;
+
   background-color: #FFF;
 }
 
