@@ -37,12 +37,14 @@ that = this
         obj.update()
       .fail (e) ->
         # HACK check for authentication error and redirect.
-        # if e.errorType == 'authentication'
+        if e.errorType == 'authentication'
         #   $rootScope.authentication.login()
-        # else
-        #   obj.handleError e
+          throw e
+        else
+          obj.handleError e
 
-        obj.handleError e
+
+        # obj.handleError e
       .done()
 
 
@@ -129,17 +131,31 @@ that = this
 
     needsIntro: ->
       nextIntroVal = @get 'nextIntro'
-      nextIntroVal? new Date(nextIntroVal).isPast()
+      unless nextIntroVal
+        true
+      else
+        new Date(nextIntroVal).isPast()
 
     setFinishedIntro: ->
-      @update 'nextIntro', Date.tomorrow()
+      @update 'nextIntro', @nextDate().getTime()
+
+    nextDate: ->
+      if @env == 'dev'
+        Date.tomorrow()
+      else
+        Date.oneYearLater()
 
 
 # REFACTOR
 Date.tomorrow = ->
-  today = new Date()
-  tomorrow = new Date()
-  tomorrow.setDate(today.getDate()+1)
+  date = new Date()
+  date.setDate date.getDate() + 1
+  date
+
+Date.oneYearLater = ->
+  date = new Date()
+  date.setFullYear date.getFullYear() + 1
+  date
 
 Date::isPast = ->
   now = new Date()

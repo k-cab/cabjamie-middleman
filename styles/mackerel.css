@@ -15,6 +15,7 @@ h1, h2, h3, h4 {
 /** general / dev */
 
 .preview > a {
+  display: none;
   color: gray;
 }
 
@@ -84,6 +85,9 @@ h1, h2, h3, h4 {
   background: white;
 }
 
+.content-container {
+  text-align: center;
+}
 
 .control-container {
   text-align: right;

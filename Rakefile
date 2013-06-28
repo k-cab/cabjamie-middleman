@@ -1,12 +1,19 @@
 require 'find'
- 
+require "date"
 
 task :default => :build
+
 task :build => [:cpsrc, :deploy]
+
 
 #=
 
+
 desc "## copy to a dropbox folder"
+
+target_dir = "~/Dropbox/bigbearlabs/builds/mackerel-chrome"
+target_dir_2 = "../mackerel-rails/public/mackerel-chrome"
+
 excludes = [
   '.git',
   'Rakefile',
@@ -16,11 +23,11 @@ excludes = [
   '*.map',
   'node_modules'
 ]
-target_dir = "~/Dropbox/bigbearlabs/builds/mackerel-chrome"
-target_dir_2 = "../mackerel-rails/public/mackerel-chrome"
 
 exclude_opts = excludes.map{|p| "--exclude '#{p}'"}.join ' '
+
 task :deploy do
+
   date = `date`.strip
   system "rm .built*; touch '.built-at-#{date}'"
   puts "*** Deploying the extension ***"
@@ -33,9 +40,27 @@ task :deploy do
 end
 
 
+
+desc "## zip up for chrome store"
+
+releases_root = "~/Dropbox/bigbearlabs/ngp/mackerel/releases"
+
+task :zip => [ :deploy ] do
+  # FIXME trim comments from *.json
+
+  zip_name = "mackerel-chrome.#{Date.today.to_s}.zip"
+  cmd = "zip -r #{releases_root}/#{zip_name} #{target_dir}"
+  puts "cmd: #{cmd}"
+
+  system cmd
+end
+
+
+
 desc "** snapshot a build for later reference"
 # get the file to increment as a file.
 task :snapshot => [ :increment, :build ]
+
 
 
 # REFACTOR
