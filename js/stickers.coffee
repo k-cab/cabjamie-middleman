@@ -48,7 +48,21 @@ angular.module( 'appModule' )
       
       ## sticker creation
 
-      $scope.createNewSticker = ->
+      $scope.startCreateSticker = ->
+        $scope.newSticker =
+          name: 'Noname'
+
+        $scope.editCallback = $scope.finishCreatingSticker
+
+        $scope.editSticker $scope.newSticker
+
+      # this has to be called for a clean save / insertion in view model. so pass in as 
+      # completion handler to editsticker. TODO 
+      $scope.finishCreatingSticker = ->
+        # FIXME encapsulation break - $scope.editedSticker due to last-minute rewiring
+
+        $scope.newSticker = $scope.editedSticker
+
         newSticker = $scope.newSticker
         newSticker.name = $scope.prefixedName newSticker.name
 
@@ -62,7 +76,10 @@ angular.module( 'appModule' )
           #   $scope.$apply()
           
           $scope.stickers.push savedSticker
+          
           $scope.newSticker = null
+          $scope.editedSticker = null
+
           $scope.$apply()
 
           # $scope.fetchStickers()
@@ -206,6 +223,10 @@ angular.module( 'appModule' )
         $scope.editedSticker = that.clone sticker
 
       $scope.finishEditingSticker =  ->
+        if $scope.editCallback
+          $scope.editCallback()
+          return
+
         oldSticker = $scope.stickers.filter( (sticker) -> sticker.id == $scope.editedSticker.id )[0]
 
         $scope.editedSticker.name = $scope.prefixedName $scope.editedSticker.name
