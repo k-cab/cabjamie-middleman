@@ -47,22 +47,10 @@
     <!-- new sticker -->
     <li class="sticker">
       <a class="sticker-image sticker-image-new absolute-positioning-container"
-        data-ng-click="newSticker.creatingNewSticker = true">
+        data-ng-click="startCreateSticker()">
 
         <img src="assets/new-sticker.png" alt="New sticker...">
       </a>
-      <div class="new-sticker-form"
-        data-ng-show="newSticker.creatingNewSticker">
-        
-        <input class="text-label sticker-name-field" placeholder="new sticker"
-          data-ng-model="newSticker.name">
-        <button class="control ok"
-          data-ng-click="createNewSticker()">OK</button>
-        <button class="control cancel"
-          data-ng-click="newSticker.creatingNewSticker = false">Cancel</button>          
-
-        <!-- TODO validation / reactive states -->
-      </div>
     </li>
   </ul>
 

@@ -48,7 +48,16 @@ angular.module( 'appModule' )
       
       ## sticker creation
 
-      $scope.createNewSticker = ->
+      $scope.startCreateSticker = ->
+        $scope.newSticker =
+          name: 'Noname'
+
+        $scope.editSticker $scope.newSticker
+
+
+      # this has to be called for a clean save / insertion in view model. so pass in as 
+      # completion handler to editsticker. TODO 
+      $scope.finishCreateSticker = ->
         newSticker = $scope.newSticker
         newSticker.name = $scope.prefixedName newSticker.name
 
