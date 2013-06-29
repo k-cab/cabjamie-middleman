@@ -1,5 +1,5 @@
 # NOTE could use tag helpers instead. http://middlemanapp.com/helpers/#toc_3
-def el_if_present( data, role, html_el = role)
+def el_if_present( data, role, html_el = role )
   content = data[role]
 
   if data[role]
@@ -14,9 +14,21 @@ def el_if_present( data, role, html_el = role)
     else
       {}
     end
-    el html_el, content, role, attrs
+
+    inner_el = el html_el, content, role, attrs
+
+    # wrap title with link tag
+    if href
+      # link_to data[:href] do
+      #   inner_el
+      # end
+      "<a href=#{href}>#{inner_el}</a>"
+    else
+      inner_el
+    end
   end
 end
+
 
 def render_section( data )
   [ 
@@ -28,6 +40,7 @@ def render_section( data )
     "</section>"
   ].join
 end
+
 
 def el( type, content, role, attr_map = {})
   classname = role.to_s.strip.downcase.gsub(' ', '-')  # TODO special chars

@@ -1,0 +1,26 @@
+- require 'helpers/bbl-helpers'
+
+
+- current_page.data.sections.each do |elem|
+  %section( class="#{elem[:role]}" )
+    - if elem[:href]
+      %a{ href: elem[:href] } #{el_if_present elem, :title, :h2}
+    - else
+      = el_if_present elem, :title, :h2
+
+    = el_if_present elem, :img
+
+    = el_if_present elem, :subtitle, :p
+
+    = el_if_present elem, :subimg
+
+    - if elem[:embed]
+      = elem[:embed]
+
+
+    -# TODO blurb
+
+    -# TODO make recursive.
+    - if elem[:sections]
+      - elem[:sections].each do |section|
+        = render_section section

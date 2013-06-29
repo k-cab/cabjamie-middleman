@@ -1,49 +1,30 @@
 ---
 title: Big Bear Labs
 
-products:
-- 
+sections:
+-
+  role: product
   href: tagyeti
   title: Tag Yeti
   subtitle: Organise efficiently.
-  subimg: images/tagyeti.jpg
+  img: images/tagyeti.jpg
 -
+  role: product
   title: WebBuddy
   href: webbuddy
   subtitle: Organise efficiently
-  subimg: images/tagyeti.jpg
+  img: images/tagyeti.jpg
 -
+  role: product
   title: OneHour
   href: onehour
   subtitle: Organise efficiently
-  subimg: images/tagyeti.jpg
-
-about:
-- 
-  title: short text.
-  subtitle: long text.
-  sections: # TODO
+  img: images/tagyeti.jpg
+-
+  role: projects
+-
+  role: blog
 
 ---
 
-%section
-  %h2 Products
-
-  %ul
-    - current_page.data.products.each do |elem|
-      %li
-        %a( href="#{elem[:href]}" )
-          %h3= elem[:title]
-          %img( src="#{elem[:subimg]}" )
-          %p= elem[:subtitle]
-
-
--# TODO another loop to handle future sections like these.
-%section.preview
-  %h2 Open Source Projects
-
-%section
-  %h2 About
-
-%section
-  %h2 Blog
+= partial "content-basic"

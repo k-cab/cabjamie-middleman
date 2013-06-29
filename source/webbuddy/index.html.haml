@@ -49,15 +49,4 @@ sections:
 # TODO pro features, 2nd actions section
 ---
 
-- current_page.data.sections.each do |elem|
-  %section( class="#{elem[:role]}" )
-    - if elem[:title]
-      %h2= elem[:title]
-    - if elem[:img]
-      %img( src="#{elem[:img]}" )
-    - if elem[:subtitle]
-      %p= elem[:subtitle]
-    - if elem[:subimg]
-      %img( src="#{elem[:subimg]}" )
-    -# TODO blurb
-    -# TODO recurse. e.g. actions
+= partial "content-basic"
