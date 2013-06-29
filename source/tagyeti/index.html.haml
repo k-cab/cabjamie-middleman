@@ -40,47 +40,7 @@ sections:
 # TODO features
 ---
 
-:ruby
-
-  # NOTE could use tag helpers instead. http://middlemanapp.com/helpers/#toc_3
-  def el_if_present( data, role, html_el = role)
-    content = data[role]
-
-    if data[role]
-      attrs = case html_el
-      when :img
-        content = ''
-        { src: data[:img] }
-      when :subimg
-        content = ''
-        html_el = :img
-        { src: data[:subimg] }
-      else
-        {}
-      end
-      el html_el, content, role, attrs
-    end
-  end
-
-  def render_section( data )
-    [ 
-      "<section>",
-      el_if_present( data, :title, :p),
-      el_if_present( data, :img),
-      el_if_present( data, :subtitle, :p),
-      el_if_present( data, :subimg),
-      "</section>"
-    ].join
-  end
-
-  def el( type, content, role, attr_map = {})
-    classname = role.to_s.strip.downcase.gsub(' ', '-')  # TODO special chars
-    attrs = attr_map.map do |k, v|
-      k.to_s + '="' + v.to_s + '"'
-    end .join ' ' 
-
-    "<#{type} class='#{classname}' #{attrs}>#{content}</#{type}>"
-  end
+- require 'helpers/bbl-helpers'
 
 
 - current_page.data.sections.each do |elem|
@@ -106,8 +66,6 @@ sections:
         = render_section section
 
 
-
--# TODO stylesheet entries to hide redundant elements.
 
 -# TODO blurbs
 
