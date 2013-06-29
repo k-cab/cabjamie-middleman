@@ -1,0 +1,82 @@
+---
+title: Tag Yeti
+subtitle: some subtitle
+
+sections:
+- 
+  role: title
+  title: Tag Yeti
+  subtitle: Placeholder subtitle.
+  img: img/tagyeti/main_image-02.png
+-
+  role: actions
+  sections:
+  - role: download
+    title: Download at the Chrome Web Store.
+    href: chromestore-url
+    img: img/ChromeWebStore206x58.png
+-
+  role: graphical-intro
+  sections:
+    - role: intro-scene
+      title: Create stickers for different topics.
+      img: img/tagyeti/intro-01.png
+    - role: intro-scene
+      title: Organize web pages with stickers as you browse.
+      img: img/tagyeti/intro-02.png
+    - role: intro-scene
+      title: Your stickers sync with your Evernote account, so you can always find what you need.
+      img: img/tagyeti/intro-03.png
+- 
+  role: marketing-summary
+  title: stub marketing text
+  img: img/placeholder.png
+-
+  role: marketing-video
+  img: 
+  subtitle: 
+  embed:
+
+# TODO features
+---
+
+
+- current_page.data.sections.each do |elem|
+  %section( class="#{elem[:role]}" )
+
+    - if elem[:title]
+      %h2= elem[:title]
+
+    - if elem[:img]
+      %img( src="#{elem[:img]}" )
+
+    - if elem[:subtitle]
+      %p= elem[:subtitle]
+
+    - if elem[:subimg]
+      %img( src="#{elem[:subimg]}" )
+
+    -# TODO blurb
+    
+    - if elem[:sections]
+      - elem[:sections].each do |section|
+        -# TODO make recursive.
+
+        %section 
+          - if section[:title]
+            %h3= section[:title].strip
+
+          - if section[:img]
+            %img( src="#{section[:img]}" )
+
+          - if section[:subtitle]
+            %p= section[:subtitle]
+
+          - if section[:subimg]
+            %img( src="#{section[:subimg]}" )
+
+          -# TODO blurb
+
+
+    -# TODO recurse. e.g. actions
+
