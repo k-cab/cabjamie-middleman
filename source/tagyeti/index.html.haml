@@ -7,7 +7,7 @@ sections:
   role: title
   title: Tag Yeti
   subtitle: Placeholder subtitle.
-  img: img/tagyeti/main_image-02.png
+  img: img/tagyeti/main_image-02.png  # TODO no text in the image
 -
   role: actions
   sections:
@@ -39,18 +39,10 @@ sections:
 ---
 
 :ruby
-  def el( type, content, role, attr_map = {})
-    classname = role.to_s.strip.downcase.gsub(' ', '-')  # TODO special chars
-    attrs = attr_map.map do |k, v|
-      k.to_s + '="' + v.to_s + '"'
-    end .join ' ' 
-
-    "<#{type} class='#{classname}' #{attrs}>#{content}</#{type}>"
-  end
 
   def el_if_present( data, role, html_el = role)
     content = data[role]
-    
+
     if data[role]
       attrs = case html_el
       when :img
@@ -67,7 +59,16 @@ sections:
     end
   end
 
+  def el( type, content, role, attr_map = {})
+    classname = role.to_s.strip.downcase.gsub(' ', '-')  # TODO special chars
+    attrs = attr_map.map do |k, v|
+      k.to_s + '="' + v.to_s + '"'
+    end .join ' ' 
 
+    "<#{type} class='#{classname}' #{attrs}>#{content}</#{type}>"
+  end
+
+  
 
 - current_page.data.sections.each do |elem|
   %section( class="#{elem[:role]}" )

@@ -2,3 +2,30 @@ header img {
 	width: 30px;
 	height: 30px;
 }
+header p {
+	display: none;  /* HACK hiding the text. */
+}
+
+footer {
+	text-align: right;
+}
+
+section {
+	text-align: center;
+}
+section.title > h2 {
+	/* current image has embedded text */
+	display:none ;
+}
+section.title > .subtitle {
+	display:none ;
+}
+
+section.actions .title {
+	display: none;
+}
+
+section.graphical-intro > section {
+	display: inline-block;
+	width: 33%;
+}
