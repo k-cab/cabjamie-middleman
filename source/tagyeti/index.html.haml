@@ -30,7 +30,7 @@ sections:
 - 
   role: marketing-summary
   title: stub marketing text
-  img: img/placeholder.png
+  img: img/tagyeti/marketing.png
 -
   role: marketing-video
   img: 
@@ -56,8 +56,10 @@ sections:
     - if elem[:subimg]
       %img( src="#{elem[:subimg]}" )
 
+    -# TODO embed
+
     -# TODO blurb
-    
+
     - if elem[:sections]
       - elem[:sections].each do |section|
         -# TODO make recursive.
