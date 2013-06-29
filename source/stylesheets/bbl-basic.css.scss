@@ -31,4 +31,18 @@ section.actions .title {
 section.graphical-intro > section {
 	display: inline-block;
 	width: 33%;
+
+	position: relative;
+
+	img {
+		position: relative;
+		top: 0;
+		height: 80%;
+		margin-bottom: 30%
+	}
+	p {
+		position: absolute;
+		bottom: 0;
+		height: 10%;
+	}
 }
