@@ -17,34 +17,60 @@ footer {
 }
 
 section {
+	@include clearfix;
+	
+	margin: 44px auto;
+
 	text-align: center;
 }
-section.title > h2 {
-	/* current image has embedded text */
-	display:none ;
-}
-section.title > .subtitle {
-	display:none ;
-}
 
-section.actions .title {
-	display: none;
-}
-
-section.graphical-intro > section {
-	display: inline-block;
-	width: 33%;
-
-	position: relative;
-
-	img {
-		position: relative;
-		top: 0;
-		margin-bottom: 30%
+section.title {
+	h2 {
+		/* current image has embedded text */
+		display:none ;
 	}
-	p {
-		position: absolute;
-		bottom: 0;
-		height: 10%;
+	.subtitle {
+		display:none ;
+	}
+}
+
+section.actions {
+ .title {
+		display: none;
+	}
+}
+
+section.graphical-intro {
+	// @include grid-row;  // had to disable this to ge the margins working.
+	@include clearfix;
+
+	> section {
+		@include grid-column(4);
+
+		margin: 0;
+
+		position: relative;
+
+		// img {
+		// 	position: relative;
+		// 	top: 0;
+		// 	margin-bottom: 30%
+		// }
+		// p {
+		// 	position: absolute;
+		// 	bottom: 0;
+		// 	height: 10%;
+		// }
+	}
+}
+
+section.marketing-video {
+	text-align: center;
+	font-size: 0;
+
+	object {
+		display: inline-block;
+		
+		width:420px; height:315px;
 	}
 }
