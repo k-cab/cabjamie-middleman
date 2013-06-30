@@ -4,20 +4,25 @@
 
 require 'date'
 
-source = '.'
-git_url = 'https://sohocoke@bitbucket.org/sohocoke/bbl-middleman.git'
 branch = 'dropbox'
+
+codebases = [
+	'.',
+	'source/mackerel-chrome'
+]
 
 date = Date.today
 
 add_cmd = "git add *"
 commit_cmd = "git commit -a -m 'dropbox change on #{date}'"
+push_cmd = "git push origin #{branch}"
 
-def callsys cmd
-	p "## #{cmd}"
-	system cmd
+def callsys dir, *cmds
+	cmd_strs = cmds.map { |cmd| cmd + "; " }
+	p "## (#{dir}) #{cmd_strs}"
+	system "cd #{dir}; #{cmd_strs}"
 end
 
-
-callsys add_cmd
-callsys commit_cmd
+codebases.map do |codebase|
+	callsys codebase, add_cmd, commit_cmd
+end
