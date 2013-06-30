@@ -10,7 +10,7 @@ require 'pp'
 
 branch = 'dropbox'
 
-codebases = [
+@codebases = [
 	'.',
 	# 'source/mackerel-chrome'
 ]
@@ -23,7 +23,7 @@ push_cmd = "git push origin #{branch}"
 
 
 doit = -> {
-	codebases.map do |codebase|
+	@codebases.map do |codebase|
 		callsys codebase, *add_cmd_files, commit_cmd
 	end	
 }
@@ -41,6 +41,12 @@ end
 
 def add_cmd_files
 	untracked = @g.status.untracked.keys
+
+	# filter out submodules
+	submodules = @codebases.reject { |e| e == '.' }
+	submodule_pattern = submodules.join '|'
+	untracked = untracked.reject { |e| e =~ /^#{submodule_pattern}/ }
+
 	untracked.map { |e| @add_cmd.gsub '%files%', "'#{e}'" }
 end
 
