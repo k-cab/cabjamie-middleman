@@ -47,8 +47,10 @@ def add_cmd_files codebase
 
 	# filter out submodules
 	submodules = @codebases.reject { |e| [ '.', codebase ].include? e }
-	submodule_pattern = submodules.join '|'
-	untracked = untracked.reject { |e| e =~ /^#{submodule_pattern}/ }
+	unless submodules.empty?
+		submodule_pattern = submodules.join '|'
+		untracked = untracked.reject { |e| e =~ /^#{submodule_pattern}/ }
+	end
 
 	untracked.map { |e| @add_cmd.gsub '%files%', "'#{e}'" }
 end
