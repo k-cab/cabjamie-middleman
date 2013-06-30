@@ -26,6 +26,7 @@ doit = -> {
 	# execute all the commands
 
 	@codebases.map do |codebase|
+		p "** adding/committing #{codebase}"
 		callsys codebase, *add_cmd_files(codebase), commit_cmd
 	end	
 }
@@ -34,7 +35,7 @@ doit = -> {
 def callsys dir, *cmds
 	# cmd_strs = cmds.map { |cmd| cmd + "; " }
 	cmds.map do |cmd|
-		pp "## (#{dir}) #{cmd}"
+		pp "* cmd: (#{dir}) #{cmd}"
 		system "cd #{dir}; #{cmd}"		
 	end
 end
