@@ -288,8 +288,11 @@ angular.module( 'appModule' )
 
       # userPrefs.apply()
 
-      globalsSvc.doit()
-
+      Q.fcall ->
+        globalsSvc.doit()
+      .fail (e) ->
+        globalsSvc.handleError e
+      .done()
 
 ## REFACTOR
  

@@ -19,6 +19,8 @@ that = this
       @nextAction = @logoutAction
 
     setLoggedOut: ->
+      userPrefs.clear 'evernote_authToken'
+
       @loggedIn = false
       @nextAction = @loginAction
 
@@ -32,21 +34,8 @@ that = this
     doit: ->
 
       # all state refreshes.
-      Q.fcall ->
-        userPrefs.apply()
-        obj.update()
-      .fail (e) ->
-        # HACK check for authentication error and redirect.
-        if e.errorType == 'authentication'
-        #   $rootScope.authentication.login()
-          throw e
-          # FIXME not handled well when just accessing #/stickers
-        else
-          obj.handleError e
-
-
-        # obj.handleError e
-      .done()
+      userPrefs.apply()
+      obj.update()
 
 
     handleError: (e) ->
@@ -93,7 +82,6 @@ that = this
     dev:
       userDataSource: stubDataSvc
 
-
     update: (key, val) ->
       if val == undefined
         throw "value for key #{key} is undefined"
@@ -120,6 +108,9 @@ that = this
       else
         console.log "returning null for '#{k}'"
         null
+
+    clear: (key) ->
+      localStorage.clear key
 
 
     apply: (env)->

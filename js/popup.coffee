@@ -115,8 +115,8 @@ userPrefs) ->
     ## the main business.
     # update will set authentication status
     globalsSvc.doit()
-    # globalsSvc.update()
   .then ->
+    
     if $rootScope.authentication.loggedIn
       $location.path "/stickers"
     else
