@@ -27,7 +27,7 @@ doit = -> {
 
 	@codebases.map do |codebase|
 		p "** adding/committing #{codebase}"
-		callsys codebase, *add_cmd_files(codebase), commit_cmd
+		callsys codebase, *add_cmd_files(codebase), commit_cmd, push_cmd
 	end	
 }
 
