@@ -33,13 +33,14 @@ that = this
 
       # all state refreshes.
       Q.fcall ->
-        userPrefs.apply 'production'
+        userPrefs.apply()
         obj.update()
       .fail (e) ->
         # HACK check for authentication error and redirect.
         if e.errorType == 'authentication'
         #   $rootScope.authentication.login()
           throw e
+          # FIXME not handled well when just accessing #/stickers
         else
           obj.handleError e
 
@@ -121,7 +122,9 @@ that = this
         null
 
 
-    apply: (env = 'production')->
+    apply: (env)->
+      env ||= @get 'env'
+
       console.log "applying env '#{env}'"
 
       @userDataSource = @[env].userDataSource
