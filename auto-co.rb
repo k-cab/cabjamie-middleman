@@ -23,6 +23,8 @@ push_cmd = "git push origin #{branch}"
 
 
 doit = -> {
+	# execute all the commands
+	
 	@codebases.map do |codebase|
 		callsys codebase, *add_cmd_files, commit_cmd
 	end	
