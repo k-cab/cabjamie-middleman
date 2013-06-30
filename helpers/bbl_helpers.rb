@@ -1,3 +1,6 @@
+module BblHelpers
+end
+
 # NOTE could use tag helpers instead. http://middlemanapp.com/helpers/#toc_3
 def el_if_present( data, role, html_el = role )
   content = data[role]
@@ -18,14 +21,14 @@ def el_if_present( data, role, html_el = role )
     inner_el = el html_el, content, role, attrs
 
     # wrap title with link tag
-    if href
-      # link_to data[:href] do
-      #   inner_el
-      # end
-      "<a href=#{href}>#{inner_el}</a>"
-    else
+    # if href
+    #   # link_to data[:href] do
+    #   #   inner_el
+    #   # end
+    #   "<a href=#{href}>#{inner_el}</a>"
+    # else
       inner_el
-    end
+    # end
   end
 end
 
