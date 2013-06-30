@@ -24,9 +24,9 @@ push_cmd = "git push origin #{branch}"
 
 doit = -> {
 	# execute all the commands
-	
+
 	@codebases.map do |codebase|
-		callsys codebase, *add_cmd_files, commit_cmd
+		callsys codebase, *add_cmd_files(codebase), commit_cmd
 	end	
 }
 
@@ -39,13 +39,13 @@ def callsys dir, *cmds
 	end
 end
 
-@g = Git.open( '.', :log => Logger.new(STDOUT))
 
-def add_cmd_files
-	untracked = @g.status.untracked.keys
+def add_cmd_files codebase
+	g = Git.open( codebase, :log => Logger.new(STDOUT))
+	untracked = g.status.untracked.keys
 
 	# filter out submodules
-	submodules = @codebases.reject { |e| e == '.' }
+	submodules = @codebases.reject { |e| [ '.', codebase ].include? e }
 	submodule_pattern = submodules.join '|'
 	untracked = untracked.reject { |e| e =~ /^#{submodule_pattern}/ }
 
