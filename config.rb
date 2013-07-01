@@ -36,6 +36,7 @@ activate :livereload, :port => 35730
 # end
 page "/mackerel-chrome/*", :layout => "angular"
 page "/mackerel-chrome/templates/*", :layout => false
+page "/mackerel-chrome/partials/*", :layout => false
 
 # Proxy (fake) files
 # page "/this-page-has-no-template.html", :proxy => "/template-file.html" do
