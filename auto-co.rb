@@ -17,7 +17,7 @@ branch = 'dropbox'
 
 date = Date.today
 
-# pull_cmd = "git pull origin develop"
+pull_cmd = "git pull -- no-edit origin develop"
 @add_cmd = "git add %files%"
 commit_cmd = "git commit -a -m 'dropbox change on #{date}'"
 push_cmd = "git push origin #{branch}"
@@ -28,7 +28,11 @@ doit = -> {
 
 	@codebases.map do |codebase|
 		p "** adding/committing #{codebase}"
-		callsys codebase, *add_cmd_files(codebase), commit_cmd, push_cmd
+		callsys codebase, 
+			pull_cmd, 
+			*add_cmd_files(codebase), 
+			commit_cmd, 
+			push_cmd
 	end	
 }
 
