@@ -12,6 +12,8 @@ angular.module( 'appModule' )
           $scope.update()
 
 
+      $scope.shouldShowMenu = true
+
 
       #### controller actions
 
