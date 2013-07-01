@@ -2,7 +2,7 @@
 set :markdown_engine, :redcarpet
 
 #Livereload
-# activate :livereload, :port => 35730
+activate :livereload, :port => 35730
 # activate :livereload
 
 ### 
