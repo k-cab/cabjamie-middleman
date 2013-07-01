@@ -20,11 +20,13 @@
       localStorage: 
         data: _.map Object.keys(localStorage), (e)-> e + ": " + localStorage.getItem e
 
-        actions:
-          [
-            name: 'reset all'
-            func: -> console.log 'todo'
-          ]
+        actions: [
+          name: 'reset all'
+          func: -> 
+            $log.info "clearing everything in localStorage"
+            for i in localStorage
+              localStorage.clear i
+        ]
 
     $scope.chooseKeyVal = (key, val) ->
       $log.info 'todo'
@@ -37,8 +39,5 @@
       # update the selection.
       $scope.options[key].selection = val
 
-    # show userPrefs data
 
-    # show localstorage
-    # actions: clear
-    # item actions: clear
+    # TODO show userPrefs data

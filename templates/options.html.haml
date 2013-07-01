@@ -17,11 +17,15 @@
     %div
       %h5 {{entryName}}
       %ul
-        %li.choices.control( ng-repeat="e1 in entry.data" 
-          ng-class="entry.selection === e1 ? 'selected' : ''"
-          ng-click="chooseKeyVal(entryName, e1)"
-          )
-          %p {{e1}}  
-          %p( ng-if="typeof(e1) === 'object'") {{e2}}
+        -# shoe the actions
+        %p( ng-if="entry.actions")
+          %li.control( ng-repeat="action in entry.actions")
+            %p(ng-click="action.func()") {{action.name}}
 
-        -# CASE non-collection values
+        -# show the data
+        %li.choices.control( ng-repeat="choice in entry.data" 
+          ng-class="entry.selection === choice ? 'selected' : ''"
+          ng-click="chooseKeyVal(entryName, choice)"
+          )
+          %p {{choice}}
+          
