@@ -19,6 +19,8 @@ that = this
       @nextAction = @logoutAction
 
     setLoggedOut: ->
+      userPrefs.clear 'evernote_authToken'
+
       @loggedIn = false
       @nextAction = @loginAction
 
@@ -32,20 +34,8 @@ that = this
     doit: ->
 
       # all state refreshes.
-      Q.fcall ->
-        userPrefs.apply 'production'
-        obj.update()
-      .fail (e) ->
-        # HACK check for authentication error and redirect.
-        if e.errorType == 'authentication'
-        #   $rootScope.authentication.login()
-          throw e
-        else
-          obj.handleError e
-
-
-        # obj.handleError e
-      .done()
+      userPrefs.apply()
+      obj.update()
 
 
     handleError: (e) ->
@@ -92,11 +82,11 @@ that = this
     dev:
       userDataSource: stubDataSvc
 
-
-    update: (key, val) ->
+    set: (key, val) ->
       if val == undefined
         throw "value for key #{key} is undefined"
 
+      $log.info "setting #{key}"
       @[key] = val
       localStorage.setItem key, JSON.stringify val
     
@@ -120,8 +110,13 @@ that = this
         console.log "returning null for '#{k}'"
         null
 
+    clear: (key) ->
+      localStorage.clear key
 
-    apply: (env = 'production')->
+
+    apply: (env)->
+      env ||= @get 'env'
+
       console.log "applying env '#{env}'"
 
       @userDataSource = @[env].userDataSource
@@ -137,7 +132,7 @@ that = this
         new Date(nextIntroVal).isPast()
 
     setFinishedIntro: ->
-      @update 'nextIntro', @nextDate().getTime()
+      @set 'nextIntro', @nextDate().getTime()
 
     nextDate: ->
       if @env == 'dev'

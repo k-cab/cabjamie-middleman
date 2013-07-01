@@ -1,18 +1,32 @@
 /** popup */
 
 body {
-  background-color: #FFF;
+
+  background-image: url("../assets/background-image-07.png");  
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 h1, h2, h3, h4 {
-  display: none;
-
   color: #1f3b69;
   font-family:Bell Gothic std, Tahoma, sans-serif;
 }
 
+p, a {
+  color: white;
+}
+
+a:hover {
+  color: white;
+  font-weight: bold;
+}
 
 /** general / dev */
+
+h6 {
+  display: none;
+}
 
 .preview > a {
   display: none;
@@ -20,7 +34,8 @@ h1, h2, h3, h4 {
 }
 
 /* debugging sticker layout */
-/*.sticker>* { 
+/*
+.sticker>* { 
   border-style: solid;
   border-width: 1px;
 }
@@ -28,6 +43,11 @@ h1, h2, h3, h4 {
 
 
 /** compositional elements */
+
+.popup {
+  width: 380px;
+  height: 480px;
+}
 
 .top-menu {
   display: -webkit-box;
@@ -43,6 +63,13 @@ h1, h2, h3, h4 {
   -webkit-box-flex: 30;
 }
 
+.top-menu .about {
+}
+
+.controller-content {
+  min-width: 95%;
+  margin: 10px;
+}
 
 .msg-container {
   position: fixed;
@@ -60,9 +87,10 @@ h1, h2, h3, h4 {
   height: 100%;
   max-height: 100%;
   top: 0;
+  left: 0;
 
   /* gray-out effect.*/
-  background: rgba(235,235,235,0.7);
+  background: rgba(220,220,220,0.7);
 }
 
 /* overlay container shows is centred in viewport.*/
@@ -82,7 +110,7 @@ h1, h2, h3, h4 {
 }
 
 .dialog-content {
-  background: white;
+  background: gray;
 }
 
 .content-container {
@@ -97,35 +125,32 @@ h1, h2, h3, h4 {
   cursor: hand; cursor: pointer; 
   display: inline-block;
   font-size: 0px;
+
+  width: 50px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+
+  /* override webkit default styles */
+  background-color: rgba(0, 0, 0, 0);
+  border-style: none;
+
 }
 
 .ok {
-  background-image: url("../assets/icon-ok.png");
-  width: 50px;
-  height: 30px;
-  background-repeat: no-repeat;
-  background-size: contain;
-  
+  width: 80px;
 }
 .cancel {
-  display: inline-block;
-
-  background-image: url("../assets/icon-cancel.png");
-  width: 50px;
-  height: 30px;
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 
 /** stickers */
 
 .sticker-label, .text-label {
-  color: #000;
   font:13px arial, Helvetica, sans-serif;
   line-height: 1em;
 }
-
 
 .stickers-container {
   /*text-align: center;*/
@@ -195,12 +220,13 @@ h1, h2, h3, h4 {
   /*display: none;*/
   display: inline-block;
   height: 10px;
+  width: 10px;
 }
 .sticker:hover .sticker-edit {
   display: inline-block;
   width: 10px;
   height: 10px;
-  background-image: url("../assets/icon-edit.png");
+  background-image: url("../assets/edit.png");
   background-size: contain;
 }
 

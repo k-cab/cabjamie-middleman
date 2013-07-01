@@ -122,7 +122,7 @@ app = @appModule
 
       unless obj.authToken and obj.noteStoreURL and obj.authToken != typeof undefined
         throw 
-          msg: "couldn't intialise service access from localStorage" 
+          msg: "couldn't initialise service access from localStorage" 
           errorType: "authentication"
 
       noteStoreTransport = new Thrift.BinaryHttpTransport(obj.noteStoreURL)

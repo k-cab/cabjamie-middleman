@@ -88,13 +88,12 @@ userPrefs) ->
   $scope.refreshContent()
   
 
-
+# REFACTOR change to controller('controllerName')
 @AppCntl = ($scope, $location, $log, $rootScope,
   globalsSvc, userPrefs,
   runtime,
   ) ->
 
-  
   #### doit
 
   if userPrefs.needsIntro()
@@ -102,10 +101,21 @@ userPrefs) ->
     return
     
   Q.fcall ->
+
+    # 1st chance to redirect to content. building up some conventions.
+    # if external resource exists, 
+    ###    
+        externalResource = $location.path().externalResource()
+        if externalResource
+          location.href = externalResource
+          return
+    ###
+
+    ## the main business.
     # update will set authentication status
     globalsSvc.doit()
-    # globalsSvc.update()
   .then ->
+
     if $rootScope.authentication.loggedIn
       $location.path "/stickers"
     else
@@ -116,7 +126,7 @@ userPrefs) ->
     if e.errorType == 'authentication'
       $location.path "/login"
       $rootScope.$apply()
-      
+
   .done()
 
 

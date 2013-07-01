@@ -49,7 +49,7 @@ angular.module( 'appModule' )
       ## sticker creation
 
       $scope.startCreateSticker = ->
-        $scope.newSticker =
+        $scope.newSticker = new Sticker
           name: 'Noname'
 
         $scope.editCallback = $scope.finishCreatingSticker
@@ -85,6 +85,7 @@ angular.module( 'appModule' )
           # $scope.fetchStickers()
           # FIXME get delta of stickers
         .fail (err) ->
+          err.userMessage = "Sorry, a sticker named '#{newSticker.name}' already exists."
           globalsSvc.handleError err
         
 
@@ -97,7 +98,7 @@ angular.module( 'appModule' )
 
       $scope.saveStickerOrder = ->
         # persist the sticker order list.
-        userPrefs.update 'stickerOrder',
+        userPrefs.set 'stickerOrder',
           $scope.stickers.map (sticker)-> sticker.name
 
       $scope.orderedStickers = (stickers)->
@@ -257,7 +258,7 @@ angular.module( 'appModule' )
           name: e.name
           colour: e.colour
         
-        userPrefs.update 'stickerColours', colours
+        userPrefs.set 'stickerColours', colours
 
 
       $scope.colouredStickers = (stickers) ->
@@ -287,8 +288,11 @@ angular.module( 'appModule' )
 
       # userPrefs.apply()
 
-      globalsSvc.doit()
-
+      Q.fcall ->
+        globalsSvc.doit()
+      .fail (e) ->
+        globalsSvc.handleError e
+      .done()
 
 ## REFACTOR
  
