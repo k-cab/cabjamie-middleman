@@ -15,10 +15,11 @@
 %ul 
   %li( ng-repeat="(entryName, entry) in options" )
     %div
-      %h5 {{entryName}}
+      %h4 {{entryName}}
       %ul
-        -# shoe the actions
-        %p( ng-if="entry.actions")
+        -# show the actions
+        %div( ng-if="entry.actions")
+          %h5( style="display:inline-block;") Actions: 
           %li.control( ng-repeat="action in entry.actions")
             %p(ng-click="action.func()") {{action.name}}
 
