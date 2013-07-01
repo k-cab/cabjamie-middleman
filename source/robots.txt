@@ -3,3 +3,6 @@
 User-agent: *
 
 # exclude mackerel-chrome/*
+Disallow: /mackerel-chrome
+Disallow: /webbuddy
+Disallow: /onehour
