@@ -1,7 +1,6 @@
 @appModule = angular.module "appModule", ['ui', 'ngResource'], ($routeProvider, $locationProvider) ->
     # routing
     $routeProvider.when "/",
-      template: '<p>inline template content</p>'
       templateUrl: 'templates/options.html'
       controller: 'AppCntl'
 
@@ -10,7 +9,25 @@
 
 
 @appModule.controller 'AppCntl', 
-  ($scope, $log, $location, $resource
+  ($scope, $log, $location, $resource,
+    userPrefs
   ) ->
-    # stub
-      console.log 'hi'
+    $scope.options = 
+      env:
+        [ 'dev', 'production' ]
+      localStorage: ['localStorageData']
+
+    $scope.chooseKeyVal = (key, val) ->
+      $log.info 'todo'
+      switch key
+        when 'env'
+          userPrefs.set 'env', val
+
+        # other handling logic here.
+
+
+    # show userPrefs data
+
+    # show localstorage
+    # actions: clear
+    # item actions: clear

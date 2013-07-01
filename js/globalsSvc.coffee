@@ -82,10 +82,11 @@ that = this
     dev:
       userDataSource: stubDataSvc
 
-    update: (key, val) ->
+    set: (key, val) ->
       if val == undefined
         throw "value for key #{key} is undefined"
 
+      $log.info "setting #{key}"
       @[key] = val
       localStorage.setItem key, JSON.stringify val
     
@@ -131,7 +132,7 @@ that = this
         new Date(nextIntroVal).isPast()
 
     setFinishedIntro: ->
-      @update 'nextIntro', @nextDate().getTime()
+      @set 'nextIntro', @nextDate().getTime()
 
     nextDate: ->
       if @env == 'dev'

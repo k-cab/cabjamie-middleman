@@ -28,3 +28,5 @@ js/authentication.js
 js/globalsSvc.js
 js/stickers.js
 assetify.js
+options.js
+bbl-infra.js

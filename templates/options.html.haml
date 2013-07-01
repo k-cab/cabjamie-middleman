@@ -1,3 +1,22 @@
-%p the dog.
-%p the cat.
-%p the wolf.
+:css
+  .choices {
+    display: inline-block;
+    margin: 0 10px;
+  }
+
+
+.links
+  %a( href="popup.html" ) Popup
+  %a( href="centre.html" ) Centre
+
+
+%ul 
+  %li( ng-repeat="(key, value) in options" )
+    %div
+      %h5 {{key}}
+      %ul
+        %li.choices( ng-repeat="valueElem in value" 
+          ng-click="chooseKeyVal(key, valueElem)")
+          %p {{valueElem}}
+
+        -# CASE non-collection values

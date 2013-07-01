@@ -4,11 +4,10 @@ title: TagYeti Options
 
 %script( src="js/options.js" )
 %script( src="js/assetify.js" )
--# %script( src="js/globalsSvc.js" )
+%script( src="js/stubDataSvc.js" )
+%script( src="js/evernoteSvc.js" )  # FIXME bad dep
+%script( src="js/globalsSvc.js" )
 
 %body.options( data-ng-app="appModule" )
-
-  %div
-    %p 'hi'
 
   .controller-content( data-ng-cloak data-ng-view )
