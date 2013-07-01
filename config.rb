@@ -1,9 +1,9 @@
-activate :livereload, :port => 35730
 #Markdown
 set :markdown_engine, :redcarpet
 
 #Livereload
-activate :livereload
+# activate :livereload, :port => 35730
+# activate :livereload
 
 ### 
 # Compass
@@ -34,6 +34,8 @@ activate :livereload
 # with_layout :admin do
 #   page "/admin/*"
 # end
+page "/mackerel-chrome/*", :layout => "angular"
+page "/mackerel-chrome/templates/*", :layout => false
 
 # Proxy (fake) files
 # page "/this-page-has-no-template.html", :proxy => "/template-file.html" do
