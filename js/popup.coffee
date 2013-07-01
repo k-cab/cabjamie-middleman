@@ -88,13 +88,12 @@ userPrefs) ->
   $scope.refreshContent()
   
 
-
+# REFACTOR change to controller('controllerName')
 @AppCntl = ($scope, $location, $log, $rootScope,
   globalsSvc, userPrefs,
   runtime,
   ) ->
 
-  
   #### doit
 
   if userPrefs.needsIntro()
@@ -116,7 +115,7 @@ userPrefs) ->
     # update will set authentication status
     globalsSvc.doit()
   .then ->
-    
+
     if $rootScope.authentication.loggedIn
       $location.path "/stickers"
     else

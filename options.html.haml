@@ -2,16 +2,13 @@
 title: TagYeti Options
 ---
 
-:coffeescript
-  console.log 'hi'
-  -# TODO define appModule
-  
-
 %script( src="js/options.js" )
 %script( src="js/assetify.js" )
-%script( src="js/globalsSvc.js" )
+-# %script( src="js/globalsSvc.js" )
 
-.controller-content( data-ng-cloak data-ng-view )
-  %p option 1
-  %p option 2
-  %p option 3
+%body.options( data-ng-app="appModule" )
+
+  %div
+    %p 'hi'
+
+  .controller-content( data-ng-cloak data-ng-view )
