@@ -144,6 +144,11 @@ h6 {
 .cancel {
 }
 
+/** ui states */
+.selected {
+  border-style: solid;
+  border-color: white;
+}
 
 /** stickers */
 

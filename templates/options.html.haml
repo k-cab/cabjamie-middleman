@@ -11,12 +11,14 @@
 
 
 %ul 
-  %li( ng-repeat="(key, value) in options" )
+  %li( ng-repeat="(entryName, entry) in options" )
     %div
-      %h5 {{key}}
+      %h5 {{entryName}}
       %ul
-        %li.choices( ng-repeat="valueElem in value" 
-          ng-click="chooseKeyVal(key, valueElem)")
-          %p {{valueElem}}
+        %li.choices.control( ng-repeat="choice in entry.data" 
+          ng-class="entry.selection === choice ? 'selected' : ''"
+          ng-click="chooseKeyVal(entryName, choice)"
+          )
+          %p {{choice}}
 
         -# CASE non-collection values
