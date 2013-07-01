@@ -17,25 +17,29 @@ angular.module( 'appModule' )
   $log, $location
   globalsSvc) ->
 
-  	# login, logout ops are defined on $rootScope, so this only serves as a dep-loading mechanism and actions invoked on path change.
+    # login, logout ops are defined on $rootScope, so this only serves as a dep-loading mechanism and actions invoked on path change.
 
-  	if $location.path().match /logout/
-  		$rootScope.authentication.setLoggedOut()
-  	else if $location.path().match /login/
-		  # save the location so the oauth module can redirect back.
-		  initialPath = $location.absUrl().replace(/#.*/,'')
-		  localStorage.setItem "oauth_success_redirect_path", initialPath
+    if $location.path().match /logout/
+      $rootScope.authentication.setLoggedOut()
+      
+    else if $location.path().match /login/
 
-		  # after the auth protocol succeeds, call $rootScope.authentication.setLoggedIn
+      # save the location so the oauth module can redirect back.
+      # FIXME establish a contract between an initiator and this module.
+      initialPath = $location.absUrl().replace(/#.*/,'')
+      localStorage.setItem "oauth_success_redirect_path", initialPath
 
-	  # CLEANUP redundant after $rootScope.authentication set up during globalsSvc.
 
-	  # cntl =
-	  #   status: 'stub login status'
+      # after the auth protocol succeeds, call $rootScope.authentication.setLoggedIn
 
-	  #   login: ->
-	  #     # initiate crazy login sequence using the oauth controller
-	      
-	  #   logout: ->
-	  #     # discard the oauth token. should prevent crazy redirects. TODO pull the handling out.
+      # CLEANUP redundant after $rootScope.authentication set up during globalsSvc.
+
+      # cntl =
+      #   status: 'stub login status'
+
+      #   login: ->
+      #     # initiate crazy login sequence using the oauth controller
+          
+      #   logout: ->
+      #     # discard the oauth token. should prevent crazy redirects. TODO pull the handling out.
 

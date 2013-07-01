@@ -98,7 +98,7 @@ angular.module( 'appModule' )
 
       $scope.saveStickerOrder = ->
         # persist the sticker order list.
-        userPrefs.update 'stickerOrder',
+        userPrefs.set 'stickerOrder',
           $scope.stickers.map (sticker)-> sticker.name
 
       $scope.orderedStickers = (stickers)->
@@ -258,7 +258,7 @@ angular.module( 'appModule' )
           name: e.name
           colour: e.colour
         
-        userPrefs.update 'stickerColours', colours
+        userPrefs.set 'stickerColours', colours
 
 
       $scope.colouredStickers = (stickers) ->
@@ -288,8 +288,11 @@ angular.module( 'appModule' )
 
       # userPrefs.apply()
 
-      globalsSvc.doit()
-
+      Q.fcall ->
+        globalsSvc.doit()
+      .fail (e) ->
+        globalsSvc.handleError e
+      .done()
 
 ## REFACTOR
  

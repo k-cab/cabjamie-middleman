@@ -1,9 +1,6 @@
 /** popup */
 
-.popup {
-
-  width: 380px;
-  height: 480px;
+body {
 
   background-image: url("../assets/background-image-07.png");  
   background-attachment: fixed;
@@ -46,6 +43,11 @@ h6 {
 
 
 /** compositional elements */
+
+.popup {
+  width: 380px;
+  height: 480px;
+}
 
 .top-menu {
   display: -webkit-box;
