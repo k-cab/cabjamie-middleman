@@ -16,18 +16,15 @@
       env:
         data: [ 'dev', 'production' ]
         selection: userPrefs.env
-      localStorage: 
-          data:
-            k1: 'v1'
-            k2: 'v2'
-            toString: ->
-              k1 + ": " + k2
 
-          actions:
-            [
-              name: 'reset all'
-              func: -> console.log 'todo'
-            ]
+      localStorage: 
+        data: _.map Object.keys(localStorage), (e)-> e + ": " + localStorage.getItem e
+
+        actions:
+          [
+            name: 'reset all'
+            func: -> console.log 'todo'
+          ]
 
     $scope.chooseKeyVal = (key, val) ->
       $log.info 'todo'

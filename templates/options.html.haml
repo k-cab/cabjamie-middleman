@@ -1,7 +1,9 @@
 :css
   .choices {
-    display: inline-block;
-    margin: 0 10px;
+    display: block;
+    -# margin: 0 10px;
+    width: auto;
+    height: auto;
   }
 
 
@@ -15,10 +17,11 @@
     %div
       %h5 {{entryName}}
       %ul
-        %li.choices.control( ng-repeat="choice in entry.data" 
-          ng-class="entry.selection === choice ? 'selected' : ''"
-          ng-click="chooseKeyVal(entryName, choice)"
+        %li.choices.control( ng-repeat="e1 in entry.data" 
+          ng-class="entry.selection === e1 ? 'selected' : ''"
+          ng-click="chooseKeyVal(entryName, e1)"
           )
-          %p {{choice}}
+          %p {{e1}}  
+          %p( ng-if="typeof(e1) === 'object'") {{e2}}
 
         -# CASE non-collection values
