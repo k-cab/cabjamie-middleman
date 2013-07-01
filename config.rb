@@ -68,7 +68,8 @@ configure :build do
   activate :minify_css
   
   # Minify Javascript on build
-  activate :minify_javascript
+  # NOTE disabling this until we make the angular workflow compatible with minification.
+  # activate :minify_javascript
   
   # Create favicon/touch icon set from source/favicon_base.png
   activate :favicon_maker
