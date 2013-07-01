@@ -1,9 +1,9 @@
-activate :livereload, :port => 35730
 #Markdown
 set :markdown_engine, :redcarpet
 
 #Livereload
-activate :livereload
+activate :livereload, :port => 35730
+# activate :livereload
 
 ### 
 # Compass
@@ -34,6 +34,9 @@ activate :livereload
 # with_layout :admin do
 #   page "/admin/*"
 # end
+page "/mackerel-chrome/*", :layout => "angular"
+page "/mackerel-chrome/templates/*", :layout => false
+page "/mackerel-chrome/partials/*", :layout => false
 
 # Proxy (fake) files
 # page "/this-page-has-no-template.html", :proxy => "/template-file.html" do
@@ -66,7 +69,8 @@ configure :build do
   activate :minify_css
   
   # Minify Javascript on build
-  activate :minify_javascript
+  # NOTE disabling this until we make the angular workflow compatible with minification.
+  # activate :minify_javascript
   
   # Create favicon/touch icon set from source/favicon_base.png
   activate :favicon_maker
