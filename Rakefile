@@ -1,3 +1,7 @@
+# TODO  grep -r '<<<<<<<' to check for merge conflicts.
+
+
+
 require 'rake'
 require 'rake/packagetask'
 
