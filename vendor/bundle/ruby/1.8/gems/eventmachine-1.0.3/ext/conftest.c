@@ -1,3 +1,6 @@
+#include <ruby.h>
+#include <rubysig.h>
+
 /*top*/
 int main() { return 0; }
-int t() { void ((*volatile p)()); p = (void ((*)()))rb_thread_blocking_region; return 0; }
+int t() { const volatile void *volatile p; p = &(&rb_trap_immediate)[0]; return 0; }
