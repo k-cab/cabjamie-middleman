@@ -1,3 +1,6 @@
+require 'rake'
+require 'rake/packagetask'
+
 
 # bundle exec middleman build -c; rsync -avv source/mackerel-chrome/_* build/mackerel-chrome/; rsync -avv --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman
 
@@ -10,7 +13,7 @@ task build: [:'build:middleman', :'build:chrome']
 desc 'run the the middleman build'
 task :'build:middleman' do
 	cmd = %q(
-		bundle exec middleman build -c
+		bundle exec middleman build
 		rsync -avv source/mackerel-chrome/_* build/mackerel-chrome/
 	)
 
@@ -63,13 +66,23 @@ task :'build:chrome' do
 		}
 	}
 
-	zip_cmd = %q(
-			zip -r build/mackerel-chrome.zip build/mackerel-chrome/
-		)
+	zip = -> {
+=begin
+		zip_cmd = %q(
+				zip -r build/mackerel-chrome.zip build/mackerel-chrome/
+			)
+		system zip_cmd
+=end
+		
+	  Rake::PackageTask.new do |p|
+	    p.need_zip = true
+	    p.package_files.include("build/**/*")
+	  end
+	}
 
 	bump.call
 	remove_comments.call
-	system zip_cmd
+	zip.call
 
 end
 
@@ -82,10 +95,10 @@ task :deploy => :build do
 	system cmd
 end
 
-desc 'continuously deploy'
-task :'deploy:continuous' do
+desc 'watch and deploy in a loop'
+task :'deploy:loop' do
 	cmd = %q(
-		while [ 0 ]; do sleep 20; rake deploy; done
+		while [ 0 ]; do rake deploy; sleep 20; done
 		)
 
 	system cmd
