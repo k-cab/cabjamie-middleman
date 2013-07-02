@@ -35,6 +35,57 @@ Q.longStackSupport = true
 
 
 
+# REFACTOR change to controller('controllerName')
+@AppCntl = ($scope, $location, $log, $rootScope,
+  globalsSvc, userPrefs
+  runtime,
+  ) ->
+
+  #### doit
+
+  if userPrefs.needsIntro()
+    $location.path "/intro"
+    return
+    
+  Q.fcall ->
+
+    # 1st chance to redirect to content. building up some conventions.
+    # if external resource exists, 
+    ###    
+        externalResource = $location.path().externalResource()
+        if externalResource
+          location.href = externalResource
+          return
+    ###
+
+    ## the main business.
+    # update will set authentication status
+    globalsSvc.doit()
+  .then ->
+
+    if $rootScope.authentication.loggedIn
+      $location.path "/stickers"
+    else
+      $location.path "/login"
+
+    $rootScope.$apply()
+  .fail (e)->
+    if e.errorType == 'authentication'
+      $location.path "/login"
+      $rootScope.$apply()
+
+  .done()
+
+
+    
+  # runtime.onMsg 'testType', (args...) ->
+  #   console.log "onMsg args: #{args}"
+  
+  # runtime.sendMsg 'testType', null, (response) ->
+  #   console.log "got response: #{response}"
+  
+
+
 @appModule.controller 'IntroCntl',
 ($scope, $log, $location, $resource
 userPrefs) ->
@@ -87,55 +138,4 @@ userPrefs) ->
   $scope.updateButtonVisibility()
   $scope.refreshContent()
   
-
-# REFACTOR change to controller('controllerName')
-@AppCntl = ($scope, $location, $log, $rootScope,
-  globalsSvc, userPrefs,
-  runtime,
-  ) ->
-
-  #### doit
-
-  if userPrefs.needsIntro()
-    $location.path "/intro"
-    return
-    
-  Q.fcall ->
-
-    # 1st chance to redirect to content. building up some conventions.
-    # if external resource exists, 
-    ###    
-        externalResource = $location.path().externalResource()
-        if externalResource
-          location.href = externalResource
-          return
-    ###
-
-    ## the main business.
-    # update will set authentication status
-    globalsSvc.doit()
-  .then ->
-
-    if $rootScope.authentication.loggedIn
-      $location.path "/stickers"
-    else
-      $location.path "/login"
-
-    $rootScope.$apply()
-  .fail (e)->
-    if e.errorType == 'authentication'
-      $location.path "/login"
-      $rootScope.$apply()
-
-  .done()
-
-
-    
-  # runtime.onMsg 'testType', (args...) ->
-  #   console.log "onMsg args: #{args}"
-  
-  # runtime.sendMsg 'testType', null, (response) ->
-  #   console.log "got response: #{response}"
-  
-
 

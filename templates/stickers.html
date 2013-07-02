@@ -1,4 +1,8 @@
-<!-- TODO rename to 'tagger' -->
+<!-- TODO need to make an abstract app layout template. -->
+
+<!-- all top-level actions -->
+<div ng-include="'partials/menu.html'" class="row top-menu"></div>
+  <!-- ng-show="shouldShowMenu" -->
 
 <!-- this only needed when page context needs explicit creation from user. -->
 <div class="row"
@@ -9,6 +13,7 @@
   <input type="text" placeholder=""
     data-ng-model="page.url" data-ng-change="fetchPage()">
 </div>
+
 
 
 <div class="row stickers-container">
