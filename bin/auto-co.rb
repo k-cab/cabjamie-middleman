@@ -17,7 +17,7 @@ branch = 'dropbox'
 
 date = Date.today
 
-pull_cmd = "git pull -- no-edit origin develop"
+pull_cmd = "git pull --no-edit origin develop"
 @add_cmd = "git add %files%"
 commit_cmd = "git commit -a -m 'dropbox change on #{date}'"
 push_cmd = "git push origin #{branch}"
