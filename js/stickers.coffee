@@ -1,9 +1,9 @@
 that = this
 app = appModule
 
-angular.module( 'appModule' )
+@stickersCntl = angular.module( 'appModule' )
   .controller 'StickersCntl',
-    ($log, $scope, $rootScope,
+    ($log, $scope, $rootScope, $location
       userPrefs, runtime, globalsSvc) ->
 
       # expose controller
@@ -14,6 +14,9 @@ angular.module( 'appModule' )
 
       $scope.shouldShowMenu = true
 
+      ## quickly dispatch if we can.
+      if $location.path().match '/edit'
+        $scope.editSticker null  # will probably blow up.
 
       #### controller actions
 
