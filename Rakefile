@@ -1,5 +1,5 @@
 
-# bundle exec middleman build -c; rsync -av source/mackerel-chrome/_* build/mackerel-chrome/; rsync -av --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman
+# bundle exec middleman build -c; rsync -avv source/mackerel-chrome/_* build/mackerel-chrome/; rsync -avv --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman
 
 
 task :default => :build
@@ -11,7 +11,7 @@ desc 'run the the middleman build'
 task :'build:middleman' do
 	cmd = %q(
 		bundle exec middleman build -c
-		rsync -av source/mackerel-chrome/_* build/mackerel-chrome/
+		rsync -avv source/mackerel-chrome/_* build/mackerel-chrome/
 	)
 
 	system cmd
@@ -76,7 +76,7 @@ end
 desc 'deploy to dropbox builds'
 task :deploy => :build do
 	cmd = %q(
-		rsync -av --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman
+		rsync -avv --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman
 	)
 
 	system cmd
