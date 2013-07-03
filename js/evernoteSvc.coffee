@@ -54,6 +54,10 @@ app = @appModule
     updateSticker: (newSticker) ->
       obj.persist 'sticker', newSticker
 
+    deleteSticker: (sticker) ->
+      sticker.name = ".deleted" + sticker.name
+      obj.persist 'sticker', sticker
+
 
     persist: (type, modelObj) ->
       # FIXME update the note after creation on multiple stickerings.
@@ -163,6 +167,17 @@ app = @appModule
 
       deferred.promise
         
+    deleteTag: (tag) ->
+      deferred = Q.defer()
+
+      obj.noteStore.updateTag obj.authToken, tag, (err, result) ->
+        obj.ifError err, deferred
+
+        deferred.resolve result
+
+      deferred.promise
+
+
     fetchNote: (args) ->
       deferred = Q.defer()
 

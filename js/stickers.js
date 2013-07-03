@@ -19,7 +19,9 @@
       }).then(function() {
         var name, sticker;
 
-        name = $routeParams.name;
+        if ($routeParams.name) {
+          name = decodeURIComponent($routeParams.name);
+        }
         if (name) {
           sticker = $scope.stickers.filter(function(e) {
             return e.name === name;
@@ -119,7 +121,18 @@
       return orderedStickers;
     };
     $scope.deleteSticker = function() {
-      return userDataSource.deleteSticker($scope.editedSticker);
+      return Q.fcall(function() {
+        return app.userDataSource.deleteSticker($scope.editedSticker);
+      }).then(function() {
+        var originalSticker;
+
+        originalSticker = $scope.stickers.filter(function(e) {
+          return e.id === $scope.editedSticker.id;
+        })[0];
+        $scope.stickers = _.without($scope.stickers, originalSticker);
+        $scope.editedSticker = null;
+        return $scope.$apply();
+      });
     };
     $scope.fetchPage = function() {
       var url;
@@ -263,6 +276,9 @@
       } else {
         return userPrefs.sticker_prefix + name;
       }
+    };
+    $scope.encodedName = function(name) {
+      return encodeURIComponent(name);
     };
     return this.doit();
   });

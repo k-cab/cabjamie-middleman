@@ -26,7 +26,7 @@ app = appModule
 
         .then ->
           ##  dispatch further  if we can.
-          name = $routeParams.name
+          name = decodeURIComponent $routeParams.name if $routeParams.name
           if name
             # first try to find the sticker.
             sticker = $scope.stickers.filter( (e) -> e.name == name)[0]
@@ -38,6 +38,7 @@ app = appModule
         .fail (e) ->
           globalsSvc.handleError e
         .done()
+
 
 
       #### controller actions
@@ -145,9 +146,14 @@ app = appModule
 
       ## delete
       $scope.deleteSticker = ->
-        userDataSource.deleteSticker $scope.editedSticker
-        
-        
+        Q.fcall ->
+          app.userDataSource.deleteSticker $scope.editedSticker
+        .then ->
+          originalSticker = $scope.stickers.filter((e)-> e.id == $scope.editedSticker.id)[0]          
+          
+          $scope.stickers = _.without $scope.stickers, originalSticker
+          $scope.editedSticker = null
+          $scope.$apply()
 
       ## data
 
@@ -313,6 +319,9 @@ app = appModule
         else
           userPrefs.sticker_prefix + name 
       
+      $scope.encodedName = (name) ->
+        encodeURIComponent name
+
 
       #### doit
 

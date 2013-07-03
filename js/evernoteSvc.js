@@ -65,6 +65,10 @@
       updateSticker: function(newSticker) {
         return obj.persist('sticker', newSticker);
       },
+      deleteSticker: function(sticker) {
+        sticker.name = ".deleted" + sticker.name;
+        return obj.persist('sticker', sticker);
+      },
       persist: function(type, modelObj) {
         var htmlSafeUrl, _ref;
 
@@ -139,6 +143,16 @@
         return deferred.promise;
       },
       updateTag: function(tag) {
+        var deferred;
+
+        deferred = Q.defer();
+        obj.noteStore.updateTag(obj.authToken, tag, function(err, result) {
+          obj.ifError(err, deferred);
+          return deferred.resolve(result);
+        });
+        return deferred.promise;
+      },
+      deleteTag: function(tag) {
         var deferred;
 
         deferred = Q.defer();
