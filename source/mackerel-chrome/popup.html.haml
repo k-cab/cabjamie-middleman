@@ -1,0 +1,62 @@
+---
+title: TagYeti Popup
+---
+
+:erb
+  <script src="js/popup.js"></script>
+  <script src="js/assetify.js"></script>
+  <script src="js/globalsSvc.js"></script>
+  <script src="js/authentication.js"></script>
+  <script src="js/stickers.js"></script>
+
+  <script src="js/vendor/parse-1.2.7.js"></script>
+  <script src="js/vendor/evernote-sdk-minified.js"></script>
+  <script src="js/vendor/md5.js"></script>
+
+  <script src="js/model.js"></script>
+  <script src="js/evernoteSvc.js"></script>
+  <script src="js/stubDataSvc.js"></script>
+  <script src="js/runtime.js"></script>
+
+  <body class="popup"
+    data-ng-app="appModule">
+
+
+    <div data-ng-cloak data-ng-view class="controller-content">
+    </div>
+
+
+    <!-- TODO consider refactoring to layout -->
+
+    <div class="row msg-container" id="msg-container">
+      <h6>Messages</h6>
+      <p>{{$root.msg}}</p>
+    </div>
+
+    <div class="show-error overlay"
+      data-ng-if="$root.error">
+      <div class="overlay-content dialog-content">
+
+        <div
+          data-ng-if="$root.error.userMessage">
+          <p>{{$root.error.userMessage}}</p>
+        </div>
+        <div
+          data-ng-if="! $root.error.userMessage">
+          <p>Oops, I'm sorry.</p>
+
+          <p>We just got an error: '{{$root.error}}'</p>
+          <p>Trace: {{$root.error.stack}}</p>
+
+          <p>Sorry for your inconvinience. We're fixing things all the time - please check <a href="{{resolveError(error)}}">here.</a></p> 
+          <!-- TODO resolveError(error) -->
+        </div>
+
+        <div class="control-container">
+          <button class="control" data-bbl-assetify
+            data-ng-click="$root.error = null">OK</button>
+        </div>        
+      </div>
+    </div>
+
+  </body>
