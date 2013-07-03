@@ -44,8 +44,8 @@
         {{sticker.name}}
       </a>
 
-      <div class="control sticker-edit"
-        data-ng-click="editSticker(sticker)">
+      <div class="control sticker-edit">
+        <a class="fit-parent" ng-href="#/stickers/{{sticker.name}}"/>
       </div>
 
     </li>
@@ -80,6 +80,8 @@
         data-ng-model="editedSticker.name"/>
 
       <div class="control-container">
+        <button class="control" data-bbl-assetify
+          data-ng-click="deleteSticker()">Delete</button>
         <button class="control" data-bbl-assetify
           data-ng-click="cancelEditingSticker()">Cancel</button>
         <button class="control" data-bbl-assetify

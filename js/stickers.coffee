@@ -3,7 +3,7 @@ app = appModule
 
 @stickersCntl = angular.module( 'appModule' )
   .controller 'StickersCntl',
-    ($log, $scope, $rootScope, $location
+    ($log, $scope, $rootScope, $location, $routeParams
       userPrefs, runtime, globalsSvc) ->
 
       # expose controller
@@ -20,29 +20,21 @@ app = appModule
       @doit = ->
 
         Q.fcall ->
-          ## quickly dispatch if we can.
-          if $location.path().match '/edit'
-            # validation: must have name
-            name = $location.search 'name'
-
-            # first try to find the sticker.
-            sticker = $scope.stickers.filter (e) ->
-              e.name == name
-            [0]
-            
-            # if not found, init the sticker
-            sticker ||= new Sticker
-              name: name
-            
-            $scope.editSticker sticker 
-
-            return
-            
-
           # defe to globalsSvc due to dep on  env-specific deps.
           # smells of making more pain by avoiding dep injection framework-bits.
           globalsSvc.doit()
 
+        .then ->
+          ##  dispatch further  if we can.
+          name = $routeParams.name
+          if name
+            # first try to find the sticker.
+            sticker = $scope.stickers.filter( (e) -> e.name == name)[0]
+
+            throw "invalid name '#{name}'" unless sticker
+
+            $scope.editSticker sticker 
+            $scope.$apply()
         .fail (e) ->
           globalsSvc.handleError e
         .done()
@@ -151,6 +143,11 @@ app = appModule
 
         orderedStickers
 
+      ## delete
+      $scope.deleteSticker = ->
+        userDataSource.deleteSticker $scope.editedSticker
+        
+        
 
       ## data
 

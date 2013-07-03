@@ -25,6 +25,10 @@ Q.longStackSupport = true
     templateUrl: "templates/stickers.html"
     controller: 'StickersCntl'
 
+  .when "/stickers/:name",
+    templateUrl: "templates/stickers.html"
+    controller: 'StickersCntl'
+
   .otherwise
     redirectTo: "/"
 
