@@ -18,13 +18,15 @@ desc 'run the the middleman build'
 task :'build:middleman' do
 	cmd = %q(
 		bundle exec middleman build
+
+		# copy over _* e.g. _locales
 		rsync -avv source/mackerel-chrome/_* build/mackerel-chrome/
 	)
 
 	system cmd
 end
 
-desc 'create a zip of che chrome extension'
+desc 'create a zip of the chrome extension'
 task :'build:chrome' do
 	manifest_file = 'build/mackerel-chrome/manifest.json'
 
@@ -90,7 +92,7 @@ task :'build:chrome' do
 
 end
 
-desc 'deploy to dropbox builds'
+desc 'deploy to dropbox builds dir'
 task :deploy => :build do
 	cmd = %q(
 		rsync -avv --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman

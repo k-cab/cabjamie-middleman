@@ -1,6 +1,6 @@
 # prerequisites:
 ## install xcode gcc installer
-## exclude dirs .bundle, vendor from dropbox sync
+## exclude dirs .bundle, vendor, build from dropbox sync
 
 
 # install rvm
