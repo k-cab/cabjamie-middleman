@@ -294,6 +294,30 @@ h6 {
   opacity: 0;
 }
 
+.transition-overlay, .transition-overlay-enter, .transition-overlay-leave {
+  -webkit-transition:all linear 0.3s;
+  -moz-transition:all linear 0.3s;
+  -ms-transition:all linear 0.3s;
+  -o-transition:all linear 0.3s;
+  transition:all linear 0.3s;
+}
+
+.transition-overlay-enter {
+  opacity: 0;
+  /*transition: all 2s ease-in-out;*/
+}
+.transition-overlay-enter.transition-overlay-enter-active {
+  opacity: 1;
+  /*transition: all 2s ease-in-out;*/
+}
+
+.transition-overlay-leave {
+  opacity: 1;
+}
+.transition-overlay-leave.transition-overlay-leave-active {
+  opacity: 0;
+}
+
 
 /* TODO 
 
