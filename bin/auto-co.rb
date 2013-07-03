@@ -12,7 +12,7 @@ branch = 'dropbox'
 
 @codebases = [
 	'.',
-	'source/mackerel-chrome'
+	# 'source/mackerel-chrome'
 ]
 
 date = Date.today
