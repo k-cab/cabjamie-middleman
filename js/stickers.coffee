@@ -12,11 +12,41 @@ app = appModule
           $scope.update()
 
 
+      # initial state
+
       $scope.shouldShowMenu = true
 
-      ## quickly dispatch if we can.
-      if $location.path().match '/edit'
-        $scope.editSticker null  # will probably blow up.
+
+      @doit = ->
+
+        Q.fcall ->
+          ## quickly dispatch if we can.
+          if $location.path().match '/edit'
+            # validation: must have name
+            name = $location.search 'name'
+
+            # first try to find the sticker.
+            sticker = $scope.stickers.filter (e) ->
+              e.name == name
+            [0]
+            
+            # if not found, init the sticker
+            sticker ||= new Sticker
+              name: name
+            
+            $scope.editSticker sticker 
+
+            return
+            
+
+          # defe to globalsSvc due to dep on  env-specific deps.
+          # smells of making more pain by avoiding dep injection framework-bits.
+          globalsSvc.doit()
+
+        .fail (e) ->
+          globalsSvc.handleError e
+        .done()
+
 
       #### controller actions
 
@@ -289,15 +319,7 @@ app = appModule
 
       #### doit
 
-      # app.env userPrefs.get('env'), $scope
-
-      # userPrefs.apply()
-
-      Q.fcall ->
-        globalsSvc.doit()
-      .fail (e) ->
-        globalsSvc.handleError e
-      .done()
+      @doit()
 
 ## REFACTOR
  
