@@ -132,7 +132,7 @@
         $scope.stickers = _.without($scope.stickers, originalSticker);
         $scope.editedSticker = null;
         return $scope.$apply();
-      });
+      }).done();
     };
     $scope.fetchPage = function() {
       var url;

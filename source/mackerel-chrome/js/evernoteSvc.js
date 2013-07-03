@@ -66,7 +66,7 @@
         return obj.persist('sticker', newSticker);
       },
       deleteSticker: function(sticker) {
-        sticker.name = ".deleted" + sticker.name;
+        sticker.name = "archived - " + sticker.name;
         return obj.persist('sticker', sticker);
       },
       persist: function(type, modelObj) {

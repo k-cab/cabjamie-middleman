@@ -144,7 +144,9 @@ app = appModule
 
         orderedStickers
 
+
       ## delete
+
       $scope.deleteSticker = ->
         Q.fcall ->
           app.userDataSource.deleteSticker $scope.editedSticker
@@ -154,6 +156,8 @@ app = appModule
           $scope.stickers = _.without $scope.stickers, originalSticker
           $scope.editedSticker = null
           $scope.$apply()
+        .done()
+
 
       ## data
 

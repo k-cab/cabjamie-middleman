@@ -55,7 +55,7 @@ app = @appModule
       obj.persist 'sticker', newSticker
 
     deleteSticker: (sticker) ->
-      sticker.name = ".deleted" + sticker.name
+      sticker.name = "archived - " + sticker.name
       obj.persist 'sticker', sticker
 
 
