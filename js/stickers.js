@@ -6,16 +6,36 @@
 
   app = appModule;
 
-  this.stickersCntl = angular.module('appModule').controller('StickersCntl', function($log, $scope, $rootScope, $location, userPrefs, runtime, globalsSvc) {
+  this.stickersCntl = angular.module('appModule').controller('StickersCntl', function($log, $scope, $rootScope, $location, $routeParams, userPrefs, runtime, globalsSvc) {
     app.stickersC = {
       update: function() {
         return $scope.update();
       }
     };
     $scope.shouldShowMenu = true;
-    if ($location.path().match('/edit')) {
-      $scope.editSticker(null);
-    }
+    this.doit = function() {
+      return Q.fcall(function() {
+        return globalsSvc.doit();
+      }).then(function() {
+        var name, sticker;
+
+        if ($routeParams.name) {
+          name = decodeURIComponent($routeParams.name);
+        }
+        if (name) {
+          sticker = $scope.stickers.filter(function(e) {
+            return e.name === name;
+          })[0];
+          if (!sticker) {
+            throw "invalid name '" + name + "'";
+          }
+          $scope.editSticker(sticker);
+          return $scope.$apply();
+        }
+      }).fail(function(e) {
+        return globalsSvc.handleError(e);
+      }).done();
+    };
     $scope.toggleSticker = function(sticker) {
       var doit;
 
@@ -99,6 +119,20 @@
         }
       });
       return orderedStickers;
+    };
+    $scope.deleteSticker = function() {
+      return Q.fcall(function() {
+        return app.userDataSource.deleteSticker($scope.editedSticker);
+      }).then(function() {
+        var originalSticker;
+
+        originalSticker = $scope.stickers.filter(function(e) {
+          return e.id === $scope.editedSticker.id;
+        })[0];
+        $scope.stickers = _.without($scope.stickers, originalSticker);
+        $scope.editedSticker = null;
+        return $scope.$apply();
+      });
     };
     $scope.fetchPage = function() {
       var url;
@@ -243,11 +277,10 @@
         return userPrefs.sticker_prefix + name;
       }
     };
-    return Q.fcall(function() {
-      return globalsSvc.doit();
-    }).fail(function(e) {
-      return globalsSvc.handleError(e);
-    }).done();
+    $scope.encodedName = function(name) {
+      return encodeURIComponent(name);
+    };
+    return this.doit();
   });
 
   this.clone = function(obj) {

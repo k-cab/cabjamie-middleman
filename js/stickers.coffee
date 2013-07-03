@@ -3,7 +3,7 @@ app = appModule
 
 @stickersCntl = angular.module( 'appModule' )
   .controller 'StickersCntl',
-    ($log, $scope, $rootScope, $location
+    ($log, $scope, $rootScope, $location, $routeParams
       userPrefs, runtime, globalsSvc) ->
 
       # expose controller
@@ -12,11 +12,34 @@ app = appModule
           $scope.update()
 
 
+      # initial state
+
       $scope.shouldShowMenu = true
 
-      ## quickly dispatch if we can.
-      if $location.path().match '/edit'
-        $scope.editSticker null  # will probably blow up.
+
+      @doit = ->
+
+        Q.fcall ->
+          # defe to globalsSvc due to dep on  env-specific deps.
+          # smells of making more pain by avoiding dep injection framework-bits.
+          globalsSvc.doit()
+
+        .then ->
+          ##  dispatch further  if we can.
+          name = decodeURIComponent $routeParams.name if $routeParams.name
+          if name
+            # first try to find the sticker.
+            sticker = $scope.stickers.filter( (e) -> e.name == name)[0]
+
+            throw "invalid name '#{name}'" unless sticker
+
+            $scope.editSticker sticker 
+            $scope.$apply()
+        .fail (e) ->
+          globalsSvc.handleError e
+        .done()
+
+
 
       #### controller actions
 
@@ -121,6 +144,16 @@ app = appModule
 
         orderedStickers
 
+      ## delete
+      $scope.deleteSticker = ->
+        Q.fcall ->
+          app.userDataSource.deleteSticker $scope.editedSticker
+        .then ->
+          originalSticker = $scope.stickers.filter((e)-> e.id == $scope.editedSticker.id)[0]          
+          
+          $scope.stickers = _.without $scope.stickers, originalSticker
+          $scope.editedSticker = null
+          $scope.$apply()
 
       ## data
 
@@ -286,18 +319,13 @@ app = appModule
         else
           userPrefs.sticker_prefix + name 
       
+      $scope.encodedName = (name) ->
+        encodeURIComponent name
+
 
       #### doit
 
-      # app.env userPrefs.get('env'), $scope
-
-      # userPrefs.apply()
-
-      Q.fcall ->
-        globalsSvc.doit()
-      .fail (e) ->
-        globalsSvc.handleError e
-      .done()
+      @doit()
 
 ## REFACTOR
  
