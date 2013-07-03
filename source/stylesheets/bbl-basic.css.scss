@@ -10,7 +10,6 @@ body {
 
 	color: #777;
 	font-size: medium;
-
 }
 
 
@@ -60,7 +59,7 @@ section.actions {
 }
 
 section.graphical-intro {
-	// @include grid-row;  // had to disable this to ge the margins working.
+	// @include grid-row;  // had to disable this to get the margins to work.
 	@include clearfix;
 
 	> section {
@@ -69,17 +68,6 @@ section.graphical-intro {
 		margin: 0;
 
 		position: relative;
-
-		// img {
-		// 	position: relative;
-		// 	top: 0;
-		// 	margin-bottom: 30%
-		// }
-		// p {
-		// 	position: absolute;
-		// 	bottom: 0;
-		// 	height: 10%;
-		// }
 	}
 }
 
