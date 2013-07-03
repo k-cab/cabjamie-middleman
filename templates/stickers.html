@@ -68,9 +68,6 @@
       <img class="edit-sticker-img"
         data-ng-src="{{editedSticker.imgOn()}}" alt="{{editedSticker.name}}">
 
-      <input class="edit-sticker-name"
-        data-ng-model="editedSticker.name"/>
-
       <ul class="edit-sticker-colours">
         <li class="colour-item colour-selected-{{editedSticker.isColour(colour)}}"
           style="background: {{colour.code}};"
@@ -78,6 +75,9 @@
           data-ng-click="editedSticker.setColour(colour)">
         </li>
       </ul>
+
+      <input class="edit-sticker-name"
+        data-ng-model="editedSticker.name"/>
 
       <div class="control-container">
         <button class="control" data-bbl-assetify
