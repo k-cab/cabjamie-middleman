@@ -11,7 +11,7 @@ that = this
       message: 'Login'
 
     logoutAction:
-      url: '#/logout'      
+      url: '#/logout'
       message: 'Logout'
 
     setLoggedIn: ->
