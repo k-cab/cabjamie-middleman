@@ -63,6 +63,10 @@ set :js_dir, 'javascripts'
 
 set :images_dir, 'images'
 
+# set :http_path, "/images"
+
+activate :relative_assets
+
 # Build-specific configuration
 configure :build do
   # For example, change the Compass output style for deployment
@@ -89,5 +93,5 @@ configure :build do
   
   # Or use a different image path
   # set :http_path, "/Content/images/"
-  set :http_path, "/"
+  # set :http_path, "/"
 end
