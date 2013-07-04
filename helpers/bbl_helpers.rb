@@ -8,12 +8,9 @@ def el_if_present( data, role, html_el = role )
   if data[role]
     attrs = case html_el
     when :img
-      content = ''
-      { src: data[:img] }
+      return image_tag data[:img]
     when :subimg
-      content = ''
-      html_el = :img
-      { src: data[:subimg] }
+      return image_tag data[:subimg]
     else
       {}
     end
