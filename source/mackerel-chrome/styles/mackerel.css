@@ -118,7 +118,8 @@ h6 {
 }
 
 .control-container {
-  text-align: right;
+  display: -webkit-box;
+  -webkit-box-pack: justify;
 }
 
 .control {
