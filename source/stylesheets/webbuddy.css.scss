@@ -1,0 +1,7 @@
+section.title {
+	.title, .subtitle {
+		display: inline-block;
+		
+		// TODO we can do gridding using mixins, we hope.
+	}
+}
