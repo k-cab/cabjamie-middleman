@@ -31,20 +31,5 @@
     "name": "orange",
     "code": "#ffaa56"
   }
-  {
-    "name": "red",
-    "code": "#c26060"
-  }
-  {
-    "name": "grey",
-    "code": "#d1cec9"
-  }
-  {
-    "name": "black",
-    "code": "#454547"
-  }
-  {
-    "name": "white",
-    "code": "#454547"
-  }
+  
 ]
