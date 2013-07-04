@@ -1,35 +1,34 @@
 [
   {
     "name": "yellow",
-    "code": "#ffff9f"
-  },
-  {
-    "name": "lightgreen",
-    "code": "#d1f9a8"
+    "code": "#f3f398"
   },
   {
     "name": "darkgreen",
     "code": "#669966"
   },
   {
-    "name": "darkblue",
-    "code": "#2b5987"
-  },
-  {
     "name": "lightblue",
     "code": "#bad8f6"
-  },
-  {
-    "name": "pink",
-    "code": "#ffaad4"
   },
   {
     "name": "purple",
     "code": "#c28ef9"
   },
   {
+    "name": "pink",
+    "code": "#ffaad4"
+  },
+  {
     "name": "orange",
     "code": "#ffaa56"
-  }
-  
+  },
+  {
+    "name": "red",
+    "code": "#c26060"
+  },
+  {
+    "name": "white",
+    "code": "#ffffff"
+  },  
 ]
