@@ -78,7 +78,7 @@ configure :build do
   
   # Create favicon/touch icon set from source/favicon_base.png
   ## NOTE disabling due to the build getting touched every time.
-  activate :favicon_maker
+  # activate :favicon_maker
   
   # Enable cache buster
   # activate :cache_buster
