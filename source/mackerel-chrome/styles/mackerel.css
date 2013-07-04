@@ -127,8 +127,11 @@ h6 {
   display: inline-block;
   font-size: 0px;
 
-  width: 50px;
+  width: 70px;
   height: 30px;
+
+  margin: 10px auto;
+
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center center;
