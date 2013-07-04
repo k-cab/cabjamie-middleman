@@ -264,10 +264,13 @@ h6 {
 }
 .edit-sticker-name {
   display: block;
-  margin: 0 auto;
+  margin: 20px auto;
 
   /* TODO size, font style */
   font-size: 14pt;
+}
+.edit-sticker .control-container {
+  margin: 20px auto;
 }
 .edit-sticker-colours {
   font-size: 0;
