@@ -118,7 +118,8 @@ h6 {
 }
 
 .control-container {
-  text-align: right;
+  display: -webkit-box;
+  -webkit-box-pack: justify;
 }
 
 .control {
@@ -142,6 +143,20 @@ h6 {
   width: 80px;
 }
 .cancel {
+}
+
+
+/** intro */
+
+.intro > p {
+  height: 3em;
+}
+
+.intro.control-container {
+  position: relative;
+  bottom: 0;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 /** ui states */

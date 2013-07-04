@@ -3,7 +3,7 @@ app = appModule
 
 @stickersCntl = angular.module( 'appModule' )
   .controller 'StickersCntl',
-    ($log, $scope, $rootScope, $location, $routeParams
+    ($log, $scope, $rootScope, $location, $routeParams, $resource
       userPrefs, runtime, globalsSvc) ->
 
       # expose controller
@@ -227,40 +227,8 @@ app = appModule
 
       ## sticker editing
 
-      $scope.colours = [
-        {
-          name: 'yellow'
-          code: '#eeed50'
-        }
-        {
-          name: 'red'
-          code: '#ef4e4e'
-        }
-        {
-          name: 'violet'
-          code: '#85648c'
-        }
-        {
-          name: 'pink'
-          code: '#deadb4'
-        }
-        {
-          name: 'green'
-          code: '#95a666'
-        }
-        {
-          name: 'khaki'
-          code: '#4f5549'
-        }
-        {
-          name: 'blue'
-          code: '#82b2c6'
-        }
-        {
-          name: 'navy'
-          code: '#3a5579'
-        }
-      ]
+      $scope.colours = $resource('assets/sticker-colours.json').query =>
+        $log.info { msg: 'fetched colour content', obj: $scope.colours }
 
       $scope.editSticker = (sticker) ->
         $scope.editedSticker = that.clone sticker
