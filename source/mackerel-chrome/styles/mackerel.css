@@ -145,6 +145,20 @@ h6 {
 .cancel {
 }
 
+
+/** intro */
+
+.intro > p {
+  height: 3em;
+}
+
+.intro.control-container {
+  position: relative;
+  bottom: 0;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
 /** ui states */
 .selected {
   border-style: solid;
