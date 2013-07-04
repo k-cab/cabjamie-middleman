@@ -1,34 +1,50 @@
 [
   {
     "name": "yellow",
-    "code": "#eeed50"
+    "code": "#ffff9f"
   },
   {
-    "name": "red",
-    "code": "#ef4e4e"
+    "name": "lightgreen",
+    "code": "#d1f9a8"
   },
   {
-    "name": "violet",
-    "code": "#85648c"
+    "name": "darkgreen",
+    "code": "#669966"
+  },
+  {
+    "name": "darkblue",
+    "code": "#2b5987"
+  },
+  {
+    "name": "lightblue",
+    "code": "#bad8f6"
   },
   {
     "name": "pink",
-    "code": "#deadb4"
+    "code": "#ffaad4"
   },
   {
-    "name": "green",
-    "code": "#95a666"
+    "name": "purple",
+    "code": "#c28ef9"
   },
   {
-    "name": "khaki",
-    "code": "#4f5549"
-  },
+    "name": "orange",
+    "code": "#ffaa56"
+  }
   {
-    "name": "blue",
-    "code": "#82b2c6"
-  },
+    "name": "red",
+    "code": "#c26060"
+  }
   {
-    "name": "navy",
-    "code": "#3a5579"
+    "name": "grey",
+    "code": "#d1cec9"
+  }
+  {
+    "name": "black",
+    "code": "#454547"
+  }
+  {
+    "name": "white",
+    "code": "#454547"
   }
 ]
