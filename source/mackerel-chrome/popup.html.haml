@@ -2,6 +2,7 @@
 title: TagYeti Popup
 ---
 
+-# quick migration of the previous html.
 :erb
   <script src="js/popup.js"></script>
   <script src="js/assetify.js"></script>
@@ -48,7 +49,7 @@ title: TagYeti Popup
           <p>We just got an error: '{{$root.error}}'</p>
           <p>Trace: {{$root.error.stack}}</p>
 
-          <p>Sorry for your inconvinience. We're fixing things all the time - please check <a href="{{resolveError(error)}}">here.</a></p> 
+          <p>Sorry for your inconvinience. We're fixing things all the time, so please visit <a ng-href="{{$root.resolveError(error)}}">our support forum</a> and join or start a discussion. Thanks!</p> 
           <!-- TODO resolveError(error) -->
         </div>
 

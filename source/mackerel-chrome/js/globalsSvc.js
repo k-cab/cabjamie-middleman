@@ -37,6 +37,9 @@
         $log.error(e);
         $rootScope.msg = "error: " + e;
         $rootScope.error = e;
+        $rootScope.resolveError = function(error) {
+          return 'http://support.bigbearlabs.com/forums/191718-general/category/68202-tagyeti';
+        };
         return $rootScope.$apply();
       },
       update: function() {

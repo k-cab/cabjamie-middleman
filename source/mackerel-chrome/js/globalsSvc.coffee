@@ -43,6 +43,10 @@ that = this
 
       $rootScope.msg = "error: #{e}"
       $rootScope.error = e
+      $rootScope.resolveError = (error) ->
+        # STUB
+        'http://support.bigbearlabs.com/forums/191718-general/category/68202-tagyeti'
+  
 
       $rootScope.$apply()
 
