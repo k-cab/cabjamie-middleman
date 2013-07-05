@@ -29,7 +29,6 @@
       data-ng-mouseover="highlight(sticker)"
       data-ng-mouseleave="highlight(null)"
       >
-
       <a class="sticker-image"
         data-ng-click="toggleSticker(sticker)">
         <img data-ng-src="{{sticker.imgOn()}}" alt="Page stickered with {{sticker.name}}."
@@ -39,18 +38,19 @@
           <!-- TODO transition with zoom in/out -->
       </a>
 
-      <a class="sticker-label"
-        data-ng-click="toggleSticker(sticker)">
-        {{sticker.name}}
-      </a>
+      <div class="sticker-label-section">
+        <a class="sticker-label"
+          data-ng-click="toggleSticker(sticker)">
+          {{sticker.name}}
+        </a>
 
-      <div class="sticker-edit-control">
-        <!-- disable url-based edit invocation due to it triggering an angular rerouting, resulting in a refresh of ui state.  
-        Will the refactoring to background.html solve this? -->
-        <!-- <a class="fit-parent" ng-href="#/stickers/{{encodedName(sticker.name)}}"/> -->
-        <a class="fit-parent" ng-click="editSticker(sticker)"/>
+        <div class="sticker-edit-control">
+          <!-- disable url-based edit invocation due to it triggering an angular rerouting, resulting in a refresh of ui state.  
+          Will the refactoring to background.html solve this? -->
+          <!-- <a class="fit-parent" ng-href="#/stickers/{{encodedName(sticker.name)}}"/> -->
+          <a class="fit-parent" ng-click="editSticker(sticker)"/>
+        </div>
       </div>
-
     </li>
 
     <!-- new sticker -->
