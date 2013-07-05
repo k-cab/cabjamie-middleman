@@ -19,7 +19,7 @@ p, a {
 
 a:hover {
   color: white;
-  font-weight: bold;
+  // font-weight: bold;
 }
 
 /** general / dev */
@@ -125,7 +125,7 @@ h6 {
 .control {
   cursor: hand; cursor: pointer; 
   display: inline-block;
-  font-size: 0px;
+  font-size: 0;
 
   width: 70px;
   height: 30px;
@@ -194,11 +194,11 @@ h6 {
   height: 110px;
 
   /*text-align: center;*/
-  font-size: 0px;  /* for inline-blocks */
+  font-size: 0;  /* for inline-blocks */
 }
 
 /* highlighting on hover*/
-.sticker>a:hover {
+.sticker-image:hover, .sticker-label:hover  {
   background-color: rgba(128, 128, 128, 0.45);
   border-radius: 5px 5px 5px 5px;
   transition: all 0.2s;
@@ -211,6 +211,10 @@ h6 {
   margin: 10px;
 }
 
+.sticker-label-section {
+  font-size: 0;
+}
+
 .sticker-label {
   /*label on top of sticker*/
 /*  position: absolute;
@@ -218,18 +222,13 @@ h6 {
   left: 0;
 */
   display: inline-block;
+
   width: 70px;
   margin-left: 10px;
 
   text-align: center;
+  text-overflow: ellipsis;
 }
-
-.on-page-false {
-}
-
-.on-page-true {
-}
-
 
 .sticker-image-new {
   display: table;
@@ -240,15 +239,12 @@ h6 {
 /* sticker edit control */
 
 .sticker-edit-control {
-  /*display: none;*/
-  display: inline-block;
+  float: right;
   height: 10px;
   width: 10px;
 }
+
 .sticker:hover .sticker-edit-control {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
   background-image: url("../assets/edit.png");
   background-size: contain;
 }
