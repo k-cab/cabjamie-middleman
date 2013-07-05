@@ -20,6 +20,10 @@ p, a {
 a:hover {
   color: white;
   // font-weight: bold;
+
+  background-color: rgba(128, 128, 128, 0.45);
+  border-radius: 5px 5px 5px 5px;
+  transition: all 0.2s;
 }
 
 /** general / dev */
@@ -110,7 +114,19 @@ h6 {
 }
 
 .dialog-content {
-  background: gray;
+  background: white;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-pack: justify;
+}
+
+.dialog-content > * {
+  -webkit-box-flex: 10;
+}
+
+.dialog-content .control-container {
+  -webkit-box-flex: 1;
 }
 
 .content-container {
