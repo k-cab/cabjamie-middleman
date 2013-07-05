@@ -1,0 +1,58 @@
+@import "../foundation-scss-standalone/scss/foundation";
+
+section {
+	// @include grid-row();
+}
+
+section.title {
+	display: block;
+
+	@include grid-row();
+
+	.title {
+		display: inline;
+
+		width: 66%;
+		float: left;
+
+		// hack valign with margin
+		margin-top: 5%;
+	}
+	.subtitle {
+		display: inline;
+
+		width: 66%;
+		float: left;
+	}
+
+	img {
+		width: 33%;
+	}
+}
+
+section.product {
+	@include grid-row();
+
+	margin: 50px auto;
+	
+	.title {
+		display: inline;
+
+		width: 66%;
+		float: right;
+
+		// hack valign with margin
+		margin-top: 5%;
+	}
+	.subtitle {
+		display: inline;
+
+		width: 66%;
+		float: right;
+	}
+
+	img {
+		width: 33%;
+		float: left;
+	}
+}
