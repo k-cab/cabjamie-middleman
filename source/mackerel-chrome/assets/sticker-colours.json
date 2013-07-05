@@ -1,15 +1,15 @@
 [
   {
-    "name": "red",
-    "code": "#c26060"
+    "name": "yellow",
+    "code": "#fff2a2"
   },
   {
     "name": "orange",
     "code": "#ffaa56"
   },
   {
-    "name": "yellow",
-    "code": "#f3f398"
+    "name": "red",
+    "code": "#c26060"
   },
   {
     "name": "darkgreen",
