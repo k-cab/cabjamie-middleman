@@ -22,6 +22,11 @@ title: TagYeti Popup
   <body class="popup"
     data-ng-app="appModule">
 
+    <!-- all top-level actions -->
+    <div ng-include="'partials/menu.html'" class="row top-menu"
+      ng-show="! $root.shouldHideMenu">
+    </div>
+
 
     <div data-ng-cloak data-ng-view class="controller-content">
     </div>

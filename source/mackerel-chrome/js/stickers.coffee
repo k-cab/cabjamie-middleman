@@ -12,10 +12,6 @@ app = appModule
           $scope.update()
 
 
-      # initial state
-
-      $scope.shouldShowMenu = true
-
 
       @doit = ->
 

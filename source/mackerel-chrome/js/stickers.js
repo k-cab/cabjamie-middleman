@@ -14,7 +14,6 @@
         return $scope.update();
       }
     };
-    $scope.shouldShowMenu = true;
     this.doit = function() {
       return Q.fcall(function() {
         return globalsSvc.doit();

@@ -94,6 +94,10 @@ Q.longStackSupport = true
 @appModule.controller 'IntroCntl',
 ($scope, $log, $location, $resource
 userPrefs) ->
+
+  # initial state
+  $scope.$root.shouldHideMenu = true
+
   # stub
   $scope.contentSequence = [
     {

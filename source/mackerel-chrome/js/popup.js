@@ -59,6 +59,7 @@
   this.appModule.controller('IntroCntl', function($scope, $log, $location, $resource, userPrefs) {
     var _this = this;
 
+    $scope.$root.shouldHideMenu = true;
     $scope.contentSequence = [
       {
         number: 1,
