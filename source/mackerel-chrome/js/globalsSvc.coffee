@@ -28,6 +28,17 @@ that = this
   $rootScope.authentication.nextAction = $rootScope.authentication.loginAction
 
 
+  # error handling
+  $rootScope.resolveError = (error) ->
+    # STUB
+    'http://support.bigbearlabs.com/forums/191718-general/category/68202-tagyeti'
+  
+  $rootScope.acceptError = (e) ->
+    $rootScope.error = null
+    $rootScope.msg = null    
+
+
+
   # looking redundant - just use rootscope?
   obj = 
 
@@ -43,10 +54,6 @@ that = this
 
       $rootScope.msg = "error: #{e}"
       $rootScope.error = e
-      $rootScope.resolveError = (error) ->
-        # STUB
-        'http://support.bigbearlabs.com/forums/191718-general/category/68202-tagyeti'
-  
 
       $rootScope.$apply()
 

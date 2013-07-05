@@ -102,7 +102,6 @@ h6 {
   margin-right: 10px;
 }
 
-
 /* overlay element fits viewport. */
 .overlay {
   position: fixed;
@@ -147,6 +146,10 @@ h6 {
 
 .dialog-content .control-container {
   -webkit-box-flex: 1;
+}
+
+.dialog-content a {
+  color: #12C;
 }
 
 .content-container {

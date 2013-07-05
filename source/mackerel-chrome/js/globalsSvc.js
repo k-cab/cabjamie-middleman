@@ -28,6 +28,13 @@
     };
     $rootScope.authentication.loggedIn = false;
     $rootScope.authentication.nextAction = $rootScope.authentication.loginAction;
+    $rootScope.resolveError = function(error) {
+      return 'http://support.bigbearlabs.com/forums/191718-general/category/68202-tagyeti';
+    };
+    $rootScope.acceptError = function(e) {
+      $rootScope.error = null;
+      return $rootScope.msg = null;
+    };
     return obj = {
       doit: function() {
         userPrefs.apply();
@@ -37,9 +44,6 @@
         $log.error(e);
         $rootScope.msg = "error: " + e;
         $rootScope.error = e;
-        $rootScope.resolveError = function(error) {
-          return 'http://support.bigbearlabs.com/forums/191718-general/category/68202-tagyeti';
-        };
         return $rootScope.$apply();
       },
       update: function() {
