@@ -210,8 +210,12 @@ h6 {
 /** stickers */
 
 .sticker-label, .text-label {
-  font:13px arial, Helvetica, sans-serif;
   line-height: 1em;
+  font:13px arial, Helvetica, sans-serif;
+}
+/* allow control to be clicked when label is long.*/
+.sticker-label-section:hover .sticker-label {
+  overflow-x: hidden;
 }
 
 .stickers-container {
@@ -236,18 +240,21 @@ h6 {
   font-size: 0;  /* for inline-blocks */
 }
 
-/* highlighting on hover*/
-.sticker-image:hover, .sticker-label:hover  {
-  background-color: rgba(128, 128, 128, 0.45);
-  border-radius: 5px 5px 5px 5px;
-  transition: all 0.2s;
-}
-
 .sticker-image {
   display: block;
 
   width: 70px;
   margin: 10px;
+
+
+  margin-bottom: 3px;
+}
+
+/* highlighting on hover */
+.sticker-image:hover, .sticker-label:hover  {
+  background-color: rgba(128, 128, 128, 0.45);
+  border-radius: 5px 5px 5px 5px;
+  transition: all 0.2s;
 }
 
 .sticker-label-section {

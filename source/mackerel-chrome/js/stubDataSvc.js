@@ -37,6 +37,21 @@
             }, {
               id: 3,
               name: "stub-sticker-3"
+            }, {
+              id: 4,
+              name: "##honeymoon"
+            }, {
+              id: 5,
+              name: "##longnameherelsdkfjdklsj"
+            }, {
+              id: 6,
+              name: "stub-sticker-6"
+            }, {
+              id: 7,
+              name: "stub-sticker-7"
+            }, {
+              id: 8,
+              name: "stub-sticker-8"
             }
           ];
           results = results.map(function(e) {
