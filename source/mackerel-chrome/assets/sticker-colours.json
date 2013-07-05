@@ -1,5 +1,13 @@
 [
   {
+    "name": "red",
+    "code": "#c26060"
+  },
+  {
+    "name": "orange",
+    "code": "#ffaa56"
+  },
+  {
     "name": "yellow",
     "code": "#f3f398"
   },
@@ -18,14 +26,6 @@
   {
     "name": "pink",
     "code": "#ffaad4"
-  },
-  {
-    "name": "orange",
-    "code": "#ffaa56"
-  },
-  {
-    "name": "red",
-    "code": "#c26060"
   },
   {
     "name": "white",
