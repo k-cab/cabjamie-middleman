@@ -40,7 +40,7 @@ h6 {
 }
 
 .preview {
-  /*display: none;*/
+  display: none;
   /*display: inline;*/
   border-style: dotted;
   border-color: yellow;
