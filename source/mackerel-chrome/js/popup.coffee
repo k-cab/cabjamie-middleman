@@ -141,6 +141,9 @@ userPrefs) ->
 
   $scope.finishIntro = ->
     userPrefs.setFinishedIntro()
+
+    $scope.$root.shouldHideMenu = false
+
     $location.path '/'
 
   ## doit

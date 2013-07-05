@@ -106,6 +106,7 @@
     };
     $scope.finishIntro = function() {
       userPrefs.setFinishedIntro();
+      $scope.$root.shouldHideMenu = false;
       return $location.path('/');
     };
     $scope.updateButtonVisibility();
