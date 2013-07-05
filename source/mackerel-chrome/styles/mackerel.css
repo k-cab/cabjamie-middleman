@@ -159,6 +159,7 @@ h6 {
 .control-container {
   display: -webkit-box;
   -webkit-box-pack: justify;
+  margin: auto 20px;
 }
 
 .control {
