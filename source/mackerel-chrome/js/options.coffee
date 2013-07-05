@@ -14,7 +14,7 @@
   ) ->
 
     # the preview-class controls display of preview stuff.
-    $scope.previewClass = userPrefs.get 'previewClass'
+    $scope.previewClass = 'shown'
 
     $scope.options = 
       env:

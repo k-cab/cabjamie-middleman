@@ -40,16 +40,21 @@ h6 {
 }
 
 .preview {
-  display: none;
+  /*display: none;*/
+  /*display: inline;*/
+  border-style: dotted;
+  border-color: yellow;
 }
 
 .preview.shown {
-  display: relative
+  display: inline;
   border-style: solid;
   
+/*
   p, a {
     color: white;
   }  
+*/
 }
 
 /* debugging sticker layout */
