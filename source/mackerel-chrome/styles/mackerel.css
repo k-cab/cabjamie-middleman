@@ -159,7 +159,8 @@ h6 {
 .control-container {
   display: -webkit-box;
   -webkit-box-pack: justify;
-  margin: auto 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .control {
@@ -198,8 +199,6 @@ h6 {
 .intro.control-container {
   position: relative;
   bottom: 0;
-  margin-left: 10px;
-  margin-right: 10px;
 }
 
 /** ui states */
@@ -303,6 +302,7 @@ h6 {
   margin: 0 auto;
 
   /* TODO size */
+  width: 90%;
 }
 .edit-sticker-name {
   display: block;
@@ -312,7 +312,6 @@ h6 {
   font-size: 14pt;
 }
 .edit-sticker .control-container {
-  margin: 20px auto;
 }
 .edit-sticker-colours {
   font-size: 0;
