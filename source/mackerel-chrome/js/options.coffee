@@ -12,6 +12,10 @@
   ($scope, $log, $location, $resource,
     userPrefs
   ) ->
+
+    # the preview-class controls display of preview stuff.
+    $scope.previewClass = userPrefs.get 'previewClass'
+
     $scope.options = 
       env:
         data: [ 'dev', 'production' ]

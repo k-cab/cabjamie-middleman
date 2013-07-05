@@ -9,11 +9,10 @@ title: TagYeti Options
 %script( src="js/globalsSvc.js" )
 
 %body.options( data-ng-app="appModule" )
-  -# TODO find a good way to show this only for internal people
-  -# .controller-content( data-ng-cloak data-ng-view )
-  
   %h1 TagYeti options
 
+  .controller-content.preview( ng-class="previewClass" ng-cloak ng-view )
+  
   %p(style="text-align:center;") Is there an option you'd like to set here? Let us know!
   %p(style="text-align:center;")
     %a( href="http://support.bigbearlabs.com/forums/191718-general/category/68202-tagyeti") TagYeti Support Forum

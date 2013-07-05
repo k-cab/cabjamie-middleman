@@ -39,9 +39,17 @@ h6 {
   display: none;
 }
 
-.preview > a {
+.preview {
   display: none;
-  color: gray;
+}
+
+.preview.shown {
+  display: relative
+  border-style: solid;
+  
+  p, a {
+    color: white;
+  }  
 }
 
 /* debugging sticker layout */

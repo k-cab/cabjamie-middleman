@@ -10,6 +10,7 @@
   });
 
   this.appModule.controller('AppCntl', function($scope, $log, $location, $resource, userPrefs) {
+    $scope.previewClass = userPrefs.get('previewClass');
     $scope.options = {
       env: {
         data: ['dev', 'production'],
