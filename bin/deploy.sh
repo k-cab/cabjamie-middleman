@@ -1,5 +1,7 @@
 # password: dlafvfknxn
 
+`dirname $0`/auto-co.rb
+
 rake deploy
 
 rsync -av --delete build/* ../ngp/mackerel/mackerel-site/public/
