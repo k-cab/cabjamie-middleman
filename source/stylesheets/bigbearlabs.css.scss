@@ -40,28 +40,19 @@ section.title {
 }
 
 section.product {
-	@include grid-row();
+	@include grid-column(4);
 
 	margin: 50px auto;
 	
 	.title {
-		display: inline;
-
-		width: 66%;
-		float: right;
-
-		// hack valign with margin
 		margin-top: 5%;
 	}
 	.subtitle {
-		display: inline;
-
-		width: 66%;
-		float: right;
 	}
 
 	img {
-		width: 33%;
-		float: left;
+		display: block;
+		width: 60%;
+		margin: 0 auto;
 	}
 }
