@@ -4,10 +4,14 @@
 - current_page.data.sections.each do |elem|
   %section( class="#{elem[:role]}" )
 
+    - heading_level = :h2
+    - heading_level = :h1 if elem[:role] == 'title'
+
+    -# wrap title in an a tag if there's an href.
     - if elem[:href]
-      %a{ href: elem[:href] } #{el_if_present elem, :title, :h2}
+      %a{ href: elem[:href] } #{el_if_present elem, :title, heading_level}
     - else
-      = el_if_present elem, :title, :h2
+      = el_if_present elem, :title, heading_level
 
 
     = el_if_present elem, :img

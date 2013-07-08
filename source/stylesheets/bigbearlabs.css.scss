@@ -1,4 +1,13 @@
 @import "../foundation-scss-standalone/scss/foundation";
+@import "bbl-basic";
+
+body {
+	background-color: white;
+}
+
+header {
+	display: none;
+}
 
 section {
 	// @include grid-row();
@@ -31,28 +40,25 @@ section.title {
 }
 
 section.product {
-	@include grid-row();
+	@include grid-column(4);
+
+	@media screen and (max-width: #{800px}) {
+		@include grid-row;
+		@include grid-column(12);
+	}
 
 	margin: 50px auto;
 	
 	.title {
-		display: inline;
-
-		width: 66%;
-		float: right;
-
-		// hack valign with margin
 		margin-top: 5%;
+		font-size: 200%;
 	}
 	.subtitle {
-		display: inline;
-
-		width: 66%;
-		float: right;
 	}
 
 	img {
-		width: 33%;
-		float: left;
+		display: block;
+		width: 60%;
+		margin: 0 auto;
 	}
 }
