@@ -42,10 +42,16 @@ section.title {
 section.product {
 	@include grid-column(4);
 
+	@media screen and (max-width: #{800px}) {
+		@include grid-row;
+		@include grid-column(12);
+	}
+
 	margin: 50px auto;
 	
 	.title {
 		margin-top: 5%;
+		font-size: 200%;
 	}
 	.subtitle {
 	}
