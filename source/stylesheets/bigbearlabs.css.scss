@@ -1,4 +1,13 @@
 @import "../foundation-scss-standalone/scss/foundation";
+@import "bbl-basic";
+
+body {
+	background-color: white;
+}
+
+header {
+	display: none;
+}
 
 section {
 	// @include grid-row();
