@@ -41,13 +41,13 @@ title: TagYeti Popup
 
     <div class="show-error overlay"
       data-ng-if="$root.error">
-      <div class="overlay-content dialog-content">
+      <div class="overlay-content">
 
         <div
           data-ng-if="$root.error.userMessage">
           <p>{{$root.error.userMessage}}</p>
         </div>
-        <div
+        <div class="dialog-content"
           data-ng-if="! $root.error.userMessage">
           <p>Oops, I'm sorry.</p>
 

@@ -1,4 +1,8 @@
+@import "../../stylesheets/_recipes";
+
+
 /** popup */
+
 
 body {
 
@@ -126,7 +130,11 @@ h6 {
   top: 5%;
   left: 5%;
 
-  text-align: center;
+  // text-align: center;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-pack: center;
 
 /*  background-color: rgba(230,230,230,1);
 */  /*opacity: 1;*/
@@ -135,13 +143,10 @@ h6 {
 .dialog-content {
   background: white;
 
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-box-pack: justify;
+  padding: 20px;
 }
 
 .dialog-content > * {
-  -webkit-box-flex: 10;
 }
 
 .dialog-content .control-container {
