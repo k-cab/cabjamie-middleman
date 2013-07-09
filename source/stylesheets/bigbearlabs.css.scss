@@ -18,8 +18,10 @@ section.title {
 
 	@include grid-row();
 
+	text-align: center;
+
 	.title {
-		display: inline;
+		display: none;
 
 		width: 66%;
 		float: left;
@@ -28,14 +30,17 @@ section.title {
 		margin-top: 5%;
 	}
 	.subtitle {
-		display: inline;
+		display: none;
 
 		width: 66%;
 		float: left;
 	}
+	p {
+		display: none;
+	}
 
 	img {
-		width: 33%;
+		width: 70%;
 	}
 }
 
