@@ -18,6 +18,8 @@ section.title {
 
 	@include grid-row();
 
+	text-align: center;
+
 	.title {
 		display: none;
 
@@ -33,9 +35,16 @@ section.title {
 		width: 66%;
 		float: left;
 	}
+	p {
+		display: none;
+	}
 
 	img {
+<<<<<<< HEAD
 		width: 100%;
+=======
+		width: 70%;
+>>>>>>> 62b9f7d6d943922e583c6de095e17ddafc44e418
 	}
 }
 
