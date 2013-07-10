@@ -1,0 +1,64 @@
+@import "../foundation-scss-standalone/scss/foundation";
+@import "bbl-basic";
+
+body {
+	background-color: white;
+}
+
+header {
+	display: none;
+}
+
+section {
+	// @include grid-row();
+}
+
+section.title {
+	display: block;
+
+	@include grid-row();
+
+	.title {
+		display: none;
+
+		width: 66%;
+		float: left;
+
+		// hack valign with margin
+		margin-top: 5%;
+	}
+	.subtitle {
+		display: none;
+
+		width: 66%;
+		float: left;
+	}
+
+	img {
+		width: 100%;
+	}
+}
+
+section.product {
+	@include grid-column(3);
+
+	@media screen and (max-width: #{800px}) {
+		@include grid-row;
+		@include grid-column(12);
+	}
+
+	margin: 50px auto;
+	
+	.title {
+		margin-top: 5%;
+		font-size: 200%;
+	}
+	.subtitle {
+	}
+
+	img {
+		display: block;
+		width: 60%;
+		margin: 0 auto;
+	}
+}
