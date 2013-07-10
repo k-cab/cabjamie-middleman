@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name":"Tag Yeti"
-  ,"version":"0.6.1"
+  ,"version":"0.6.0"
   // ,"build_number":"3"
   ,"description":"Turns your favorite Evernote tags into stickers."
   ,"background": {
