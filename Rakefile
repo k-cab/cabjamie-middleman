@@ -73,17 +73,17 @@ task :'build:chrome' do
 	}
 
 	zip = -> {
-=begin
+
 		zip_cmd = %q(
 				zip -r build/mackerel-chrome.zip build/mackerel-chrome/
 			)
 		system zip_cmd
-=end
+
 		
-	  Rake::PackageTask.new do |p|
-	    p.need_zip = true
-	    p.package_files.include("build/**/*")
-	  end
+	  # Rake::PackageTask.new do |p|
+	  #   p.need_zip = true
+	  #   p.package_files.include("build/**/*")
+	  # end
 	}
 
 	bump.call
@@ -95,7 +95,7 @@ end
 desc 'deploy to dropbox builds dir'
 task :deploy => :build do
 	cmd = %q(
-		rsync -avv --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman
+		rsync -avv --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman | grep -v uptodate
 	)
 
 	system cmd
