@@ -1,4 +1,4 @@
-global.config = require('./config.js');
+global.config = require('./config.' + (process.env.NODE_ENV || 'development') +'.js');
 
 var util = require('util');
 var querystring = require('querystring');
