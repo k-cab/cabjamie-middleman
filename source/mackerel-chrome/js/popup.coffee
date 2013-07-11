@@ -14,6 +14,10 @@ Q.longStackSupport = true
     controller: 'IntroCntl'
 
   .when "/login",
+    templateUrl: "templates/authentication.html"
+    controller: 'AuthenticationCntl'
+
+  .when "/login/oauth",
     templateUrl: "templates/oauth.html"
     controller: 'AuthenticationCntl'
 

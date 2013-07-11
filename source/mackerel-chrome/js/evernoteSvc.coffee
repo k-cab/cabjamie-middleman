@@ -121,8 +121,8 @@ app = @appModule
 
 
     init: ->
-      obj.authToken = localStorage.getItem 'evernote_authToken'
-      obj.noteStoreURL = localStorage.getItem 'evernote_noteStoreURL'
+      obj.authToken = app.userPrefs.authToken
+      obj.noteStoreURL = app.userPrefs.noteStoreURL
 
       unless obj.authToken and obj.noteStoreURL and obj.authToken != typeof undefined
         throw 

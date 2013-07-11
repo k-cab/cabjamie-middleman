@@ -1,0 +1,10 @@
+%h6 Authentication
+
+%p.preview authentication status: {{$root.authentication.loggedIn}}
+
+.credentials-form( ng-if="! $root.authentication.loggedIn" )
+	%p Username:
+	%p Password:
+	%button Login
+
+	%p {{authenticationResponse}}

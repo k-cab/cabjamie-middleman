@@ -108,8 +108,8 @@
       init: function() {
         var noteStoreProtocol, noteStoreTransport;
 
-        obj.authToken = localStorage.getItem('evernote_authToken');
-        obj.noteStoreURL = localStorage.getItem('evernote_noteStoreURL');
+        obj.authToken = app.userPrefs.authToken;
+        obj.noteStoreURL = app.userPrefs.noteStoreURL;
         if (!(obj.authToken && obj.noteStoreURL && obj.authToken !== typeof void 0)) {
           throw {
             msg: "couldn't initialise service access from localStorage",
