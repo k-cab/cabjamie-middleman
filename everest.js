@@ -74,14 +74,17 @@ app.all('/authentication', function(req, res){
 
 });
 
+var details = null;
 app.all('/authentication/callback', function(req, res){
 	
 	var evernote_callback = config.serverUrl +'/evernote/authentication/callback';
-		
+
+
   evernote.oAuth(evernote_callback).getOAuthAccessToken( req.session.oauthRequestToken, 
 		req.session.oauthRequestTokenSecret, 
 		req.query.oauth_verifier, 
 		function(err, authToken, accessTokenSecret, results) {
+
 
 			if (err) return res.send("Error getting accessToken", 500);
 			 
@@ -92,9 +95,20 @@ app.all('/authentication/callback', function(req, res){
 				req.session.authToken = authToken;
 				req.session.user = edamUser;
 				
-				res.redirect('/');
+				// TACTICAL
+				details = {
+					authToken: authToken,
+					noteStoreURL: 'https://www.evernote.com/shard/' + edamUser.shardId + '/notestore'
+				};
+				var client_url = 'http://localhost:4567/mackerel-chrome/popup.html';
+				res.redirect(client_url);
 			});
   });
+});
+
+app.all('/authentication/details', function(req, res){
+	res.header("Access-Control-Allow-Origin", "*");
+	res.send(details, 200);
 });
 
 app.all('/logout', function(req, res){
@@ -463,3 +477,10 @@ app.get('/sync-chunk', function(req, res){
 
 var port = process.env.PORT || config.serverPort;
 app.listen(port);
+
+
+
+// mackerel
+var mackerelApi = require('./mackerelApi');
+mackerelApi.setup(app);
+
