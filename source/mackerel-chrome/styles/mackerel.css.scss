@@ -3,7 +3,6 @@
 
 /** popup */
 
-
 body {
 
   background-image: url("../assets/background-image.png");  
@@ -48,12 +47,11 @@ h6 {
   /*display: inline;*/
   border-style: dotted;
   border-color: yellow;
-}
-
-.preview.shown {
-  display: inline;
-  border-style: solid;
   
+}
+.preview.shown {
+  display: inherit;
+
 /*
   p, a {
     color: white;

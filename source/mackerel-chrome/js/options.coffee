@@ -13,8 +13,19 @@
     userPrefs
   ) ->
 
-    # the preview-class controls display of preview stuff.
-    $scope.previewClass = 'shown'
+    $scope.userPrefs = userPrefs
+
+    $scope.showPreview = (userPrefs.get('previewClass') == 'shown')
+
+    $scope.onShowPreviewChange = ->
+
+      # the preview-class controls display of preview stuff.
+      $scope.previewClass = 'shown'
+      userPrefs.set 'previewClass', 
+        if userPrefs.get('previewClass') == 'shown'
+          ''
+        else
+          'shown'
 
     $scope.options = 
       env:

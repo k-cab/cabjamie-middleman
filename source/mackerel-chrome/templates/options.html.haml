@@ -6,8 +6,12 @@
     height: auto;
   }
 
--# doesn't seem to apply properly.
-.preview( ng-class="{{previewClass}}" )  
+
+%div
+  %p Show preview features
+  %input( type="checkbox" ng-model="showPreview" ng-change="onShowPreviewChange()")
+
+.preview( class="{{userPrefs.get('previewClass')}}" )
 
   .links
     %a( href="popup.html" ) Popup

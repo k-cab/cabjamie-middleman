@@ -10,7 +10,12 @@
   });
 
   this.appModule.controller('AppCntl', function($scope, $log, $location, $resource, userPrefs) {
-    $scope.previewClass = 'shown';
+    $scope.userPrefs = userPrefs;
+    $scope.showPreview = userPrefs.get('previewClass') === 'shown';
+    $scope.onShowPreviewChange = function() {
+      $scope.previewClass = 'shown';
+      return userPrefs.set('previewClass', userPrefs.get('previewClass') === 'shown' ? '' : 'shown');
+    };
     $scope.options = {
       env: {
         data: ['dev', 'production'],
