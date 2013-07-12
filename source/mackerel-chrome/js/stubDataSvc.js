@@ -10,18 +10,13 @@
     obj = {
       init: function() {},
       fetchPage: function(params) {
-        return Q.fcall(function() {
-          var result;
+        var deferred, results;
 
-          result = new that.Page();
-          result.url = params.url;
-          result.stickers = [
-            {
-              name: "stub-sticker-3"
-            }
-          ];
-          return result;
+        deferred = Q.defer();
+        results = $resource('http://localhost\\:8081/mackerel/page').get(params, function() {
+          return deferred.resolve(results);
         });
+        return deferred.promise;
       },
       fetchStickers: function(page) {
         var deferred, results;
@@ -35,12 +30,6 @@
         });
         return deferred.promise;
       },
-      fetchItems: function(params, resultHandler) {
-        return Q.fcall(function() {
-          $log.error("stub fetchItems called");
-          return null;
-        });
-      },
       updateSticker: function(sticker) {
         return Q.fcall(function() {
           $log.error("stub updateSticker called");
@@ -50,6 +39,12 @@
       persist: function(type, modelObj, resultHandler) {
         return Q.fcall(function() {
           $log.error("stub persist called");
+          return null;
+        });
+      },
+      fetchItems: function(params, resultHandler) {
+        return Q.fcall(function() {
+          $log.error("stub fetchItems called");
           return null;
         });
       }

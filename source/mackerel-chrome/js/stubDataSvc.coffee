@@ -8,17 +8,12 @@ that = this
     init: ->
       
     fetchPage: (params) ->
-      Q.fcall ->
+      deferred = Q.defer()
 
-        result = new that.Page()
-        result.url = params.url
-        result.stickers = [
-          {
-            name: "stub-sticker-3"
-          }
-        ]
+      results = $resource('http://localhost\\:8081/mackerel/page').get params, ->
+        deferred.resolve results
 
-        return result
+      deferred.promise
 
 
     fetchStickers: (page) ->
@@ -32,12 +27,6 @@ that = this
 
       deferred.promise
 
-    fetchItems: (params, resultHandler) ->
-      Q.fcall ->
-        $log.error "stub fetchItems called"
-        return null
-
-
     updateSticker: (sticker) ->
       Q.fcall ->
         $log.error "stub updateSticker called"
@@ -48,5 +37,14 @@ that = this
       Q.fcall ->
         $log.error "stub persist called"
         return null
+
+
+    # unmaintained
+
+    fetchItems: (params, resultHandler) ->
+      Q.fcall ->
+        $log.error "stub fetchItems called"
+        return null
+
 
   return obj

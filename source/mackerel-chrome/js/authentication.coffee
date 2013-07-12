@@ -28,11 +28,6 @@ angular.module( 'appModule' )
       #   initiate:
       #     method: 'GET'
 
-      # # phase 1: trigger en oauth, return en-token for client to use
-      # # initiate oauth based on response.
-      # # $scope.nextPath = authentication_resp.get()
-      # $scope.authenticationResponse = authentication_endpoint.initiate()
-
       # phase 2: return mk-token for client to use to access en data, map mk-token to en-token on server side.
 
       # phase 1 impl
