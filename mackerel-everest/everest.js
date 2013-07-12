@@ -98,17 +98,12 @@ app.all('/authentication/callback', function(req, res){
 				// TACTICAL
 				details = {
 					authToken: authToken,
-					noteStoreURL: 'https://www.evernote.com/shard/' + edamUser.shardId + '/notestore'
+					noteStoreURL: 'https://sandbox.evernote.com/shard/' + edamUser.shardId + '/notestore'
 				};
 				var client_url = 'http://localhost:4567/mackerel-chrome/popup.html';
 				res.redirect(client_url);
 			});
   });
-});
-
-app.all('/authentication/details', function(req, res){
-	res.header("Access-Control-Allow-Origin", "*");
-	res.send(details, 200);
 });
 
 app.all('/logout', function(req, res){

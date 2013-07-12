@@ -4,7 +4,7 @@
 
   that = this;
 
-  this.appModule.factory('stubDataSvc', function($log, $http) {
+  this.appModule.factory('stubDataSvc', function($log, $http, $resource) {
     var obj;
 
     obj = {
@@ -24,41 +24,16 @@
         });
       },
       fetchStickers: function(page) {
-        return Q.fcall(function() {
-          var results;
+        var deferred, results;
 
-          results = [
-            {
-              id: 1,
-              name: "stub-sticker-1"
-            }, {
-              id: 2,
-              name: "stub-sticker-2"
-            }, {
-              id: 3,
-              name: "stub-sticker-3"
-            }, {
-              id: 4,
-              name: "##honeymoon"
-            }, {
-              id: 5,
-              name: "##longnameherelsdkfjdklsj"
-            }, {
-              id: 6,
-              name: "stub-sticker-6"
-            }, {
-              id: 7,
-              name: "stub-sticker-7"
-            }, {
-              id: 8,
-              name: "stub-sticker-8"
-            }
-          ];
+        deferred = Q.defer();
+        results = $resource('http://localhost\\:8081/mackerel/tags').query(function() {
           results = results.map(function(e) {
             return new that.Sticker(e);
           });
-          return results;
+          return deferred.resolve(results);
         });
+        return deferred.promise;
       },
       fetchItems: function(params, resultHandler) {
         return Q.fcall(function() {

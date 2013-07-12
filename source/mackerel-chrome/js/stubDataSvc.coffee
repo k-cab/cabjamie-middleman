@@ -1,6 +1,6 @@
 that = this
 
-@appModule.factory 'stubDataSvc', ($log, $http) ->
+@appModule.factory 'stubDataSvc', ($log, $http, $resource) ->
   
   obj = 
     #= userDataSource interface realisation
@@ -22,46 +22,15 @@ that = this
 
 
     fetchStickers: (page) ->
-      Q.fcall ->
-        results = [
-          {
-            id: 1
-            name: "stub-sticker-1",
-          }
-          {
-            id: 2
-            name: "stub-sticker-2",
-          }
-          {
-            id: 3
-            name: "stub-sticker-3"
-          }
-          {
-            id: 4
-            name: "##honeymoon"
-          }
-          {
-            id: 5
-            name: "##longnameherelsdkfjdklsj"
-          }
-          {
-            id: 6
-            name: "stub-sticker-6"
-          }
-          {
-            id: 7
-            name: "stub-sticker-7"
-          }
-          {
-            id: 8
-            name: "stub-sticker-8"
-          }
-        ]
+      deferred = Q.defer()
 
+      results = $resource('http://localhost\\:8081/mackerel/tags').query ->
         results = results.map (e) ->
           new that.Sticker e
 
-        return results
+        deferred.resolve results
+
+      deferred.promise
 
     fetchItems: (params, resultHandler) ->
       Q.fcall ->
