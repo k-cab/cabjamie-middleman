@@ -36,6 +36,12 @@ app.dynamicHelpers({
   }
 });
 
+// mackerel
+var mackerelApi = require('./mackerelApi');
+app.evernote = evernote;
+mackerelApi.setup(app);
+
+
 //Allow X-Domain Ajax
 app.all('/', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -74,7 +80,6 @@ app.all('/authentication', function(req, res){
 
 });
 
-var details = null;
 app.all('/authentication/callback', function(req, res){
 	
 	var evernote_callback = config.serverUrl +'/evernote/authentication/callback';
@@ -100,6 +105,8 @@ app.all('/authentication/callback', function(req, res){
 					authToken: authToken,
 					noteStoreURL: 'https://sandbox.evernote.com/shard/' + edamUser.shardId + '/notestore'
 				};
+				app.store.setCredentials( 'evernote', 'sohocoke', edamUser );
+
 				var client_url = 'http://localhost:4567/mackerel-chrome/popup.html';
 				res.redirect(client_url);
 			});
@@ -474,8 +481,4 @@ var port = process.env.PORT || config.serverPort;
 app.listen(port);
 
 
-
-// mackerel
-var mackerelApi = require('./mackerelApi');
-mackerelApi.setup(app);
 
