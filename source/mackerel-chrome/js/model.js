@@ -79,14 +79,20 @@
     };
 
     Page.prototype.hasSticker = function(sticker) {
-      var _ref;
+      var _ref, _ref1;
 
       if (_.include((_ref = this.stickers) != null ? _ref.map(function(e) {
         return e.name;
       }) : void 0, sticker.name)) {
         return true;
       } else {
-        return false;
+        if (_.include((_ref1 = this.stickers) != null ? _ref1.map(function(e) {
+          return e.id;
+        }) : void 0, sticker.id)) {
+          return true;
+        } else {
+          return false;
+        }
       }
     };
 

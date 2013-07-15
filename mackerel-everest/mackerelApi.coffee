@@ -7,44 +7,44 @@ Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Q
 
 Credentials = Parse.Object.extend 'Credentials'
 
-module.exports = 
+store  =
+  getCredentials: (vendorId, username) ->
+    q = new Parse.Query Credentials
+    q.find( {
+              vendorId
+              username 
+            })
+    # TODO ensure we order results.
+
+
+  setCredentials: (vendorId, username, credentials) ->
+    new Credentials().save {
+      vendorId
+      username
+      credentials
+    }
+evernote = null
+
+
+module.exports = obj =
 
   setup: (app)=> 
     evernote = app.evernote
 
-    app.store = store =
-      getCredentials: (vendorId, username) ->
-        q = new Parse.Query Credentials
-        q.find( {
-                  vendorId
-                  username 
-                })
-        # TODO ensure we order results.
-
-
-      setCredentials: (vendorId, username, credentials) ->
-        new Credentials().save {
-          vendorId
-          username
-          credentials
-        }
-      
+    app.store = store
 
     # e.g. building a rest api
     # app.post '/mackerel/tags/:guid', (req, res) ->
     #   return res.send tag, 200
 
-    sendData = (data, res)->
-      res.header "Access-Control-Allow-Origin", "*"
-      res.send data, 200
-
 
     # INSECURE
-    app.all '/authentication/details', (req, res)->
+    app.all '/authentication/details', (req, res)=>
       details = {}
-      sendData details, res
+      obj.sendData details, res
 
-    app.get '/mackerel/tags', (req, res) ->
+
+    app.get '/mackerel/tags', (req, res) =>
       stub_tags = [
         {
           id: 1
@@ -80,72 +80,20 @@ module.exports =
         }
       ]
 
-      # fetchStickers: (page) ->
-      #   Q.fcall ->
-      #     obj.listTags()
-      #   .then (tags)->
-      #     obj.ifError tags, Q
-          
-      #     $log.info tags
-      #     matchingTags = tags.filter (tag) -> tag.name.match app.userPrefs.sticker_prefix_pattern
-
-      #     stickers = matchingTags.map (tag) ->
-      #       sticker = new Sticker
-      #         implObj: tag
-      #         id: tag.guid
-      #         name: tag.name
-
-      #     return stickers
-
-  
       # based on everest.js
-      try
-        Q.fcall ->
-          if !req.session.user 
-            # new session for this client - get mackerel token, attempt to load vendor token.
+      obj.initEdamUser(req)
+      .then (userInfo)->
+        obj.fetchTags userInfo
+      .then (tagList) ->
+        obj.sendData tagList, res
+      .fail (err) ->
+        return res.send(err,403) if (err == 'EDAMUserException') 
 
-            # TEMP dev-mode retrieval from parse
-            store.getCredentials( 'evernote', 'sohocoke')
-            .then (credentialsSet)->
-              credentials = _.sortBy( credentialsSet, (e) -> e.updatedAt ).reverse()[0]
-              data = credentials.get 'credentials'
-            .then (data)->
-              authToken = data.authToken
-
-              getUserPromise = promisify evernote, 'getUser'
-              getUserPromise authToken 
-
-            .then (edamUser)->
-              # if err
-              #   res.send(err, 500) 
-              #   return
-
-              req.session.user = edamUser
-
-        .then ->
-          userInfo = req.session.user
-
-          evernote.listTags userInfo, (err, tagList) -> 
-            if (err) 
-              return res.send(err,403) if (err == 'EDAMUserException') 
-
-              return res.send(err,500)
-            else 
-              # ODD only 20 at a time. why?
-
-              sticker_prefix_pattern = /^##/
-              matchingTags = tagList.filter (tag) -> tag.name.match sticker_prefix_pattern
-
-              sendData matchingTags, res
+        return res.send(err,500)
 
 
-      catch e
-        console.log e
-        return res.send('Unauthenticate',401);
-
-
-    app.get '/mackerel/page', (req, res) ->
-      page = 
+    app.get '/mackerel/page', (req, res) =>
+      stub_page = 
         url: 'http://stub-url'
         stickers: [
           {
@@ -153,7 +101,58 @@ module.exports =
           }
         ]
 
-      sendData page, res
+      obj.initEdamUser(req)
+      .then (userInfo)->
+        url = req.query.url
+        words = "sourceURL:#{url}"
+        offset = 0
+        count = 10  # CASE handle duplicate notes
+        sortOrder = 'UPDATED'
+        ascending = false
+
+        evernote.findNotes userInfo,  words, { offset:offset, count:count, sortOrder:sortOrder, ascending:ascending }, (err, noteList)->
+          if (err)
+            return res.send(err,403) if (err == 'EDAMUserException')
+            return res.send(err,500);
+          else
+
+            note = noteList.notes[0]
+
+            note ||= 
+              id: null
+              title: req.query.title
+              url: req.query.url
+              tagGuids: []
+
+            pageData = 
+              id: note.id
+              url: note.url
+              title: note.title
+              stickers: note.tagGuids.map (guid)->
+                id: guid
+
+            # if no previous note for this url
+            pageData.stickers ||= []
+
+            obj.sendData pageData, res
+
+
+    app.get '/mackerel/notes', (req, res) =>
+      obj.initEdamUser(req)
+      .then (userInfo)->
+        url = req.query.url
+        words = "sourceURL:#{url}"
+        offset = 0
+        count = 10  # CASE handle duplicate notes
+        sortOrder = 'UPDATED'
+        ascending = false
+
+        evernote.findNotes userInfo,  words, { offset:offset, count:count, sortOrder:sortOrder, ascending:ascending }, (err, noteList)->
+          if (err)
+            return res.send(err,403) if (err == 'EDAMUserException')
+            return res.send(err,500);
+          else
+            return obj.sendData noteList, res
 
 
 
@@ -161,3 +160,57 @@ module.exports =
     
 
 
+  sendData: (data, res)->
+    res.header "Access-Control-Allow-Origin", "*"
+    res.send data, 200
+
+  initEdamUser: (req) ->
+    deferred = Q.defer()
+
+    if !req.session.user 
+      # new session for this client - get mackerel token, attempt to load vendor token.
+
+      # TEMP dev-mode retrieval from parse
+      store.getCredentials( 'evernote', 'sohocoke')
+      .then (credentialsSet)->
+        credentials = _.sortBy( credentialsSet, (e) -> e.updatedAt ).reverse()[0]
+        data = credentials.get 'credentials'
+      .then (data)->
+        authToken = data.authToken
+
+        getUserPromise = promisify evernote, 'getUser'
+        getUserPromise authToken 
+
+      .then (edamUser)->
+        # if err
+        #   res.send(err, 500) 
+        #   return
+
+        req.session.user = edamUser
+        deferred.resolve edamUser
+    else
+      deferred.resolve req.session.user
+
+    return deferred.promise
+
+
+  fetchTags: (userInfo)->
+    deferred = Q.defer()
+
+    evernote.listTags userInfo, (err, tagList) -> 
+      if (err) 
+        deferred.reject err
+      else
+        sticker_prefix_pattern = /^##/
+        tagList = tagList.filter (tag) -> tag.name.match sticker_prefix_pattern
+
+        deferred.resolve tagList.map (tag) ->
+          id: tag.guid
+          name: tag.name
+
+
+    deferred.promise
+
+
+  
+  

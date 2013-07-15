@@ -49,7 +49,10 @@ class Page
     if _.include this.stickers?.map((e) -> e.name), sticker.name
       true
     else
-      false
+      if _.include this.stickers?.map((e) -> e.id), sticker.id
+        true
+      else
+        false
 
 
 @Sticker = Sticker
