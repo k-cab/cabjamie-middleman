@@ -44,8 +44,8 @@ module.exports = obj =
       obj.sendData details, res
 
 
-    app.get '/mackerel/tags', (req, res) =>
-      stub_tags = [
+    app.get '/mackerel/stickers', (req, res) =>
+      stub_stickers = [
         {
           id: 1
           name: "stub-sticker-1",
@@ -83,14 +83,17 @@ module.exports = obj =
       # based on everest.js
       obj.initEdamUser(req)
       .then (userInfo)->
-        obj.fetchTags userInfo
-      .then (tagList) ->
-        obj.sendData tagList, res
+        obj.fetchStickers userInfo
+      .then (stickers) ->
+        obj.sendData stickers, res
       .fail (err) ->
         return res.send(err,403) if (err == 'EDAMUserException') 
 
         return res.send(err,500)
 
+    app.post '/mackerel/stickers', (req, res) =>
+      # TODO create or update evernote tag.
+      
 
     app.get '/mackerel/page', (req, res) =>
       stub_page = 
@@ -136,6 +139,34 @@ module.exports = obj =
 
             obj.sendData pageData, res
 
+    
+    app.options '/mackerel/page', (req, res) ->
+      res.header "Access-Control-Allow-Headers", "Content-Type"
+
+      obj.sendData null, res
+
+    
+    app.post '/mackerel/page', (req, res) =>
+      obj.initEdamUser(req)
+      .then (userInfo)->
+
+        note =
+          title: 'stub title' 
+          content: '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+  <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>
+  </en-note>'
+          # more properties
+        
+        evernote.createNote userInfo, note, (err, note) ->
+          
+          if (err) 
+            return res.send(err,403) if (err == 'EDAMUserException') 
+            return res.send(err,500);
+          
+          obj.sendData note.guid, res
+
+
+    # not part of public api
 
     app.get '/mackerel/notes', (req, res) =>
       obj.initEdamUser(req)
@@ -194,17 +225,17 @@ module.exports = obj =
     return deferred.promise
 
 
-  fetchTags: (userInfo)->
+  fetchStickers: (userInfo)->
     deferred = Q.defer()
 
-    evernote.listTags userInfo, (err, tagList) -> 
+    evernote.listTags userInfo, (err, stickers) -> 
       if (err) 
         deferred.reject err
       else
         sticker_prefix_pattern = /^##/
-        tagList = tagList.filter (tag) -> tag.name.match sticker_prefix_pattern
+        stickers = stickers.filter (tag) -> tag.name.match sticker_prefix_pattern
 
-        deferred.resolve tagList.map (tag) ->
+        deferred.resolve stickers.map (tag) ->
           id: tag.guid
           name: tag.name
 

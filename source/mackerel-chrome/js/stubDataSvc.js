@@ -10,11 +10,14 @@
     obj = {
       init: function() {},
       fetchPage: function(params) {
-        var deferred, results;
+        var deferred, result;
 
         deferred = Q.defer();
-        results = $resource('http://localhost\\:8081/mackerel/page').get(params, function() {
-          return deferred.resolve(results);
+        result = $resource('http://localhost\\:8081/mackerel/page').get(params, function() {
+          var page;
+
+          page = new Page(result);
+          return deferred.resolve(page);
         });
         return deferred.promise;
       },
@@ -22,7 +25,7 @@
         var deferred, results;
 
         deferred = Q.defer();
-        results = $resource('http://localhost\\:8081/mackerel/tags').query(function() {
+        results = $resource('http://localhost\\:8081/mackerel/stickers').query(function() {
           results = results.map(function(e) {
             return new that.Sticker(e);
           });
@@ -35,6 +38,15 @@
           $log.error("stub updateSticker called");
           return null;
         });
+      },
+      savePage: function(page) {
+        var deferred;
+
+        deferred = Q.defer();
+        $resource('http://localhost\\:8081/mackerel/page').save(page, function() {
+          return deferred.resolve(page);
+        });
+        return deferred.promise;
       },
       persist: function(type, modelObj, resultHandler) {
         return Q.fcall(function() {

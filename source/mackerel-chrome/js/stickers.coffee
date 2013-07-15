@@ -61,11 +61,11 @@ app = appModule
 
       $scope.addSticker = (sticker) -> 
         $scope.page.addSticker sticker
-        app.userDataSource.persist 'page', $scope.page
+        app.userDataSource.savePage $scope.page
 
       $scope.removeSticker = (sticker) ->
         $scope.page.removeSticker sticker
-        app.userDataSource.persist 'page', $scope.page
+        app.userDataSource.savePage $scope.page
 
         # TODO decouple the writes from the user interaction, coalecse and schedule.
 

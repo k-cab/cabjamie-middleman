@@ -10,8 +10,9 @@ that = this
     fetchPage: (params) ->
       deferred = Q.defer()
 
-      results = $resource('http://localhost\\:8081/mackerel/page').get params, ->
-        deferred.resolve results
+      result = $resource('http://localhost\\:8081/mackerel/page').get params, ->
+        page = new Page result
+        deferred.resolve page
 
       deferred.promise
 
@@ -19,7 +20,7 @@ that = this
     fetchStickers: (page) ->
       deferred = Q.defer()
 
-      results = $resource('http://localhost\\:8081/mackerel/tags').query ->
+      results = $resource('http://localhost\\:8081/mackerel/stickers').query ->
         results = results.map (e) ->
           new that.Sticker e
 
@@ -27,11 +28,25 @@ that = this
 
       deferred.promise
 
+
     updateSticker: (sticker) ->
       Q.fcall ->
         $log.error "stub updateSticker called"
         return null
-    
+
+    savePage: (page)->
+      deferred = Q.defer()
+
+      $resource('http://localhost\\:8081/mackerel/page').save page, ->
+        # TODO fill in the id
+
+        deferred.resolve page
+
+        # TODO error
+
+      deferred.promise
+
+
 
     persist: (type, modelObj, resultHandler) ->
       Q.fcall ->

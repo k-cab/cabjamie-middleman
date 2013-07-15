@@ -57,11 +57,11 @@
     };
     $scope.addSticker = function(sticker) {
       $scope.page.addSticker(sticker);
-      return app.userDataSource.persist('page', $scope.page);
+      return app.userDataSource.savePage($scope.page);
     };
     $scope.removeSticker = function(sticker) {
       $scope.page.removeSticker(sticker);
-      return app.userDataSource.persist('page', $scope.page);
+      return app.userDataSource.savePage($scope.page);
     };
     $scope.startCreateSticker = function() {
       $scope.newSticker = new Sticker({
