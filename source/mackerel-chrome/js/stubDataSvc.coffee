@@ -17,6 +17,20 @@ that = this
       deferred.promise
 
 
+    savePage: (page)->
+      deferred = Q.defer()
+
+      $resource('http://localhost\\:8081/mackerel/page').save pageData, ->
+        # TODO fill in the id
+
+        deferred.resolve page
+
+        # TODO error
+
+      deferred.promise
+
+
+
     fetchStickers: (page) ->
       deferred = Q.defer()
 
@@ -29,23 +43,31 @@ that = this
       deferred.promise
 
 
-    updateSticker: (sticker) ->
-      Q.fcall ->
-        $log.error "stub updateSticker called"
-        return null
-
-    savePage: (page)->
+    createSticker: (sticker) ->
       deferred = Q.defer()
 
-      $resource('http://localhost\\:8081/mackerel/page').save page, ->
-        # TODO fill in the id
+      $resource('http://localhost\\:8081/mackerel/stickers').save sticker, (stickerData)->
+        sticker.id = stickerData.guid
 
-        deferred.resolve page
+        deferred.resolve sticker
 
         # TODO error
 
-      deferred.promise
+      deferred.promise      
+    
 
+    updateSticker: (sticker) ->
+      deferred = Q.defer()
+
+      $resource('http://localhost\\:8081/mackerel/stickers').save sticker, (stickerData)->
+
+        deferred.resolve sticker
+
+        # TODO error
+
+      deferred.promise      
+
+    # TODO resolve api to 'saveSticker'.
 
 
     persist: (type, modelObj, resultHandler) ->
@@ -54,7 +76,8 @@ that = this
         return null
 
 
-    # unmaintained
+
+    # tactically unmaintained
 
     fetchItems: (params, resultHandler) ->
       Q.fcall ->

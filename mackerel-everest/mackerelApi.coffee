@@ -44,6 +44,19 @@ module.exports = obj =
       obj.sendData details, res
 
 
+    # necessary for successful post
+    app.options '/mackerel/page', (req, res) ->
+      res.header "Access-Control-Allow-Headers", "Content-Type"
+
+      obj.sendData null, res
+
+    app.options '/mackerel/stickers', (req, res) ->
+      res.header "Access-Control-Allow-Headers", "Content-Type"
+
+      obj.sendData null, res
+
+
+
     app.get '/mackerel/stickers', (req, res) =>
       stub_stickers = [
         {
@@ -92,8 +105,34 @@ module.exports = obj =
         return res.send(err,500)
 
     app.post '/mackerel/stickers', (req, res) =>
-      # TODO create or update evernote tag.
-      
+      # create or update evernote tag.
+      name = req.body.name
+      id = req.body.id
+
+      obj.initEdamUser(req)
+      .then (userInfo)->
+        if id
+          obj.updateSticker userInfo, {
+            guid: id
+            name
+          }
+        else
+          obj.findSticker( userInfo, { name })
+          .then (sticker) ->
+            if sticker
+              obj.updateSticker( userInfo, { guid: sticker.guid, name })
+            else
+              obj.createSticker userInfo, { name }
+
+      .then (sticker) ->
+        if typeof(sticker) == 'object'
+          resultData = sticker
+          
+        obj.sendData resultData, res
+
+      .fail (err) ->
+        res.send err, 500
+
 
     app.get '/mackerel/page', (req, res) =>
       stub_page = 
@@ -139,13 +178,7 @@ module.exports = obj =
 
             obj.sendData pageData, res
 
-    
-    app.options '/mackerel/page', (req, res) ->
-      res.header "Access-Control-Allow-Headers", "Content-Type"
-
-      obj.sendData null, res
-
-    
+        
     app.post '/mackerel/page', (req, res) =>
       obj.initEdamUser(req)
       .then (userInfo)->
@@ -155,7 +188,7 @@ module.exports = obj =
           content: '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
   <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>
   </en-note>'
-          # more properties
+          # TODO more properties
         
         evernote.createNote userInfo, note, (err, note) ->
           
@@ -164,6 +197,10 @@ module.exports = obj =
             return res.send(err,500);
           
           obj.sendData note.guid, res
+
+
+        # CASE updating the note.
+        # CASE more posts before note fully created.
 
 
     # not part of public api
@@ -228,20 +265,96 @@ module.exports = obj =
   fetchStickers: (userInfo)->
     deferred = Q.defer()
 
-    evernote.listTags userInfo, (err, stickers) -> 
+    evernote.listTags userInfo, (err, tags) -> 
       if (err) 
         deferred.reject err
       else
         sticker_prefix_pattern = /^##/
-        stickers = stickers.filter (tag) -> tag.name.match sticker_prefix_pattern
+        stickers = tags.filter (tag) -> tag.name.match sticker_prefix_pattern
 
-        deferred.resolve stickers.map (tag) ->
-          id: tag.guid
-          name: tag.name
+        deferred.resolve stickers.map (sticker) ->
+          id: sticker.guid
+          name: sticker.name
 
 
     deferred.promise
 
 
+  # only works with the name.
+  findSticker: (userInfo, params) ->
+    d = Q.defer()
+
+    obj.fetchStickers(userInfo)
+    .then (stickers)->
+      matches = stickers.filter (sticker) ->
+        sticker.name == params.name
+
+      if matches.length > 1
+        throw "more than 1 match for #{params}"
+      
+      d.resolve matches[0]
+    
+    d.promise
   
+
+  createSticker: (userInfo, params) ->
+  
+    # if(!req.session.user) return res.send('Unauthenticate',401);
+    # if(!req.body) return res.send('Invalid content',400);
+
+    # var tag = req.body;
+    # var userInfo = req.session.user;
+    
+    # evernote.createTag(userInfo, tag, function(err, tag) {
+      
+    #   if (err) {
+    #     if(err == 'EDAMUserException') return res.send(err,403);
+    #     return res.send(err,500);
+    #   } 
+
+    #   return res.send(tag,200);
+    # });
+
+    d = Q.defer()
+
+    tag =
+      name: params.name
+
+    evernote.createTag userInfo, tag, (err, tag) ->
+      throw err if err
+      d.resolve tag
+  
+    d.promise
+
+  
+  updateSticker: (userInfo, params) ->
+    # if(!req.session.user) return res.send('Unauthenticate',401);
+    # if(!req.body) return res.send('Invalid content',400);
+    
+    # var tag = req.body;
+    # var userInfo = req.session.user;
+    
+    # tag.guid = req.params.guid;
+    
+    # evernote.updateTag(userInfo, tag, function(err, tag) {
+      
+    #   if (err) {
+    #     if(err == 'EDAMUserException') return res.send(err,403);
+    #     return res.send(err,500);
+    #   } 
+
+    #   return res.send(tag,200);
+    # });
+
+    d = Q.defer()
+
+    tag =
+      guid: params.guid
+      name: params.name    
+
+    evernote.updateTag userInfo, tag, (err, tag)->
+      throw err if err
+      d.resolve tag
+  
+    d.promise
   

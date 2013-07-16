@@ -5,9 +5,34 @@
   app = this.appModule;
 
   this.appModule.factory('evernoteSvc', function($log, $http) {
-    var obj;
+    var obj,
+      _this = this;
 
     obj = {
+      fetchPage: function(params) {
+        return Q.fcall(function() {
+          return obj.fetchNote({
+            url: params.url
+          });
+        }).then(function(result) {
+          var page, pageData, _ref;
+
+          pageData = {
+            url: params.url,
+            title: params.title,
+            stickers: result != null ? (_ref = result.tags) != null ? _ref.map(function(tag) {
+              return {
+                name: tag.name,
+                guid: tag.guid
+              };
+            }) : void 0 : void 0,
+            note: result
+          };
+          pageData.stickers || (pageData.stickers = []);
+          page = new Page(pageData);
+          return page;
+        });
+      },
       fetchStickers: function(page) {
         if (page === null) {
           return Q.fcall(function() {
@@ -35,29 +60,8 @@
           throw "don't call me for page stickers.";
         }
       },
-      fetchPage: function(params) {
-        return Q.fcall(function() {
-          return obj.fetchNote({
-            url: params.url
-          });
-        }).then(function(result) {
-          var page, pageData, _ref;
-
-          pageData = {
-            url: params.url,
-            title: params.title,
-            stickers: result != null ? (_ref = result.tags) != null ? _ref.map(function(tag) {
-              return {
-                name: tag.name,
-                guid: tag.guid
-              };
-            }) : void 0 : void 0,
-            note: result
-          };
-          pageData.stickers || (pageData.stickers = []);
-          page = new Page(pageData);
-          return page;
-        });
+      savePage: function(page) {
+        return _this.persist('page', page);
       },
       createSticker: function(newSticker) {
         return obj.persist('sticker', newSticker);

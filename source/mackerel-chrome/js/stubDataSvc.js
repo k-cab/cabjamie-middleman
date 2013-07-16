@@ -21,6 +21,15 @@
         });
         return deferred.promise;
       },
+      savePage: function(page) {
+        var deferred;
+
+        deferred = Q.defer();
+        $resource('http://localhost\\:8081/mackerel/page').save(pageData, function() {
+          return deferred.resolve(page);
+        });
+        return deferred.promise;
+      },
       fetchStickers: function(page) {
         var deferred, results;
 
@@ -33,18 +42,22 @@
         });
         return deferred.promise;
       },
-      updateSticker: function(sticker) {
-        return Q.fcall(function() {
-          $log.error("stub updateSticker called");
-          return null;
-        });
-      },
-      savePage: function(page) {
+      createSticker: function(sticker) {
         var deferred;
 
         deferred = Q.defer();
-        $resource('http://localhost\\:8081/mackerel/page').save(page, function() {
-          return deferred.resolve(page);
+        $resource('http://localhost\\:8081/mackerel/stickers').save(sticker, function(stickerData) {
+          sticker.id = stickerData.guid;
+          return deferred.resolve(sticker);
+        });
+        return deferred.promise;
+      },
+      updateSticker: function(sticker) {
+        var deferred;
+
+        deferred = Q.defer();
+        $resource('http://localhost\\:8081/mackerel/stickers').save(sticker, function(stickerData) {
+          return deferred.resolve(sticker);
         });
         return deferred.promise;
       },
