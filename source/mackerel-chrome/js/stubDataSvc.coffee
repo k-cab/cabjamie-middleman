@@ -65,9 +65,15 @@ that = this
 
         # TODO error
 
-      deferred.promise      
+      deferred.promise
 
     # TODO resolve api to 'saveSticker'.
+
+
+    deleteSticker: (sticker) ->
+      sticker.name = "archived - " + sticker.name
+      Q.fcall ->
+        obj.updateSticker sticker
 
 
     persist: (type, modelObj, resultHandler) ->
