@@ -2,7 +2,7 @@
 (function() {
   Q.longStackSupport = true;
 
-  this.appModule = angular.module("appModule", ['ui', 'ngResource'], function($routeProvider, $locationProvider) {
+  this.appModule = angular.module("appModule", ['ui', 'ngResource', 'restangular'], function($routeProvider, $locationProvider) {
     return $routeProvider.when("/", {
       templateUrl: "templates/stickers.html",
       controller: 'AppCntl'

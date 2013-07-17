@@ -1,6 +1,10 @@
 that = this
 
-@appModule.factory 'stubDataSvc', ($log, $http, $resource) ->
+@appModule.config (RestangularProvider)-> 
+    RestangularProvider.setBaseUrl("http://localhost:8081/mackerel")
+  
+
+@appModule.factory 'stubDataSvc', ($log, $http, $resource, Restangular) ->
   
   obj = 
     #= userDataSource interface realisation
@@ -10,8 +14,11 @@ that = this
     fetchPage: (params) ->
       deferred = Q.defer()
 
-      result = $resource('http://localhost\\:8081/mackerel/page').get params, ->
-        page = new Page result
+      Restangular.one('page').get(params)
+      .then (pageData)->
+        # FIXME pageData has a lot of properties from restangular.
+
+        page = new Page pageData
         deferred.resolve page
 
       deferred.promise
@@ -20,7 +27,8 @@ that = this
     savePage: (page)->
       deferred = Q.defer()
 
-      $resource('http://localhost\\:8081/mackerel/page').save pageData, ->
+      page.post()
+      .then (pageData)->
         # TODO fill in the id
 
         deferred.resolve page
@@ -34,8 +42,9 @@ that = this
     fetchStickers: (page) ->
       deferred = Q.defer()
 
-      results = $resource('http://localhost\\:8081/mackerel/stickers').query ->
-        results = results.map (e) ->
+      Restangular.all('stickers').getList()
+      .then (stickersData) ->
+        results = stickersData.map (e) ->
           new that.Sticker e
 
         deferred.resolve results
@@ -59,7 +68,7 @@ that = this
     updateSticker: (sticker) ->
       deferred = Q.defer()
 
-      $resource('http://localhost\\:8081/mackerel/stickers').save {}, sticker, (stickerData)->
+      $resource('http://localhost\\:8081/mackerel/stickers').save sticker, (stickerData)->
 
         deferred.resolve sticker
 
@@ -72,8 +81,7 @@ that = this
 
     deleteSticker: (sticker) ->
       sticker.name = "archived - " + sticker.name
-      Q.fcall ->
-        obj.updateSticker sticker
+      obj.updateSticker sticker
 
 
     persist: (type, modelObj, resultHandler) ->

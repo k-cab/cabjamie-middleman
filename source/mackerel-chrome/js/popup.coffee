@@ -2,7 +2,7 @@
 # DEV
 Q.longStackSupport = true
 
-@appModule = angular.module "appModule", ['ui', 'ngResource'], ($routeProvider, $locationProvider) ->
+@appModule = angular.module "appModule", ['ui', 'ngResource', 'restangular'], ($routeProvider, $locationProvider) ->
   $routeProvider
 
   .when "/",

@@ -4,19 +4,23 @@
 
   that = this;
 
-  this.appModule.factory('stubDataSvc', function($log, $http, $resource) {
+  this.appModule.config(function(RestangularProvider) {
+    return RestangularProvider.setBaseUrl("http://localhost:8081/mackerel");
+  });
+
+  this.appModule.factory('stubDataSvc', function($log, $http, $resource, Restangular) {
     var obj;
 
     obj = {
       init: function() {},
       fetchPage: function(params) {
-        var deferred, result;
+        var deferred;
 
         deferred = Q.defer();
-        result = $resource('http://localhost\\:8081/mackerel/page').get(params, function() {
+        Restangular.one('page').get(params).then(function(pageData) {
           var page;
 
-          page = new Page(result);
+          page = new Page(pageData);
           return deferred.resolve(page);
         });
         return deferred.promise;
@@ -25,17 +29,19 @@
         var deferred;
 
         deferred = Q.defer();
-        $resource('http://localhost\\:8081/mackerel/page').save(pageData, function() {
+        page.post().then(function(pageData) {
           return deferred.resolve(page);
         });
         return deferred.promise;
       },
       fetchStickers: function(page) {
-        var deferred, results;
+        var deferred;
 
         deferred = Q.defer();
-        results = $resource('http://localhost\\:8081/mackerel/stickers').query(function() {
-          results = results.map(function(e) {
+        Restangular.all('stickers').getList().then(function(stickersData) {
+          var results;
+
+          results = stickersData.map(function(e) {
             return new that.Sticker(e);
           });
           return deferred.resolve(results);
@@ -56,14 +62,14 @@
         var deferred;
 
         deferred = Q.defer();
-        $resource('http://localhost\\:8081/mackerel/stickers').save({}, sticker, function(stickerData) {
+        $resource('http://localhost\\:8081/mackerel/stickers').save(sticker, function(stickerData) {
           return deferred.resolve(sticker);
         });
         return deferred.promise;
       },
       deleteSticker: function(sticker) {
         sticker.name = "archived - " + sticker.name;
-          return obj.updateSticker(sticker);
+        return obj.updateSticker(sticker);
       },
       persist: function(type, modelObj, resultHandler) {
         return Q.fcall(function() {

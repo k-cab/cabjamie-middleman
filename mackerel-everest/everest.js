@@ -30,6 +30,10 @@ app.configure('development', function(){
 	));
 });
 
+process.on('uncaughtException', function(err) {
+	console.log(err);
+});
+
 app.dynamicHelpers({
   session: function(req, res){
     return req.session;

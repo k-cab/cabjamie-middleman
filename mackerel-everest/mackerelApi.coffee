@@ -106,7 +106,7 @@ module.exports = obj =
       # create or update evernote tag.
       obj.initEdamUser(req)
       .then (userInfo)->
-        
+
         name = req.body.name
         id = req.body.id
 
@@ -231,7 +231,7 @@ module.exports = obj =
     res.header "Access-Control-Allow-Origin", "*"
     res.send data, 200
 
-  sendError: (res, err = null) ->
+  sendError: (res, err) ->
     return res.send err,403 if (err == 'EDAMUserException') 
 
     return res.send(err,500)
@@ -248,6 +248,7 @@ module.exports = obj =
       .then (credentialsSet)->
         credentials = _.sortBy( credentialsSet, (e) -> e.updatedAt ).reverse()[0]
         data = credentials.get 'credentials'
+
       .then (data)->
         authToken = data.authToken
 
