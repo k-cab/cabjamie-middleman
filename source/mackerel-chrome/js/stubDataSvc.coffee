@@ -59,7 +59,7 @@ that = this
     updateSticker: (sticker) ->
       deferred = Q.defer()
 
-      $resource('http://localhost\\:8081/mackerel/stickers').save sticker, (stickerData)->
+      $resource('http://localhost\\:8081/mackerel/stickers').save {}, sticker, (stickerData)->
 
         deferred.resolve sticker
 

@@ -121,20 +121,6 @@
       });
       return orderedStickers;
     };
-    $scope.deleteSticker = function() {
-      return Q.fcall(function() {
-        return app.userDataSource.deleteSticker($scope.editedSticker);
-      }).then(function() {
-        var originalSticker;
-
-        originalSticker = $scope.stickers.filter(function(e) {
-          return e.id === $scope.editedSticker.id;
-        })[0];
-        $scope.stickers = _.without($scope.stickers, originalSticker);
-        $scope.editedSticker = null;
-        return $scope.$apply();
-      }).done();
-    };
     $scope.fetchPage = function() {
       var url;
 
@@ -216,6 +202,18 @@
     };
     $scope.cancelEditingSticker = function() {
       return $scope.editedSticker = null;
+    };
+    $scope.deleteSticker = function() {
+      return app.userDataSource.deleteSticker($scope.editedSticker).then(function() {
+        var originalSticker;
+
+        originalSticker = $scope.stickers.filter(function(e) {
+          return e.id === $scope.editedSticker.id;
+        })[0];
+        $scope.stickers = _.without($scope.stickers, originalSticker);
+        $scope.editedSticker = null;
+        return $scope.$apply();
+      }).done();
     };
     $scope.saveStickerColours = function() {
       var colours;

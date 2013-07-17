@@ -141,20 +141,6 @@ app = appModule
         orderedStickers
 
 
-      ## delete
-
-      $scope.deleteSticker = ->
-        Q.fcall ->
-          app.userDataSource.deleteSticker $scope.editedSticker
-        .then ->
-          originalSticker = $scope.stickers.filter((e)-> e.id == $scope.editedSticker.id)[0]          
-          
-          $scope.stickers = _.without $scope.stickers, originalSticker
-          $scope.editedSticker = null
-          $scope.$apply()
-        .done()
-
-
       ## data
 
       $scope.fetchPage = ->
@@ -258,6 +244,20 @@ app = appModule
 
       $scope.cancelEditingSticker = ->
         $scope.editedSticker = null
+
+
+      ## delete
+
+      $scope.deleteSticker = ->
+        app.userDataSource.deleteSticker( $scope.editedSticker )
+        .then ->
+          originalSticker = $scope.stickers.filter((e)-> e.id == $scope.editedSticker.id)[0]          
+          
+          $scope.stickers = _.without $scope.stickers, originalSticker
+          $scope.editedSticker = null
+          $scope.$apply()
+        .done()
+
 
       $scope.saveStickerColours = ->
         colours = $scope.stickers.map (e) -> 

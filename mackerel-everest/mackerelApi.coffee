@@ -56,7 +56,6 @@ module.exports = obj =
       obj.sendData null, res
 
 
-
     app.get '/mackerel/stickers', (req, res) =>
       stub_stickers = [
         {
@@ -100,17 +99,17 @@ module.exports = obj =
       .then (stickers) ->
         obj.sendData stickers, res
       .fail (err) ->
-        return res.send(err,403) if (err == 'EDAMUserException') 
-
-        return res.send(err,500)
+        console.log err
+        obj.sendError res, err
 
     app.post '/mackerel/stickers', (req, res) =>
       # create or update evernote tag.
-      name = req.body.name
-      id = req.body.id
-
       obj.initEdamUser(req)
       .then (userInfo)->
+        
+        name = req.body.name
+        id = req.body.id
+
         if id
           obj.updateSticker userInfo, {
             guid: id
@@ -131,7 +130,7 @@ module.exports = obj =
         obj.sendData resultData, res
 
       .fail (err) ->
-        res.send err, 500
+        obj.sendError res, err
 
 
     app.get '/mackerel/page', (req, res) =>
@@ -154,8 +153,8 @@ module.exports = obj =
 
         evernote.findNotes userInfo,  words, { offset:offset, count:count, sortOrder:sortOrder, ascending:ascending }, (err, noteList)->
           if (err)
-            return res.send(err,403) if (err == 'EDAMUserException')
-            return res.send(err,500);
+            obj.sendError res, err
+            return
           else
 
             note = noteList.notes[0]
@@ -193,8 +192,8 @@ module.exports = obj =
         evernote.createNote userInfo, note, (err, note) ->
           
           if (err) 
-            return res.send(err,403) if (err == 'EDAMUserException') 
-            return res.send(err,500);
+            obj.sendError res, err
+            return
           
           obj.sendData note.guid, res
 
@@ -217,8 +216,8 @@ module.exports = obj =
 
         evernote.findNotes userInfo,  words, { offset:offset, count:count, sortOrder:sortOrder, ascending:ascending }, (err, noteList)->
           if (err)
-            return res.send(err,403) if (err == 'EDAMUserException')
-            return res.send(err,500);
+            obj.sendError res, err
+            return
           else
             return obj.sendData noteList, res
 
@@ -232,6 +231,12 @@ module.exports = obj =
     res.header "Access-Control-Allow-Origin", "*"
     res.send data, 200
 
+  sendError: (res, err = null) ->
+    return res.send err,403 if (err == 'EDAMUserException') 
+
+    return res.send(err,500)
+  
+  
   initEdamUser: (req) ->
     deferred = Q.defer()
 

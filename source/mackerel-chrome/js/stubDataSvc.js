@@ -56,7 +56,7 @@
         var deferred;
 
         deferred = Q.defer();
-        $resource('http://localhost\\:8081/mackerel/stickers').save(sticker, function(stickerData) {
+        $resource('http://localhost\\:8081/mackerel/stickers').save({}, sticker, function(stickerData) {
           return deferred.resolve(sticker);
         });
         return deferred.promise;
