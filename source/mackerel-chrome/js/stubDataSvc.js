@@ -63,9 +63,7 @@
       },
       deleteSticker: function(sticker) {
         sticker.name = "archived - " + sticker.name;
-        return Q.fcall(function() {
           return obj.updateSticker(sticker);
-        });
       },
       persist: function(type, modelObj, resultHandler) {
         return Q.fcall(function() {
