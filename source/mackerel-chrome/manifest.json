@@ -28,5 +28,5 @@
     "default_popup": "popup.html",
     "default_icon": "assets/small app icon.png"
   }
-  ,"content_security_policy": "script-src 'self' http://localhost 'unsafe-eval'; object-src 'self'"
+  ,"content_security_policy": "script-src 'self' http://localhost https://ssl.google-analytics.com https://*.uservoice.com 'unsafe-eval'; object-src 'self'"
 }
