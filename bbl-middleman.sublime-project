@@ -1,0 +1,21 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "/Users/ilo-robbie/dev/src/bbl-middleman"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/ilo-robbie/dev/src/lab/angular-gen"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/ilo-robbie/.middleman/html5bphaml"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/ilo-robbie/dev/src/bigbearlabs/bbl-rails"
+		}
+	]
+}
