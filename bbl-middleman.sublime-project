@@ -16,6 +16,22 @@
 		{
 			"follow_symlinks": true,
 			"path": "/Users/ilo-robbie/dev/src/bigbearlabs/bbl-rails"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/ilo-robbie/dev/src/public/bookmarklet_tutorial"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/ilo-robbie/dev/src/public/Chrome-Extension-Boilerplate"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/ilo-robbie/Downloads/myextensionizr"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/ilo-robbie/dev/src/public/template-chrome"
 		}
 	]
 }
