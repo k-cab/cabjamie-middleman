@@ -183,8 +183,13 @@ module.exports = obj =
       .then (userInfo)->
 
         note =
-          title: req.title 
-          tags: req.stickers.concat { name: 'Mackerel' }
+          title: req.body.title 
+          tagNames: req.body.stickers.map( (e) ->e.name)
+            .concat 'Mackerel'
+
+          attributes:
+            sourceURL: req.body.url
+
           content: '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
   <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>
   </en-note>'
@@ -199,7 +204,7 @@ module.exports = obj =
           obj.sendData note.guid, res
 
 
-        # CASE updating the note.
+        # CASE update the note if necessary.
         # CASE more posts before note fully created.
 
 
