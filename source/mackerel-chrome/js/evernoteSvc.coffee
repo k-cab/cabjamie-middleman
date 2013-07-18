@@ -71,7 +71,7 @@ app = @appModule
             guid: modelObj.note?.guid
             title: modelObj.title
             content: "On #{new Date()}, you stickered the page <a href='#{encodeURI(htmlSafeUrl)}'>'#{modelObj.title}'</a>."
-            tags: modelObj.stickers.concat { name: 'Mackerel' }
+            tags: modelObj.stickers.concat { name: 'TagYeti' }
             thumbnail: modelObj.thumbnailUrl
             url: modelObj.url
 
