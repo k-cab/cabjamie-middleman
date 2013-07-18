@@ -5,7 +5,15 @@
   that = this;
 
   this.appModule.config(function(RestangularProvider) {
-    return RestangularProvider.setBaseUrl("http://localhost:8081/mackerel");
+    RestangularProvider.setBaseUrl("http://localhost:8081/mackerel");
+    return RestangularProvider.setFullRequestInterceptor(function(el, op, what, url, headers, params) {
+      headers['x-username'] = 'sohocoke';
+      return {
+        headers: headers,
+        params: params,
+        element: el
+      };
+    });
   });
 
   this.appModule.factory('stubDataSvc', function($log, $http, $resource, Restangular) {

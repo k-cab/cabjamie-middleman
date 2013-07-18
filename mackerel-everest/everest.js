@@ -28,6 +28,13 @@ app.configure('development', function(){
 	app.use(express.session(
 		{ secret: "EverestJS" }
 	));
+
+	// 500 on all exceptions
+	app.use(function(err, req, res, next){
+		console.error(err.stack);
+		res.send(500, 'Something broke!');
+	});
+
 });
 
 process.on('uncaughtException', function(err) {

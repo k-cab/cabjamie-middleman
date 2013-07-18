@@ -46,12 +46,12 @@ module.exports = obj =
 
     # necessary for successful post
     app.options '/mackerel/page', (req, res) ->
-      res.header "Access-Control-Allow-Headers", "Content-Type"
+      res.header "Access-Control-Allow-Headers", "Content-Type, x-username"
 
       obj.sendData null, res
 
     app.options '/mackerel/stickers', (req, res) ->
-      res.header "Access-Control-Allow-Headers", "Content-Type"
+      res.header "Access-Control-Allow-Headers", "Content-Type, x-username"
 
       obj.sendData null, res
 
@@ -183,7 +183,8 @@ module.exports = obj =
       .then (userInfo)->
 
         note =
-          title: 'stub title' 
+          title: req.title 
+          tags: req.stickers.concat { name: 'Mackerel' }
           content: '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
   <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>
   </en-note>'
@@ -243,8 +244,8 @@ module.exports = obj =
     if !req.session.user 
       # new session for this client - get mackerel token, attempt to load vendor token.
 
-      # TEMP dev-mode retrieval from parse
-      store.getCredentials( 'evernote', 'sohocoke')
+      username = req.params.username
+      store.getCredentials( 'evernote', username)
       .then (credentialsSet)->
         credentials = _.sortBy( credentialsSet, (e) -> e.updatedAt ).reverse()[0]
         data = credentials.get 'credentials'

@@ -2,6 +2,12 @@ that = this
 
 @appModule.config (RestangularProvider)-> 
     RestangularProvider.setBaseUrl("http://localhost:8081/mackerel")
+    RestangularProvider.setFullRequestInterceptor (el, op, what, url, headers, params)->
+      headers['x-username'] = 'sohocoke'
+      # FIXME read username from localStorage
+      headers: headers
+      params: params
+      element: el
   
 
 @appModule.factory 'stubDataSvc', ($log, $http, $resource, Restangular) ->
