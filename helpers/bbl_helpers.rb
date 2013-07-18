@@ -31,12 +31,17 @@ end
 
 
 def render_section( data )
+  href = data[:href]
+  puts "!!", href
   [ 
     "<section>",
+    # wrap the whole thing in an a tag if an href exists.
+    href ? "<a href='#{href}'>" : "",
     el_if_present( data, :title, :p),
     el_if_present( data, :img),
     el_if_present( data, :subtitle, :p),
     el_if_present( data, :subimg),
+    href ? "</a>" : "",
     "</section>"
   ].join
 end
