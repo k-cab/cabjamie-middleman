@@ -93,8 +93,7 @@ module.exports = obj =
       ]
 
       # based on everest.js
-      obj.initEdamUser(req)
-      .then (userInfo)->
+      obj.serveEvernoteRequest req, res, (userInfo)->
         obj.fetchStickers userInfo
       .then (stickers) ->
         obj.sendData stickers, res
@@ -104,8 +103,7 @@ module.exports = obj =
 
     app.post '/mackerel/stickers', (req, res) =>
       # create or update evernote tag.
-      obj.initEdamUser(req)
-      .then (userInfo)->
+      obj.serveEvernoteRequest req, res, (userInfo)->
 
         name = req.body.name
         id = req.body.id
@@ -142,8 +140,7 @@ module.exports = obj =
           }
         ]
 
-      obj.initEdamUser(req)
-      .then (userInfo)->
+      obj.serveEvernoteRequest req, res, (userInfo)->
         url = req.query.url
         words = "sourceURL:#{url}"
         offset = 0
@@ -209,8 +206,7 @@ module.exports = obj =
     # not part of public api
 
     app.get '/mackerel/notes', (req, res) =>
-      obj.initEdamUser(req)
-      .then (userInfo)->
+      obj.serveEvernoteRequest req, res, (userInfo)->
         url = req.query.url
         words = "sourceURL:#{url}"
         offset = 0
@@ -226,7 +222,6 @@ module.exports = obj =
             return obj.sendData noteList, res
 
 
-
     console.log('mackerel api initialised.')
     
 
@@ -240,7 +235,8 @@ module.exports = obj =
 
     return res.send(err,500)
   
-  
+
+
   fetchStickers: (userInfo)->
     deferred = Q.defer()
 
@@ -338,6 +334,16 @@ module.exports = obj =
     d.promise
   
 
+
+  serveEvernoteRequest: (req, res, callback) ->
+    obj.initEdamUser(req)
+    .then(callback)
+    .fail (e)->
+      console.error 
+        msg: "error while serving evernote request"
+        error: e
+    .done()
+
   initEdamUser: (req) ->
     deferred = Q.defer()
 
@@ -369,11 +375,3 @@ module.exports = obj =
     return deferred.promise
 
 
-  serveEvernoteRequest: (req, res, callback) ->
-    obj.initEdamUser(req)
-    .then(callback)
-    .fail (e)->
-      console.error 
-        msg: "error while serving evernote request"
-        error: e
-    .done()
