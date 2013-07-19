@@ -1,5 +1,6 @@
 _ = require('lodash')
 Q = require('Q')
+Q.longStackSupport = true
 promisify = require('when-promisify')
 
 Parse = require('parse').Parse
@@ -23,8 +24,8 @@ store  =
       username
       credentials
     }
-evernote = null
 
+evernote = null  # going to get the obj from the app.
 
 module.exports = obj =
 
@@ -44,17 +45,93 @@ module.exports = obj =
       obj.sendData details, res
 
 
-    # necessary for successful post
+    # OPTIONS necessary for successful post
+    handleOptions = (req, res)->
+      res.header "Access-Control-Allow-Headers", "Content-Type, x-username"
+      obj.sendData null, res
+
     app.options '/mackerel/page', (req, res) ->
-      res.header "Access-Control-Allow-Headers", "Content-Type, x-username"
-
-      obj.sendData null, res
-
+      handleOptions req, res
     app.options '/mackerel/stickers', (req, res) ->
-      res.header "Access-Control-Allow-Headers", "Content-Type, x-username"
+      handleOptions req, res
 
-      obj.sendData null, res
 
+  # page
+
+    app.get '/mackerel/page', (req, res) =>
+      stub_page = 
+        url: 'http://stub-url'
+        stickers: [
+          {
+            name: "stub-sticker-3"
+          }
+        ]
+
+      obj.serveEvernoteRequest req, res, (userInfo)->
+        url = req.query.url
+        words = "sourceURL:#{url}"
+        offset = 0
+        count = 10  # CASE handle duplicate notes
+        sortOrder = 'UPDATED'
+        ascending = false
+
+        evernote.findNotes userInfo,  words, { offset:offset, count:count, sortOrder:sortOrder, ascending:ascending }, (err, noteList)->
+          if (err)
+            obj.sendError res, err
+            return
+          else
+
+            note = noteList.notes[0]
+
+            note ||= 
+              id: null
+              title: req.query.title
+              url: req.query.url
+              tagGuids: []
+
+            pageData = 
+              id: note.id
+              url: note.url
+              title: note.title
+              stickers: note.tagGuids.map (guid)->
+                id: guid
+
+            # if no previous note for this url
+            pageData.stickers ||= []
+
+            obj.sendData pageData, res
+
+        
+    app.post '/mackerel/page', (req, res) =>
+      obj.serveEvernoteRequest req, res, (userInfo)->
+        note =
+          title: req.body.title 
+          tagNames: req.body.stickers.map( (e) ->e.name)
+            .concat 'Mackerel'
+
+          attributes:
+            sourceURL: req.body.url
+
+          content: '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+  <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>
+  </en-note>'
+          # TODO more properties
+          # FIXME empty tag names results in tagNames with null elements
+        
+        evernote.createNote userInfo, note, (err, note) ->
+          
+          if (err) 
+            obj.sendError res, err
+            return
+          
+          obj.sendData note.guid, res
+
+
+        # CASE update the note if necessary.
+        # CASE more posts before note fully created.
+
+
+  # stickers
 
     app.get '/mackerel/stickers', (req, res) =>
       stub_stickers = [
@@ -131,79 +208,9 @@ module.exports = obj =
         obj.sendError res, err
 
 
-    app.get '/mackerel/page', (req, res) =>
-      stub_page = 
-        url: 'http://stub-url'
-        stickers: [
-          {
-            name: "stub-sticker-3"
-          }
-        ]
-
-      obj.serveEvernoteRequest req, res, (userInfo)->
-        url = req.query.url
-        words = "sourceURL:#{url}"
-        offset = 0
-        count = 10  # CASE handle duplicate notes
-        sortOrder = 'UPDATED'
-        ascending = false
-
-        evernote.findNotes userInfo,  words, { offset:offset, count:count, sortOrder:sortOrder, ascending:ascending }, (err, noteList)->
-          if (err)
-            obj.sendError res, err
-            return
-          else
-
-            note = noteList.notes[0]
-
-            note ||= 
-              id: null
-              title: req.query.title
-              url: req.query.url
-              tagGuids: []
-
-            pageData = 
-              id: note.id
-              url: note.url
-              title: note.title
-              stickers: note.tagGuids.map (guid)->
-                id: guid
-
-            # if no previous note for this url
-            pageData.stickers ||= []
-
-            obj.sendData pageData, res
-
-        
-    app.post '/mackerel/page', (req, res) =>
-      obj.serveEvernoteRequest req, res, (userInfo)->
-        note =
-          title: req.body.title 
-          tagNames: req.body.stickers.map( (e) ->e.name)
-            .concat 'Mackerel'
-
-          attributes:
-            sourceURL: req.body.url
-
-          content: '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
-  <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>
-  </en-note>'
-          # TODO more properties
-        
-        evernote.createNote userInfo, note, (err, note) ->
-          
-          if (err) 
-            obj.sendError res, err
-            return
-          
-          obj.sendData note.guid, res
 
 
-        # CASE update the note if necessary.
-        # CASE more posts before note fully created.
-
-
-    # not part of public api
+  # private api layer
 
     app.get '/mackerel/notes', (req, res) =>
       obj.serveEvernoteRequest req, res, (userInfo)->
