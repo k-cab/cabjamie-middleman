@@ -43,7 +43,8 @@ class Page
 
   removeSticker: (sticker) ->
     console.log "remove sticker #{sticker} from #{this.url}"
-    this.stickers = this.stickers.filter( (e) -> e.name != sticker.name )
+    this.stickers = this.stickers.filter (e) -> 
+      e.name != sticker.name && e.id != sticker.id
   
   hasSticker: (sticker) ->
     if _.include this.stickers?.map((e) -> e.name), sticker.name

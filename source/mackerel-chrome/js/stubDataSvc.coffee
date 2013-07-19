@@ -25,6 +25,8 @@ that = this
         # FIXME pageData has a lot of properties from restangular.
 
         page = new Page pageData
+        page.stickers = page.stickers.map (e) -> new Sticker e
+        
         deferred.resolve page
 
       deferred.promise
@@ -33,7 +35,7 @@ that = this
     savePage: (page)->
       deferred = Q.defer()
 
-      page.post()
+      Restangular.copy(page).post()
       .then (pageData)->
         # TODO fill in the id
 

@@ -29,6 +29,9 @@
           var page;
 
           page = new Page(pageData);
+          page.stickers = page.stickers.map(function(e) {
+            return new Sticker(e);
+          });
           return deferred.resolve(page);
         });
         return deferred.promise;
@@ -37,7 +40,7 @@
         var deferred;
 
         deferred = Q.defer();
-        page.post().then(function(pageData) {
+        Restangular.copy(page).post().then(function(pageData) {
           return deferred.resolve(page);
         });
         return deferred.promise;

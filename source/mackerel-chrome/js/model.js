@@ -74,7 +74,7 @@
     Page.prototype.removeSticker = function(sticker) {
       console.log("remove sticker " + sticker + " from " + this.url);
       return this.stickers = this.stickers.filter(function(e) {
-        return e.name !== sticker.name;
+        return e.name !== sticker.name && e.id !== sticker.id;
       });
     };
 
