@@ -179,9 +179,7 @@ module.exports = obj =
 
         
     app.post '/mackerel/page', (req, res) =>
-      obj.initEdamUser(req)
-      .then (userInfo)->
-
+      obj.serveEvernoteRequest req, res, (userInfo)->
         note =
           title: req.body.title 
           tagNames: req.body.stickers.map( (e) ->e.name)
@@ -243,37 +241,6 @@ module.exports = obj =
     return res.send(err,500)
   
   
-  initEdamUser: (req) ->
-    deferred = Q.defer()
-
-    if !req.session.user 
-      # new session for this client - get mackerel token, attempt to load vendor token.
-
-      username = req.params.username
-      store.getCredentials( 'evernote', username)
-      .then (credentialsSet)->
-        credentials = _.sortBy( credentialsSet, (e) -> e.updatedAt ).reverse()[0]
-        data = credentials.get 'credentials'
-
-      .then (data)->
-        authToken = data.authToken
-
-        getUserPromise = promisify evernote, 'getUser'
-        getUserPromise authToken 
-
-      .then (edamUser)->
-        # if err
-        #   res.send(err, 500) 
-        #   return
-
-        req.session.user = edamUser
-        deferred.resolve edamUser
-    else
-      deferred.resolve req.session.user
-
-    return deferred.promise
-
-
   fetchStickers: (userInfo)->
     deferred = Q.defer()
 
@@ -370,3 +337,43 @@ module.exports = obj =
   
     d.promise
   
+
+  initEdamUser: (req) ->
+    deferred = Q.defer()
+
+    if !req.session.user 
+      # new session for this client - get mackerel token, attempt to load vendor token.
+
+      username = req.params.username
+      store.getCredentials( 'evernote', username)
+      .then (credentialsSet)->
+        credentials = _.sortBy( credentialsSet, (e) -> e.updatedAt ).reverse()[0]
+        data = credentials.get 'credentials'
+
+      .then (data)->
+        authToken = data.authToken
+
+        getUserPromise = promisify evernote, 'getUser'
+        getUserPromise authToken 
+
+      .then (edamUser)->
+        # if err
+        #   res.send(err, 500) 
+        #   return
+
+        req.session.user = edamUser
+        deferred.resolve edamUser
+    else
+      deferred.resolve req.session.user
+
+    return deferred.promise
+
+
+  serveEvernoteRequest: (req, res, callback) ->
+    obj.initEdamUser(req)
+    .then(callback)
+    .fail (e)->
+      console.error 
+        msg: "error while serving evernote request"
+        error: e
+    .done()

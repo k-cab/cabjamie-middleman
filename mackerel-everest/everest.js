@@ -3,9 +3,56 @@ global.config = require('./config.' + (process.env.NODE_ENV || 'development') +'
 var util = require('util');
 var querystring = require('querystring');
 var express = require('express');
+var http = require('http');
+var connect = require('connect');
+var connectDomain = require('connect-domain');
+
 var config = global.config;
 
-var app = express.createServer();
+
+var app = express();
+app.use(connectDomain());
+
+//Setup ExpressJS
+app.use(express.cookieParser()); 
+app.use(express.bodyParser());
+
+//Use session
+app.use(express.session(
+	{ secret: "EverestJS" }
+));
+
+app.use(app.router);
+
+
+// error handler
+// 500 on all exceptions
+app.use(function(err, req, res, next) {
+    res.send(500, {err: err});
+
+    // exit the process and get forever to pick up
+	setTimeout(function(){
+		process.exit(1);
+	}, 1);
+});
+
+
+app.configure(function(){
+
+	app.use(function(req, res, next){
+		res.locals.session = req.session;
+		next();
+	});
+
+});
+
+app.configure('development', function(){
+	//Use static files
+	app.use("/website", express.static(__dirname + '/website'));
+
+	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
 
 // Create an Evernote instance
 var Evernote = require('./evernode').Evernote;
@@ -14,38 +61,6 @@ var evernote = new Evernote(
 		config.evernoteConsumerSecret,
 		config.evernoteUsedSandbox
 		);
-
-//Setup ExpressJS
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-	app.use(express.cookieParser()); 
-	app.use(express.bodyParser());
-	
-	//Use static files
-	app.use("/website", express.static(__dirname + '/website'));
-	
-	//Use session
-	app.use(express.session(
-		{ secret: "EverestJS" }
-	));
-
-	// 500 on all exceptions
-	app.use(function(err, req, res, next){
-		console.error(err.stack);
-		res.send(500, 'Something broke!');
-	});
-
-});
-
-process.on('uncaughtException', function(err) {
-	console.log(err);
-});
-
-app.dynamicHelpers({
-  session: function(req, res){
-    return req.session;
-  }
-});
 
 // mackerel
 var mackerelApi = require('./mackerelApi');
@@ -489,7 +504,7 @@ app.get('/sync-chunk', function(req, res){
 });
 
 var port = process.env.PORT || config.serverPort;
-app.listen(port);
+http.createServer(app).listen(port);
 
 
 
