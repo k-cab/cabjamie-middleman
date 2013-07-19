@@ -86,12 +86,13 @@ module.exports = obj =
             note ||= 
               id: null
               title: req.query.title
-              url: req.query.url
               tagGuids: []
+              attributes:
+                sourceURL: url
 
             pageData = 
               id: note.id
-              url: note.url
+              url: note.attributes.sourceURL
               title: note.title
               stickers: note.tagGuids.map (guid)->
                 id: guid
@@ -106,7 +107,13 @@ module.exports = obj =
       obj.serveEvernoteRequest req, res, (userInfo)->
         note =
           title: req.body.title 
-          tagNames: req.body.stickers.map( (e) ->e.name)
+          tagGuids: req.body.stickers.map( (e) ->
+              # if e.name
+              #   e.name
+              # else
+              #   console.error "didn't receive name for tag #{e.id}"
+                e.id
+            )
             .concat 'Mackerel'
 
           attributes:
@@ -116,8 +123,7 @@ module.exports = obj =
   <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>
   </en-note>'
           # TODO more properties
-          # FIXME empty tag names results in tagNames with null elements
-        
+
         evernote.createNote userInfo, note, (err, note) ->
           
           if (err) 
@@ -171,41 +177,36 @@ module.exports = obj =
 
       # based on everest.js
       obj.serveEvernoteRequest req, res, (userInfo)->
-        obj.fetchStickers userInfo
-      .then (stickers) ->
-        obj.sendData stickers, res
-      .fail (err) ->
-        console.log err
-        obj.sendError res, err
+        obj.fetchStickers( userInfo)
+        .then (stickers) ->
+          obj.sendData stickers, res
+
 
     app.post '/mackerel/stickers', (req, res) =>
       # create or update evernote tag.
       obj.serveEvernoteRequest req, res, (userInfo)->
+        Q.fcall ->
+          name = req.body.name
+          id = req.body.id
 
-        name = req.body.name
-        id = req.body.id
+          if id
+            obj.updateSticker userInfo, {
+              guid: id
+              name
+            }
+          else
+            obj.findSticker( userInfo, { name })
+            .then (sticker) ->
+              if sticker
+                obj.updateSticker( userInfo, { guid: sticker.guid, name })
+              else
+                obj.createSticker userInfo, { name }
 
-        if id
-          obj.updateSticker userInfo, {
-            guid: id
-            name
-          }
-        else
-          obj.findSticker( userInfo, { name })
-          .then (sticker) ->
-            if sticker
-              obj.updateSticker( userInfo, { guid: sticker.guid, name })
-            else
-              obj.createSticker userInfo, { name }
-
-      .then (sticker) ->
-        if typeof(sticker) == 'object'
-          resultData = sticker
-          
-        obj.sendData resultData, res
-
-      .fail (err) ->
-        obj.sendError res, err
+        .then (sticker) ->
+          if typeof(sticker) == 'object'
+            resultData = sticker
+            
+          obj.sendData resultData, res
 
 
 
