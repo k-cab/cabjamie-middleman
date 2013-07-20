@@ -68,45 +68,25 @@ module.exports = obj =
         ]
 
       obj.serveEvernoteRequest req, res, (userInfo)->
-        url = req.query.url
-        words = "sourceURL:#{url}"
-        offset = 0
-        count = 10  # CASE handle duplicate notes
-        sortOrder = 'UPDATED'
-        ascending = false
 
-        evernote.findNotes userInfo,  words, { offset:offset, count:count, sortOrder:sortOrder, ascending:ascending }, (err, noteList)->
-          if (err)
-            obj.sendError res, err
-            return
-          else
+        params =
+          url: req.query.url
+          title: req.query.title
 
-            note = noteList.notes[0]
+        obj.fetchPage( userInfo, params)
+        .then (page)->
+          unless page
+            page = params
+            page.stickers = []
 
-            note ||= 
-              id: null
-              title: req.query.title
-              tagGuids: []
-              attributes:
-                sourceURL: url
-
-            pageData = 
-              id: note.id
-              url: note.attributes.sourceURL
-              title: note.title
-              stickers: note.tagGuids.map (guid)->
-                id: guid
-
-            # if no previous note for this url
-            pageData.stickers ||= []
-
-            obj.sendData pageData, res
+          obj.sendData page, res
 
         
     app.post '/mackerel/page', (req, res) =>
+
       obj.serveEvernoteRequest req, res, (userInfo)->
-        note =
-          title: req.body.title 
+        obj.savePage userInfo, 
+          title: req.body.title
           tagGuids: req.body.stickers.map( (e) ->
               # if e.name
               #   e.name
@@ -114,27 +94,12 @@ module.exports = obj =
               #   console.error "didn't receive name for tag #{e.id}"
                 e.id
             )
-            .concat 'Mackerel'
-
-          attributes:
-            sourceURL: req.body.url
-
-          content: '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
-  <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>
-  </en-note>'
-          # TODO more properties
-
-        evernote.createNote userInfo, note, (err, note) ->
-          
-          if (err) 
-            obj.sendError res, err
-            return
-          
-          obj.sendData note.guid, res
-
-
-        # CASE update the note if necessary.
-        # CASE more posts before note fully created.
+            # .concat 'Mackerel'
+          url: req.body.url
+        .then (note) ->
+          obj.sendData 
+            guid: note.guid
+          , res
 
 
   # stickers
@@ -243,6 +208,60 @@ module.exports = obj =
 
     return res.send(err,500)
   
+
+  fetchPage: (userInfo, params)->
+    d = Q.defer()
+
+    words = "sourceURL:#{params.url}"
+    offset = 0
+    count = 10  # CASE handle duplicate notes
+    sortOrder = 'UPDATED'
+    ascending = false
+
+    evernote.findNotes userInfo,  words, { offset:offset, count:count, sortOrder:sortOrder, ascending:ascending }, (err, noteList)->
+      if (err)
+        obj.sendError res, err
+        return
+      else
+
+        note = noteList.notes[0]
+
+        pageData = if note
+            id: note.id
+            url: note.attributes.sourceURL
+            title: note.title
+            stickers: note.tagGuids.map (guid)->
+              id: guid
+          else 
+            null
+
+        d.resolve pageData
+
+    d.promise
+
+  savePage: (userInfo, params)->
+    d = Q.defer()
+
+    note =
+      title: params.title 
+      tagGuids: params.tagGuids
+
+      attributes:
+        sourceURL: params.url
+
+      content: '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+<en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>
+</en-note>'
+      # TODO more properties
+
+    evernote.createNote userInfo, note, (err, note) ->
+      d.resolve note
+
+
+    # CASE update the note if necessary.
+    # CASE more posts before note fully created.
+
+    d.promise
 
 
   fetchStickers: (userInfo)->
