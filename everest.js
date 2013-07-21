@@ -3,9 +3,56 @@ global.config = require('./config.' + (process.env.NODE_ENV || 'development') +'
 var util = require('util');
 var querystring = require('querystring');
 var express = require('express');
+var http = require('http');
+var connect = require('connect');
+var connectDomain = require('connect-domain');
+
 var config = global.config;
 
-var app = express.createServer();
+
+var app = express();
+app.use(connectDomain());
+
+//Setup ExpressJS
+app.use(express.cookieParser()); 
+app.use(express.bodyParser());
+
+//Use session
+app.use(express.session(
+	{ secret: "EverestJS" }
+));
+
+app.use(app.router);
+
+
+// error handler
+// 500 on all exceptions
+app.use(function(err, req, res, next) {
+    res.send(500, {err: err});
+
+    // exit the process and get forever to pick up
+	setTimeout(function(){
+		process.exit(1);
+	}, 1);
+});
+
+
+app.configure(function(){
+
+	app.use(function(req, res, next){
+		res.locals.session = req.session;
+		next();
+	});
+
+});
+
+app.configure('development', function(){
+	//Use static files
+	app.use("/website", express.static(__dirname + '/website'));
+
+	app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
 
 // Create an Evernote instance
 var Evernote = require('./evernode').Evernote;
@@ -15,26 +62,11 @@ var evernote = new Evernote(
 		config.evernoteUsedSandbox
 		);
 
-//Setup ExpressJS
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-	app.use(express.cookieParser()); 
-	app.use(express.bodyParser());
-	
-	//Use static files
-	app.use("/website", express.static(__dirname + '/website'));
-	
-	//Use session
-	app.use(express.session(
-		{ secret: "EverestJS" }
-	));
-});
+// mackerel
+var mackerelApi = require('./mackerelApi');
+app.evernote = evernote;
+mackerelApi.setup(app);
 
-app.dynamicHelpers({
-  session: function(req, res){
-    return req.session;
-  }
-});
 
 //Allow X-Domain Ajax
 app.all('/', function(req, res, next) {
@@ -74,7 +106,6 @@ app.all('/authentication', function(req, res){
 
 });
 
-var details = null;
 app.all('/authentication/callback', function(req, res){
 	
 	var evernote_callback = config.serverUrl +'/evernote/authentication/callback';
@@ -98,17 +129,14 @@ app.all('/authentication/callback', function(req, res){
 				// TACTICAL
 				details = {
 					authToken: authToken,
-					noteStoreURL: 'https://www.evernote.com/shard/' + edamUser.shardId + '/notestore'
+					noteStoreURL: 'https://sandbox.evernote.com/shard/' + edamUser.shardId + '/notestore'
 				};
+				app.store.setCredentials( 'evernote', 'sohocoke', edamUser );
+
 				var client_url = 'http://localhost:4567/mackerel-chrome/popup.html';
 				res.redirect(client_url);
 			});
   });
-});
-
-app.all('/authentication/details', function(req, res){
-	res.header("Access-Control-Allow-Origin", "*");
-	res.send(details, 200);
 });
 
 app.all('/logout', function(req, res){
@@ -476,11 +504,7 @@ app.get('/sync-chunk', function(req, res){
 });
 
 var port = process.env.PORT || config.serverPort;
-app.listen(port);
+http.createServer(app).listen(port);
 
 
-
-// mackerel
-var mackerelApi = require('./mackerelApi');
-mackerelApi.setup(app);
 
