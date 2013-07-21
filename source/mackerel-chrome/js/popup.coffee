@@ -75,11 +75,13 @@ Q.longStackSupport = true
     if $rootScope.authentication.loggedIn
       $location.path "/stickers"
     else
+      $log.info "authentication status requires login. redirecting to /login"
       $location.path "/login"
 
     $rootScope.$apply()
   .fail (e)->
     if e.errorType == 'authentication'
+      $log.info "authentication error. redirecting to /login"
       $location.path "/login"
       $rootScope.$apply()
 

@@ -4,11 +4,11 @@
 
   app = this.appModule;
 
-  angular.module('appModule').controller('AuthenticationCntl', function($scope, $rootScope, $log, $location, $resource, globalsSvc) {
+  angular.module('appModule').controller('AuthenticationCntl', function($scope, $rootScope, $log, $location, $resource, globalsSvc, userPrefs) {
     $scope.doLogin = function() {
       var authenticationDetails;
 
-      authenticationDetails = $resource('http://localhost\\:8081/authentication/details').get();
+      authenticationDetails = $resource(userPrefs.apiServer.replace(/:(\d+)/, '\\:$1') + '/authentication/details').get();
       return authenticationDetails.$then(function() {
         if (authenticationDetails) {
           app.userPrefs.authToken = authenticationDetails.authToken;
@@ -20,7 +20,7 @@
         if (app.userPrefs.authToken) {
           return;
         }
-        return location.href = 'http://localhost:8081/authentication';
+        return location.href = userPrefs.apiServer + '/authentication';
       });
     };
     if ($location.path().match(/logout/)) {

@@ -16,7 +16,7 @@ angular.module( 'appModule' )
 .controller 'AuthenticationCntl',
   ($scope, $rootScope,
   $log, $location, $resource
-  globalsSvc) ->
+  globalsSvc, userPrefs) ->
 
     $scope.doLogin = ->
       # authentication_endpoint = $resource 'http://localhost\\:8081/authentication', {},
@@ -32,7 +32,7 @@ angular.module( 'appModule' )
 
       # phase 1 impl
       # first check if access details available INSECURE
-      authenticationDetails = $resource('http://localhost\\:8081/authentication/details').get()
+      authenticationDetails = $resource(userPrefs.apiServer.replace(/:(\d+)/, '\\:$1') + '/authentication/details').get()
       authenticationDetails.$then ->
         if authenticationDetails
           app.userPrefs.authToken = authenticationDetails.authToken
@@ -44,7 +44,7 @@ angular.module( 'appModule' )
         if app.userPrefs.authToken
           return
 
-        location.href = 'http://localhost:8081/authentication'          
+        location.href = userPrefs.apiServer + '/authentication'          
       # ERRCASE
 
       # TODO server-side: save referer as redirect url

@@ -82,6 +82,8 @@ that = this
     sticker_prefix_pattern: /^##/
     sticker_prefix: '##'
 
+    apiServer: 'http://localhost:8081'
+
     userDataSource: null
 
 

@@ -48,11 +48,13 @@
       if ($rootScope.authentication.loggedIn) {
         $location.path("/stickers");
       } else {
+        $log.info("authentication status requires login. redirecting to /login");
         $location.path("/login");
       }
       return $rootScope.$apply();
     }).fail(function(e) {
       if (e.errorType === 'authentication') {
+        $log.info("authentication error. redirecting to /login");
         $location.path("/login");
         return $rootScope.$apply();
       }

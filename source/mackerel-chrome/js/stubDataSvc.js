@@ -4,8 +4,11 @@
 
   that = this;
 
-  this.appModule.config(function(RestangularProvider) {
-    RestangularProvider.setBaseUrl("http://localhost:8081/mackerel");
+  this.appModule.config(function(RestangularProvider, userPrefsProvider) {
+    var userPrefs;
+
+    userPrefs = userPrefsProvider.$get();
+    RestangularProvider.setBaseUrl(userPrefs.apiServer + "/mackerel");
     return RestangularProvider.setFullRequestInterceptor(function(el, op, what, url, headers, params) {
       headers['x-username'] = 'sohocoke';
       return {
@@ -63,7 +66,7 @@
         var deferred;
 
         deferred = Q.defer();
-        $resource('http://localhost\\:8081/mackerel/stickers').save(sticker, function(stickerData) {
+        $resource(userPrefs.apiServer + '/mackerel/stickers').save(sticker, function(stickerData) {
           sticker.id = stickerData.guid;
           return deferred.resolve(sticker);
         });
@@ -73,7 +76,7 @@
         var deferred;
 
         deferred = Q.defer();
-        $resource('http://localhost\\:8081/mackerel/stickers').save(sticker, function(stickerData) {
+        $resource(userPrefs.apiServer + '/mackerel/stickers').save(sticker, function(stickerData) {
           return deferred.resolve(sticker);
         });
         return deferred.promise;
