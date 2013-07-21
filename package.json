@@ -2,20 +2,18 @@
   "name": "everest-js",
   "version": "0.0.1",
   "dependencies": {
-  	"npm": "x",
     "express": "3.3.4",
     "connect": "2.8.4",
     "connect-domain": "x",
     "lodash": "x",
     "Q": "git://github.com/kriskowal/q.git#v0.9.6",
     "when-promisify": "x",
-    "parse": "x"
+    "parse": "x",
+    "thrift": "x",
+    "oauth": "x"
 },
   "engines": {
     "node": "0.8.x",
     "npm": "1.1.x"
-  },
-  "scripts": {
-    "postinstall": "node_modules/.bin/npm install -d connect"
   }	
 }
