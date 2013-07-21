@@ -131,7 +131,7 @@ app.all('/authentication/callback', function(req, res){
 					authToken: authToken,
 					noteStoreURL: 'https://sandbox.evernote.com/shard/' + edamUser.shardId + '/notestore'
 				};
-				app.store.setCredentials( 'evernote', 'sohocoke', edamUser );
+				app.store.setCredentials( 'evernote', 'sohocoke', edamUser );  // FIXME
 
 				var client_url = 'http://localhost:4567/mackerel-chrome/popup.html';
 				res.redirect(client_url);
