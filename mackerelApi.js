@@ -5,7 +5,7 @@
 
   _ = require('lodash');
 
-  Q = require('Q');
+  Q = require('q');
 
   Q.longStackSupport = true;
 
