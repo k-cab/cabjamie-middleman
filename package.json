@@ -2,6 +2,7 @@
   "name": "everest-js",
   "version": "0.0.1",
   "dependencies": {
+  	"npm": "x",
     "express": "3.3.4",
     "connect": "2.8.4",
     "connect-domain": "x",
@@ -15,6 +16,6 @@
     "npm": "1.1.x"
   },
   "scripts": {
-    "postinstall": "npm install -d"
+    "postinstall": "node_modules/.bin/npm install -d"
   }	
 }
