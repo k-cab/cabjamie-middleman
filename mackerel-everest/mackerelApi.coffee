@@ -73,8 +73,9 @@ module.exports = obj =
           url: req.query.url
           title: req.query.title
 
-        obj.fetchPage( userInfo, params)
-        .then (page)->
+        obj.fetchPages( userInfo, params)
+        .then (pages)->
+          page = pages[0]
           unless page
             page = params
             page.stickers = []
@@ -101,6 +102,8 @@ module.exports = obj =
             guid: note.guid
           , res
 
+          obj.mergeDuplicates userInfo,  
+            url: req.body.url
 
   # stickers
 
@@ -209,36 +212,24 @@ module.exports = obj =
     return res.send(err,500)
   
 
-  fetchPage: (userInfo, params)->
+  fetchPages: (userInfo, params)->
     d = Q.defer()
 
-    words = "sourceURL:#{params.url}"
-    offset = 0
-    count = 10  # CASE handle duplicate notes
-    sortOrder = 'UPDATED'
-    ascending = false
+    obj.findNotes userInfo,
+      url: params.url
+    .then (notes) ->
+      pages = notes.map (note) ->
+        id: note.id
+        url: note.attributes.sourceURL
+        title: note.title
+        stickers: note.tagGuids.map (guid)->
+          id: guid
 
-    evernote.findNotes userInfo,  words, { offset:offset, count:count, sortOrder:sortOrder, ascending:ascending }, (err, noteList)->
-      if (err)
-        obj.sendError res, err
-        return
-      else
-
-        note = noteList.notes[0]
-
-        pageData = if note
-            id: note.id
-            url: note.attributes.sourceURL
-            title: note.title
-            stickers: note.tagGuids.map (guid)->
-              id: guid
-          else 
-            null
-
-        d.resolve pageData
+      d.resolve pages
 
     d.promise
-
+    
+  
   savePage: (userInfo, params)->
     d = Q.defer()
 
@@ -361,7 +352,45 @@ module.exports = obj =
     d.promise
   
 
+  mergeDuplicates: (userInfo, params) ->
+    Q.fcall ->
+      if params.notes
+        params.notes
+      else
+        obj.findNotes userInfo, params
+    .then (notes) ->
+      orderedNotes = _.sortBy notes, (e) -> e.updated
+      latestNote = orderedNotes[0]
+      # use the tags from the latest note
+      tagGuids = latestNote.tagGuids
 
+      # merge all contents that are unique.
+      loadFullNotes = orderedNotes.map (e) -> 
+        d = Q.defer()
+        evernote.getNote userInfo, e.guid, {}, (err, fullNote) ->
+          d.resolve fullNote
+        d.promise
+        
+      Q.all(loadFullNotes)
+      .then (fullNotes) ->
+        console.log fullNotes
+        contentCollection = fullNotes.map (e) -> e.content
+        uniqueContents = _.uniq contentCollection
+        if uniqueContents.length == 1
+          # all content is the same, just delete the rest.
+
+        else
+          console.log "TODO merge content"
+          content = uniqueContents[0]
+
+          # update content, delete the rest.
+      
+        _.rest( orderedNotes, latestNote).map (e) ->
+          obj.deleteNote e
+        
+      
+
+  # IMPROVE all calls to this method to move to a middleware, results passed back via req.
   serveEvernoteRequest: (req, res, callback) ->
     obj.initEdamUser(req)
     .then(callback)
@@ -369,7 +398,9 @@ module.exports = obj =
       console.error 
         msg: "error while serving evernote request"
         error: e
+        trace: e.stack
     .done()
+
 
   initEdamUser: (req) ->
     deferred = Q.defer()
@@ -402,3 +433,27 @@ module.exports = obj =
     return deferred.promise
 
 
+  findNotes: (userInfo, params) ->
+    d = Q.defer()
+
+    words = "sourceURL:#{params.url}"
+    offset = 0
+    count = 10  # CASE handle duplicate notes
+    sortOrder = 'UPDATED'
+    ascending = false
+
+    evernote.findNotes userInfo,  words, { offset:offset, count:count, sortOrder:sortOrder, ascending:ascending }, (err, noteList)->
+      if (err)
+        obj.sendError res, err
+        return
+      else
+
+      d.resolve noteList.notes
+
+    d.promise
+
+
+  deleteNote: (note) ->
+    console.log "TODO delete note #{note}"
+  
+  
