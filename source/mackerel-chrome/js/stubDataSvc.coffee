@@ -1,23 +1,22 @@
 that = this
-
-@appModule.config (RestangularProvider, userPrefsProvider)-> 
-  userPrefs = userPrefsProvider.$get()
-  RestangularProvider.setBaseUrl(userPrefs.apiServer + "/mackerel")
-
-  RestangularProvider.setFullRequestInterceptor (el, op, what, url, headers, params)->
-    headers['x-username'] = 'sohocoke'
-    # FIXME read username from localStorage
-    headers: headers
-    params: params
-    element: el
+app = @appModule
   
 
-@appModule.factory 'stubDataSvc', ($log, $http, $resource, Restangular) ->
-  
-  obj = 
+@appModule.factory 'stubDataSvc', ($log, $http, $resource, Restangular
+  globalsSvc) ->
+  obj = app.stubDataSvc =
     #= userDataSource interface realisation
     
     init: ->
+      Restangular.setBaseUrl(app.apiServer + "/mackerel")
+
+      Restangular.setFullRequestInterceptor (el, op, what, url, headers, params)->
+        headers['x-username'] = 'sohocoke'
+        # FIXME read username from localStorage
+        headers: headers
+        params: params
+        element: el
+
       
     fetchPage: (params) ->
       deferred = Q.defer()
@@ -65,7 +64,7 @@ that = this
     createSticker: (sticker) ->
       deferred = Q.defer()
 
-      $resource(userPrefs.apiServer + '/mackerel/stickers').save sticker, (stickerData)->
+      $resource(app.apiServer + '/mackerel/stickers').save sticker, (stickerData)->
         sticker.id = stickerData.guid
 
         deferred.resolve sticker
@@ -78,7 +77,7 @@ that = this
     updateSticker: (sticker) ->
       deferred = Q.defer()
 
-      $resource(userPrefs.apiServer + '/mackerel/stickers').save sticker, (stickerData)->
+      $resource(app.apiServer + '/mackerel/stickers').save sticker, (stickerData)->
 
         deferred.resolve sticker
 

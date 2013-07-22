@@ -1,7 +1,8 @@
 that = this
+app = @appModule
 
 @appModule.factory 'globalsSvc', ($log, $rootScope, $location,
-  userPrefs) ->
+  userPrefs, envs) ->
   
   # set up an authentication object under root scope, as ui needs to invoke ops. all controllers must declare this service as an injected dep in order to make authentication flows work.
   $rootScope.authentication =
@@ -45,7 +46,7 @@ that = this
     doit: ->
 
       # all state refreshes.
-      userPrefs.apply()
+      envs.apply()
       obj.update()
 
 
@@ -62,18 +63,16 @@ that = this
 
     update: ->
       # update all dependents.
-      userPrefs.userDataSource.init()
+      app.userDataSource.init()
       $rootScope.authentication.setLoggedIn()
-      that.appModule.stickersC?.update()
+      app.stickersC?.update()
 
 
 
 @appModule.factory 'userPrefs', ($log
-  stubDataSvc, evernoteSvc) ->
+  ) ->
 
-  that.appModule.userPrefs = 
-    stubDataSvc: stubDataSvc
-    evernoteSvc: evernoteSvc
+  app.userPrefs = 
 
     ## defaults.
 
@@ -82,18 +81,8 @@ that = this
     sticker_prefix_pattern: /^##/
     sticker_prefix: '##'
 
-    apiServer: 'http://localhost:8081'
 
-    userDataSource: null
-
-
-    ## envs.
-
-    production:
-      userDataSource: evernoteSvc
-
-    dev:
-      userDataSource: stubDataSvc
+    # local storage persistence
 
     set: (key, val) ->
       if val == undefined
@@ -127,15 +116,6 @@ that = this
       localStorage.clear key
 
 
-    apply: (env)->
-      env ||= @get 'env'
-
-      console.log "applying env '#{env}'"
-
-      @userDataSource = @[env].userDataSource
-
-      # expose it on the app module. there should be a better way to inject the right impl, but it has to be controllable from this method.
-      that.appModule.userDataSource = @userDataSource
 
     needsIntro: ->
       nextIntroVal = @get 'nextIntro'
@@ -152,6 +132,34 @@ that = this
         Date.tomorrow()
       else
         Date.oneYearLater()
+
+
+
+@appModule.factory 'envs', ($log, $injector
+  userPrefs) ->
+
+
+  userPrefs.envs = obj =
+
+    ## envs.
+
+    production:
+      userDataSource: 'stubDataSvc'
+      apiServer: 'http://mackerel-everest.herokuapp.com'
+
+    dev:
+      userDataSource: 'stubDataSvc'
+      apiServer: 'http://localhost:8081'
+
+
+    apply: (env)->
+      env ||= userPrefs.get 'env'
+
+      console.log "applying env '#{env}'"
+
+      app.userDataSource = $injector.get @[env].userDataSource
+      app.apiServer = @[env].apiServer
+
 
 
 # REFACTOR

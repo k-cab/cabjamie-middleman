@@ -45,7 +45,7 @@ Q.longStackSupport = true
 
 # REFACTOR change to controller('controllerName')
 @AppCntl = ($scope, $location, $log, $rootScope,
-  globalsSvc, userPrefs
+  globalsSvc, userPrefs, envs
   runtime,
   ) ->
 

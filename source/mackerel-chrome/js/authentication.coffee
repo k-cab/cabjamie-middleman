@@ -32,7 +32,7 @@ angular.module( 'appModule' )
 
       # phase 1 impl
       # first check if access details available INSECURE
-      authenticationDetails = $resource(userPrefs.apiServer.replace(/:(\d+)/, '\\:$1') + '/authentication/details').get()
+      authenticationDetails = $resource(app.apiServer.replace(/:(\d+)/, '\\:$1') + '/authentication/details').get()
       authenticationDetails.$then ->
         if authenticationDetails
           app.userPrefs.authToken = authenticationDetails.authToken
@@ -44,7 +44,7 @@ angular.module( 'appModule' )
         if app.userPrefs.authToken
           return
 
-        location.href = userPrefs.apiServer + '/authentication'          
+        location.href = app.apiServer + '/authentication'          
       # ERRCASE
 
       # TODO server-side: save referer as redirect url

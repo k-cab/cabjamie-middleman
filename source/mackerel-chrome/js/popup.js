@@ -31,7 +31,7 @@
     return $compileProvider.urlSanitizationWhitelist(/^\s*(https?|chrome-extension):/);
   });
 
-  this.AppCntl = function($scope, $location, $log, $rootScope, globalsSvc, userPrefs, runtime) {
+  this.AppCntl = function($scope, $location, $log, $rootScope, globalsSvc, userPrefs, envs, runtime) {
     if (userPrefs.needsIntro()) {
       $location.path("/intro");
       return;
