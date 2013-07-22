@@ -6,7 +6,7 @@
 
   app = appModule;
 
-  this.stickersCntl = angular.module('appModule').controller('StickersCntl', function($log, $scope, $rootScope, $location, $routeParams, $resource, userPrefs, runtime, globalsSvc) {
+  this.stickersCntl = angular.module('appModule').controller('StickersCntl', function($log, $scope, $rootScope, $location, $routeParams, $resource, $q, userPrefs, runtime, globalsSvc) {
     var _this = this;
 
     app.stickersC = {
@@ -15,9 +15,7 @@
       }
     };
     this.doit = function() {
-      return Q.fcall(function() {
-        return globalsSvc.doit();
-      }).then(function() {
+      return $q.when(globalsSvc.doit()).then(function() {
         var name, sticker;
 
         if ($routeParams.name) {
@@ -33,9 +31,9 @@
           $scope.editSticker(sticker);
           return $scope.$apply();
         }
-      }).fail(function(e) {
+      }, function(e) {
         return globalsSvc.handleError(e);
-      }).done();
+      });
     };
     $scope.toggleSticker = function(sticker) {
       var doit;
@@ -152,10 +150,8 @@
     };
     $scope.update = function() {
       $rootScope.msg = "Fetching data...";
-      $rootScope.$apply();
-      return Q.all([$scope.fetchPage(), $scope.fetchStickers()]).then(function() {
-        $rootScope.msg = "";
-        return $rootScope.$apply();
+      return $q.all([$scope.fetchPage(), $scope.fetchStickers()]).then(function() {
+        return $rootScope.msg = "";
       });
     };
     $scope.showPageDetails = function() {

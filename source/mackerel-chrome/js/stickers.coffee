@@ -3,7 +3,7 @@ app = appModule
 
 @stickersCntl = angular.module( 'appModule' )
   .controller 'StickersCntl',
-    ($log, $scope, $rootScope, $location, $routeParams, $resource
+    ($log, $scope, $rootScope, $location, $routeParams, $resource, $q
       userPrefs, runtime, globalsSvc) ->
 
       # expose controller
@@ -15,12 +15,12 @@ app = appModule
 
       @doit = ->
 
-        Q.fcall ->
+        $q.when(
           # defe to globalsSvc due to dep on  env-specific deps.
           # smells of making more pain by avoiding dep injection framework-bits.
           globalsSvc.doit()
-
-        .then ->
+        
+        ).then ->
           ##  dispatch further  if we can.
           name = decodeURIComponent $routeParams.name if $routeParams.name
           if name
@@ -31,10 +31,8 @@ app = appModule
 
             $scope.editSticker sticker 
             $scope.$apply()
-        .fail (e) ->
+        , (e) ->
           globalsSvc.handleError e
-        .done()
-
 
 
       #### controller actions
@@ -184,15 +182,14 @@ app = appModule
 
       $scope.update = ->
         $rootScope.msg = "Fetching data..."
-        $rootScope.$apply()
+        # $rootScope.$apply()
 
-        Q.all([ 
+        $q.all([ 
           $scope.fetchPage(), 
           $scope.fetchStickers()
         ])
         .then ->
           $rootScope.msg = ""
-          $rootScope.$apply()
         
 
       ## view
