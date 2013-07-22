@@ -28,6 +28,8 @@ app.use(app.router);
 // error handler
 // 500 on all exceptions
 app.use(function(err, req, res, next) {
+	console.error(err);
+
     res.send(500, {err: err});
 
     // exit the process and get forever to pick up

@@ -232,17 +232,18 @@
       return d.promise;
     },
     savePage: function(userInfo, params) {
-      var d, note;
+      var d, linkToPage, note, thumbnailMd5Hex;
       d = Q.defer();
+      linkToPage = "<a href='" + (encodeURI(params.url)) + "'>'" + params.title + "'</a>";
+      thumbnailMd5Hex = null;
       note = {
         title: params.title,
         tagGuids: params.tagGuids,
         attributes: {
           sourceURL: params.url
         },
-        content: '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">\
-<en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>\
-</en-note>'
+        content: "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">\n<en-note style=\"word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;\">\n  <div>" + linkToPage + "</div>\n  <en-media type=\"image/jpeg\" hash=\"" + thumbnailMd5Hex + "\" width=\"100%\"/>\n  <div>Stickers: TODO</div>\n  <div>Date: " + (new Date()) + "</div>\n</en-note>",
+        resources: null
       };
       evernote.createNote(userInfo, note, function(err, note) {
         return d.resolve(note);

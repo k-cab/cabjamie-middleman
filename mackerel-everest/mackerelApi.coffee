@@ -233,6 +233,9 @@ module.exports = obj =
   savePage: (userInfo, params)->
     d = Q.defer()
 
+    linkToPage = "<a href='#{encodeURI(params.url)}'>'#{params.title}'</a>"
+    thumbnailMd5Hex = null #TODO
+
     note =
       title: params.title 
       tagGuids: params.tagGuids
@@ -240,10 +243,17 @@ module.exports = obj =
       attributes:
         sourceURL: params.url
 
-      content: '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
-<en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>
-</en-note>'
-      # TODO more properties
+      content: """
+        <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+        <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
+          <div>#{linkToPage}</div>
+          <en-media type="image/jpeg" hash="#{thumbnailMd5Hex}" width="100%"/>
+          <div>Stickers: TODO</div>
+          <div>Date: #{new Date()}</div>
+        </en-note>
+        """
+
+      resources: null  # TODO
 
     evernote.createNote userInfo, note, (err, note) ->
       d.resolve note
