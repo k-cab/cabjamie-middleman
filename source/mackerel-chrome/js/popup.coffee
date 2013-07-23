@@ -2,7 +2,7 @@
 # DEV
 Q.longStackSupport = true
 
-@appModule = angular.module "appModule", ['ui', 'ngResource'], ($routeProvider, $locationProvider) ->
+@appModule = angular.module "appModule", ['ui', 'ngResource', 'restangular'], ($routeProvider, $locationProvider) ->
   $routeProvider
 
   .when "/",
@@ -14,6 +14,10 @@ Q.longStackSupport = true
     controller: 'IntroCntl'
 
   .when "/login",
+    templateUrl: "templates/authentication.html"
+    controller: 'AuthenticationCntl'
+
+  .when "/login/oauth",
     templateUrl: "templates/oauth.html"
     controller: 'AuthenticationCntl'
 
@@ -41,7 +45,7 @@ Q.longStackSupport = true
 
 # REFACTOR change to controller('controllerName')
 @AppCntl = ($scope, $location, $log, $rootScope,
-  globalsSvc, userPrefs
+  globalsSvc, userPrefs, envs
   runtime,
   ) ->
 
@@ -71,11 +75,13 @@ Q.longStackSupport = true
     if $rootScope.authentication.loggedIn
       $location.path "/stickers"
     else
+      $log.info "authentication status requires login. redirecting to /login"
       $location.path "/login"
 
     $rootScope.$apply()
   .fail (e)->
     if e.errorType == 'authentication'
+      $log.info "authentication error. redirecting to /login"
       $location.path "/login"
       $rootScope.$apply()
 

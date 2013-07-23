@@ -1,83 +1,103 @@
 that = this
-
-@appModule.factory 'stubDataSvc', ($log, $http) ->
+app = @appModule
   
-  obj = 
+
+@appModule.factory 'stubDataSvc', ($log, $http, $resource, Restangular
+  globalsSvc) ->
+  obj = app.stubDataSvc =
     #= userDataSource interface realisation
     
     init: ->
+
       
     fetchPage: (params) ->
-      Q.fcall ->
+      deferred = Q.defer()
 
-        result = new that.Page()
-        result.url = params.url
-        result.stickers = [
-          {
-            name: "stub-sticker-3"
-          }
-        ]
+      Restangular.one('page').get(params)
+      .then (pageData)->
+        # FIXME pageData has a lot of properties from restangular.
 
-        return result
+        page = new Page pageData
+        page.stickers = page.stickers.map (e) -> new Sticker e
+        
+        deferred.resolve page
+
+      deferred.promise
+
+
+    savePage: (page)->
+      deferred = Q.defer()
+
+      Restangular.copy(page).post()
+      .then (pageData)->
+        # TODO fill in the id
+
+        deferred.resolve page
+
+        # TODO error
+
+      deferred.promise
+
 
 
     fetchStickers: (page) ->
-      Q.fcall ->
-        results = [
-          {
-            id: 1
-            name: "stub-sticker-1",
-          }
-          {
-            id: 2
-            name: "stub-sticker-2",
-          }
-          {
-            id: 3
-            name: "stub-sticker-3"
-          }
-          {
-            id: 4
-            name: "##honeymoon"
-          }
-          {
-            id: 5
-            name: "##longnameherelsdkfjdklsj"
-          }
-          {
-            id: 6
-            name: "stub-sticker-6"
-          }
-          {
-            id: 7
-            name: "stub-sticker-7"
-          }
-          {
-            id: 8
-            name: "stub-sticker-8"
-          }
-        ]
+      deferred = Q.defer()
 
-        results = results.map (e) ->
+      Restangular.all('stickers').getList()
+      .then (stickersData) ->
+        results = stickersData.map (e) ->
           new that.Sticker e
 
-        return results
+        deferred.resolve results
+
+      deferred.promise
+
+
+    createSticker: (sticker) ->
+      deferred = Q.defer()
+
+      $resource(app.apiServer + '/mackerel/stickers').save sticker, (stickerData)->
+        sticker.id = stickerData.guid
+
+        deferred.resolve sticker
+
+        # TODO error
+
+      deferred.promise      
+    
+
+    updateSticker: (sticker) ->
+      deferred = Q.defer()
+
+      $resource(app.apiServer + '/mackerel/stickers').save sticker, (stickerData)->
+
+        deferred.resolve sticker
+
+        # TODO error
+
+      deferred.promise
+
+    # TODO resolve api to 'saveSticker'.
+
+
+    deleteSticker: (sticker) ->
+      sticker.name = "archived - " + sticker.name
+      obj.updateSticker sticker
+
+
+    persist: (type, modelObj, resultHandler) ->
+      Q.fcall ->
+        $log.error "stub persist called"
+        return null
+
+
+
+    # tactically unmaintained
 
     fetchItems: (params, resultHandler) ->
       Q.fcall ->
         $log.error "stub fetchItems called"
         return null
 
-
-    updateSticker: (sticker) ->
-      Q.fcall ->
-        $log.error "stub updateSticker called"
-        return null
-    
-
-    persist: (type, modelObj, resultHandler) ->
-      Q.fcall ->
-        $log.error "stub persist called"
-        return null
 
   return obj

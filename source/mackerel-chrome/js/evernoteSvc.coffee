@@ -6,6 +6,27 @@ app = @appModule
 
     #= userDataSource interface realisation
 
+    fetchPage: (params) ->
+
+      Q.fcall ->
+        obj.fetchNote
+          url: params.url
+      .then (result)->
+        pageData = 
+          url: params.url
+          title: params.title
+          stickers: result?.tags?.map (tag) ->
+            name: tag.name
+            guid: tag.guid
+          note: result
+
+        # if no previous note for this url
+        pageData.stickers ||= []
+
+        page = new Page pageData
+        return page
+
+
     fetchStickers: (page) ->
       if page == null
         Q.fcall ->
@@ -28,25 +49,8 @@ app = @appModule
         throw "don't call me for page stickers."
 
 
-    fetchPage: (params) ->
-
-      Q.fcall ->
-        obj.fetchNote
-          url: params.url
-      .then (result)->
-        pageData = 
-          url: params.url
-          title: params.title
-          stickers: result?.tags?.map (tag) ->
-            name: tag.name
-            guid: tag.guid
-          note: result
-
-        # if no previous note for this url
-        pageData.stickers ||= []
-
-        page = new Page pageData
-        return page
+    savePage: (page) =>
+      @persist 'page', page
 
     createSticker: (newSticker) ->
       obj.persist 'sticker', newSticker
@@ -121,8 +125,8 @@ app = @appModule
 
 
     init: ->
-      obj.authToken = localStorage.getItem 'evernote_authToken'
-      obj.noteStoreURL = localStorage.getItem 'evernote_noteStoreURL'
+      obj.authToken = app.userPrefs.authToken
+      obj.noteStoreURL = app.userPrefs.noteStoreURL
 
       unless obj.authToken and obj.noteStoreURL and obj.authToken != typeof undefined
         throw 

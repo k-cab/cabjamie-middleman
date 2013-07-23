@@ -2,7 +2,7 @@
 (function() {
   Q.longStackSupport = true;
 
-  this.appModule = angular.module("appModule", ['ui', 'ngResource'], function($routeProvider, $locationProvider) {
+  this.appModule = angular.module("appModule", ['ui', 'ngResource', 'restangular'], function($routeProvider, $locationProvider) {
     return $routeProvider.when("/", {
       templateUrl: "templates/stickers.html",
       controller: 'AppCntl'
@@ -10,6 +10,9 @@
       templateUrl: "templates/intro.html",
       controller: 'IntroCntl'
     }).when("/login", {
+      templateUrl: "templates/authentication.html",
+      controller: 'AuthenticationCntl'
+    }).when("/login/oauth", {
       templateUrl: "templates/oauth.html",
       controller: 'AuthenticationCntl'
     }).when("/logout", {
@@ -28,7 +31,7 @@
     return $compileProvider.urlSanitizationWhitelist(/^\s*(https?|chrome-extension):/);
   });
 
-  this.AppCntl = function($scope, $location, $log, $rootScope, globalsSvc, userPrefs, runtime) {
+  this.AppCntl = function($scope, $location, $log, $rootScope, globalsSvc, userPrefs, envs, runtime) {
     if (userPrefs.needsIntro()) {
       $location.path("/intro");
       return;
@@ -45,11 +48,13 @@
       if ($rootScope.authentication.loggedIn) {
         $location.path("/stickers");
       } else {
+        $log.info("authentication status requires login. redirecting to /login");
         $location.path("/login");
       }
       return $rootScope.$apply();
     }).fail(function(e) {
       if (e.errorType === 'authentication') {
+        $log.info("authentication error. redirecting to /login");
         $location.path("/login");
         return $rootScope.$apply();
       }

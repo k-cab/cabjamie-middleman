@@ -32,6 +32,10 @@
         data: [ 'dev', 'production' ]
         selection: userPrefs.env
 
+      # dataService:
+      #   data: [ 'stubDataSvc', 'evernoteSvc' ]
+      #   selection: userPrefs.
+
       localStorage: 
         data: _.map Object.keys(localStorage), (e)-> e + ": " + localStorage.getItem e
 

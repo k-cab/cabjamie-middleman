@@ -3,7 +3,7 @@ app = appModule
 
 @stickersCntl = angular.module( 'appModule' )
   .controller 'StickersCntl',
-    ($log, $scope, $rootScope, $location, $routeParams, $resource
+    ($log, $scope, $rootScope, $location, $routeParams, $resource, $q
       userPrefs, runtime, globalsSvc) ->
 
       # expose controller
@@ -15,12 +15,12 @@ app = appModule
 
       @doit = ->
 
-        Q.fcall ->
+        $q.when(
           # defe to globalsSvc due to dep on  env-specific deps.
           # smells of making more pain by avoiding dep injection framework-bits.
           globalsSvc.doit()
-
-        .then ->
+        
+        ).then ->
           ##  dispatch further  if we can.
           name = decodeURIComponent $routeParams.name if $routeParams.name
           if name
@@ -31,10 +31,8 @@ app = appModule
 
             $scope.editSticker sticker 
             $scope.$apply()
-        .fail (e) ->
+        , (e) ->
           globalsSvc.handleError e
-        .done()
-
 
 
       #### controller actions
@@ -61,11 +59,11 @@ app = appModule
 
       $scope.addSticker = (sticker) -> 
         $scope.page.addSticker sticker
-        app.userDataSource.persist 'page', $scope.page
+        app.userDataSource.savePage $scope.page
 
       $scope.removeSticker = (sticker) ->
         $scope.page.removeSticker sticker
-        app.userDataSource.persist 'page', $scope.page
+        app.userDataSource.savePage $scope.page
 
         # TODO decouple the writes from the user interaction, coalecse and schedule.
 
@@ -141,20 +139,6 @@ app = appModule
         orderedStickers
 
 
-      ## delete
-
-      $scope.deleteSticker = ->
-        Q.fcall ->
-          app.userDataSource.deleteSticker $scope.editedSticker
-        .then ->
-          originalSticker = $scope.stickers.filter((e)-> e.id == $scope.editedSticker.id)[0]          
-          
-          $scope.stickers = _.without $scope.stickers, originalSticker
-          $scope.editedSticker = null
-          $scope.$apply()
-        .done()
-
-
       ## data
 
       $scope.fetchPage = ->
@@ -198,15 +182,14 @@ app = appModule
 
       $scope.update = ->
         $rootScope.msg = "Fetching data..."
-        $rootScope.$apply()
+        # $rootScope.$apply()
 
-        Q.all([ 
+        $q.all([ 
           $scope.fetchPage(), 
           $scope.fetchStickers()
         ])
         .then ->
           $rootScope.msg = ""
-          $rootScope.$apply()
         
 
       ## view
@@ -258,6 +241,20 @@ app = appModule
 
       $scope.cancelEditingSticker = ->
         $scope.editedSticker = null
+
+
+      ## delete
+
+      $scope.deleteSticker = ->
+        app.userDataSource.deleteSticker( $scope.editedSticker )
+        .then ->
+          originalSticker = $scope.stickers.filter((e)-> e.id == $scope.editedSticker.id)[0]          
+          
+          $scope.stickers = _.without $scope.stickers, originalSticker
+          $scope.editedSticker = null
+          $scope.$apply()
+        .done()
+
 
       $scope.saveStickerColours = ->
         colours = $scope.stickers.map (e) -> 

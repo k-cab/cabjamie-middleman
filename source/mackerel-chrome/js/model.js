@@ -74,19 +74,25 @@
     Page.prototype.removeSticker = function(sticker) {
       console.log("remove sticker " + sticker + " from " + this.url);
       return this.stickers = this.stickers.filter(function(e) {
-        return e.name !== sticker.name;
+        return e.name !== sticker.name && e.id !== sticker.id;
       });
     };
 
     Page.prototype.hasSticker = function(sticker) {
-      var _ref;
+      var _ref, _ref1;
 
       if (_.include((_ref = this.stickers) != null ? _ref.map(function(e) {
         return e.name;
       }) : void 0, sticker.name)) {
         return true;
       } else {
-        return false;
+        if (_.include((_ref1 = this.stickers) != null ? _ref1.map(function(e) {
+          return e.id;
+        }) : void 0, sticker.id)) {
+          return true;
+        } else {
+          return false;
+        }
       }
     };
 

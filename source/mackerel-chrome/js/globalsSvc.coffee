@@ -1,7 +1,9 @@
 that = this
+app = @appModule
 
 @appModule.factory 'globalsSvc', ($log, $rootScope, $location,
-  userPrefs) ->
+  Restangular
+  userPrefs, envs) ->
   
   # set up an authentication object under root scope, as ui needs to invoke ops. all controllers must declare this service as an injected dep in order to make authentication flows work.
   $rootScope.authentication =
@@ -42,11 +44,35 @@ that = this
   # looking redundant - just use rootscope?
   obj = 
 
-    doit: ->
+    setupRestangular: ->
+      apiServer = envs[userPrefs.get('env')].apiServer
+      Restangular.setBaseUrl(apiServer + "/mackerel")
 
-      # all state refreshes.
-      userPrefs.apply()
+      username = userPrefs.get 'username'
+      throw "null username" unless username
+
+      Restangular.setFullRequestInterceptor (el, op, what, url, headers, params)->
+        headers['x-username'] = username
+        # FIXME read username from localStorage
+        headers: headers
+        params: params
+        element: el
+
+
+    # all state refreshes.
+    doit: ->
+      envs.apply()
+      
+      obj.setupRestangular()
+
       obj.update()
+
+
+    # update all dependents.
+    update: ->
+      app.userDataSource.init()
+      $rootScope.authentication.setLoggedIn()
+      app.stickersC?.update()
 
 
     handleError: (e) ->
@@ -60,20 +86,13 @@ that = this
       # console.warn { msg: 'Exception!!', obj:e }
 
 
-    update: ->
-      # update all dependents.
-      userPrefs.userDataSource.init()
-      $rootScope.authentication.setLoggedIn()
-      that.appModule.stickersC?.update()
-
+  obj
 
 
 @appModule.factory 'userPrefs', ($log
-  stubDataSvc, evernoteSvc) ->
+  ) ->
 
-  that.appModule.userPrefs = 
-    stubDataSvc: stubDataSvc
-    evernoteSvc: evernoteSvc
+  app.userPrefs = 
 
     ## defaults.
 
@@ -82,16 +101,8 @@ that = this
     sticker_prefix_pattern: /^##/
     sticker_prefix: '##'
 
-    userDataSource: null
 
-
-    ## envs.
-
-    production:
-      userDataSource: evernoteSvc
-
-    dev:
-      userDataSource: stubDataSvc
+    # local storage persistence
 
     set: (key, val) ->
       if val == undefined
@@ -125,15 +136,6 @@ that = this
       localStorage.clear key
 
 
-    apply: (env)->
-      env ||= @get 'env'
-
-      console.log "applying env '#{env}'"
-
-      @userDataSource = @[env].userDataSource
-
-      # expose it on the app module. there should be a better way to inject the right impl, but it has to be controllable from this method.
-      that.appModule.userDataSource = @userDataSource
 
     needsIntro: ->
       nextIntroVal = @get 'nextIntro'
@@ -150,6 +152,34 @@ that = this
         Date.tomorrow()
       else
         Date.oneYearLater()
+
+
+
+@appModule.factory 'envs', ($log, $injector
+  userPrefs) ->
+
+
+  obj =
+
+    ## envs.
+
+    production:
+      userDataSource: 'stubDataSvc'
+      apiServer: 'http://mackerel-everest.herokuapp.com'
+
+    dev:
+      userDataSource: 'stubDataSvc'
+      apiServer: 'http://localhost:8081'
+
+
+    apply: (env)->
+      env ||= userPrefs.get 'env'
+
+      console.log "applying env '#{env}'"
+
+      app.userDataSource = $injector.get @[env].userDataSource
+      app.apiServer = @[env].apiServer
+
 
 
 # REFACTOR

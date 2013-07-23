@@ -6,7 +6,7 @@
 
   app = appModule;
 
-  this.stickersCntl = angular.module('appModule').controller('StickersCntl', function($log, $scope, $rootScope, $location, $routeParams, $resource, userPrefs, runtime, globalsSvc) {
+  this.stickersCntl = angular.module('appModule').controller('StickersCntl', function($log, $scope, $rootScope, $location, $routeParams, $resource, $q, userPrefs, runtime, globalsSvc) {
     var _this = this;
 
     app.stickersC = {
@@ -15,9 +15,7 @@
       }
     };
     this.doit = function() {
-      return Q.fcall(function() {
-        return globalsSvc.doit();
-      }).then(function() {
+      return $q.when(globalsSvc.doit()).then(function() {
         var name, sticker;
 
         if ($routeParams.name) {
@@ -33,9 +31,9 @@
           $scope.editSticker(sticker);
           return $scope.$apply();
         }
-      }).fail(function(e) {
+      }, function(e) {
         return globalsSvc.handleError(e);
-      }).done();
+      });
     };
     $scope.toggleSticker = function(sticker) {
       var doit;
@@ -57,11 +55,11 @@
     };
     $scope.addSticker = function(sticker) {
       $scope.page.addSticker(sticker);
-      return app.userDataSource.persist('page', $scope.page);
+      return app.userDataSource.savePage($scope.page);
     };
     $scope.removeSticker = function(sticker) {
       $scope.page.removeSticker(sticker);
-      return app.userDataSource.persist('page', $scope.page);
+      return app.userDataSource.savePage($scope.page);
     };
     $scope.startCreateSticker = function() {
       $scope.newSticker = new Sticker({
@@ -121,20 +119,6 @@
       });
       return orderedStickers;
     };
-    $scope.deleteSticker = function() {
-      return Q.fcall(function() {
-        return app.userDataSource.deleteSticker($scope.editedSticker);
-      }).then(function() {
-        var originalSticker;
-
-        originalSticker = $scope.stickers.filter(function(e) {
-          return e.id === $scope.editedSticker.id;
-        })[0];
-        $scope.stickers = _.without($scope.stickers, originalSticker);
-        $scope.editedSticker = null;
-        return $scope.$apply();
-      }).done();
-    };
     $scope.fetchPage = function() {
       var url;
 
@@ -166,10 +150,8 @@
     };
     $scope.update = function() {
       $rootScope.msg = "Fetching data...";
-      $rootScope.$apply();
-      return Q.all([$scope.fetchPage(), $scope.fetchStickers()]).then(function() {
-        $rootScope.msg = "";
-        return $rootScope.$apply();
+      return $q.all([$scope.fetchPage(), $scope.fetchStickers()]).then(function() {
+        return $rootScope.msg = "";
       });
     };
     $scope.showPageDetails = function() {
@@ -216,6 +198,18 @@
     };
     $scope.cancelEditingSticker = function() {
       return $scope.editedSticker = null;
+    };
+    $scope.deleteSticker = function() {
+      return app.userDataSource.deleteSticker($scope.editedSticker).then(function() {
+        var originalSticker;
+
+        originalSticker = $scope.stickers.filter(function(e) {
+          return e.id === $scope.editedSticker.id;
+        })[0];
+        $scope.stickers = _.without($scope.stickers, originalSticker);
+        $scope.editedSticker = null;
+        return $scope.$apply();
+      }).done();
     };
     $scope.saveStickerColours = function() {
       var colours;
