@@ -1,20 +1,31 @@
 _ = require('lodash')
+promisify = require('when-promisify')
+
 Q = require('q')
 Q.longStackSupport = true
-promisify = require('when-promisify')
+
+atob = require 'atob'
+
+crypto = require('crypto')
 
 Parse = require('parse').Parse
 Parse.initialize("RnNIA4148ExIhwBFNB9qMGci85tOOEBHbzwxenNY", "5FSg0xa311sim8Ok1Qeob7MLPGsz3wLFQexlOOgm")
 
 Credentials = Parse.Object.extend 'Credentials'
 
+Types = require('./evernode').Types;
+
+
 store  =
   getCredentials: (vendorId, username) ->
+    unless vendorId && username
+      throw "null params for store query."
+
     q = new Parse.Query Credentials
-    q.find( {
-              vendorId
-              username 
-            })
+    q.equalTo 'vendorId', vendorId
+    q.equalTo 'username', username
+
+    q.find()
     # TODO ensure we order results.
 
 
@@ -86,17 +97,25 @@ module.exports = obj =
     app.post '/mackerel/page', (req, res) =>
 
       obj.serveEvernoteRequest req, res, (userInfo)->
-        obj.savePage userInfo, 
-          title: req.body.title
-          tagGuids: req.body.stickers.map( (e) ->
-              # if e.name
-              #   e.name
-              # else
-              #   console.error "didn't receive name for tag #{e.id}"
-                e.id
-            )
-            # .concat 'Mackerel'
-          url: req.body.url
+        thumbnailUrl = req.body.thumbnailUrl
+
+        thumbnail = obj.urlToThumbnail thumbnailUrl
+
+        obj.savePage( userInfo, {
+            title: req.body.title
+            tagGuids: req.body.stickers.map( (e) ->
+                # if e.name
+                #   e.name
+                # else
+                #   console.error "didn't receive name for tag #{e.id}"
+                  e.id
+              )
+              # .concat 'Mackerel'
+            url: req.body.url
+            thumbnailData: thumbnail.data
+            thumbnailMd5Hex: req.body.thumbnailMd5Hex
+            thumbnailDataB64: thumbnail.dataB64
+          })
         .then (note) ->
           obj.sendData 
             guid: note.guid
@@ -156,7 +175,6 @@ module.exports = obj =
         Q.fcall ->
           name = req.body.name
           id = req.body.id
-
           if id
             obj.updateSticker userInfo, {
               guid: id
@@ -233,6 +251,23 @@ module.exports = obj =
   savePage: (userInfo, params)->
     d = Q.defer()
 
+    linkToPage = "<a href='#{encodeURI(params.url)}'>'#{params.title}'</a>"
+
+    thumbnail = new Buffer params.thumbnailData
+
+    md5 = crypto.createHash 'md5'
+    md5.update thumbnail
+    thumbnailMd5Hex = md5.digest 'hex'
+
+    data = new Types.Data()
+    data.body = thumbnail
+    data.size = thumbnail.length
+    data.bodyHash = params.thumbnailDataB64
+
+    resource = new Types.Resource()
+    resource.mime = 'image/jpeg'
+    resource.data = data
+
     note =
       title: params.title 
       tagGuids: params.tagGuids
@@ -240,10 +275,17 @@ module.exports = obj =
       attributes:
         sourceURL: params.url
 
-      content: '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
-<en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div>stub content</div>
-</en-note>'
-      # TODO more properties
+      content: """
+        <!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
+        <en-note style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;">
+          <div>#{linkToPage}</div>
+          <en-media type="image/jpeg" hash="#{thumbnailMd5Hex}" width="100%"/>
+          <div>Stickers: TODO links to stickers on this page</div>
+          <div>Date: #{new Date()}</div>
+        </en-note>
+        """
+
+      resources: [ resource ]
 
     evernote.createNote userInfo, note, (err, note) ->
       d.resolve note
@@ -408,7 +450,8 @@ module.exports = obj =
     if !req.session.user 
       # new session for this client - get mackerel token, attempt to load vendor token.
 
-      username = req.params.username
+      username = req.headers['x-username']
+      username ||= req.params.username
       store.getCredentials( 'evernote', username)
       .then (credentialsSet)->
         credentials = _.sortBy( credentialsSet, (e) -> e.updatedAt ).reverse()[0]
@@ -455,5 +498,20 @@ module.exports = obj =
 
   deleteNote: (note) ->
     console.log "TODO delete note #{note}"
+  
+
+
+
+  urlToThumbnail: (thumbnailUrl) ->
+    thumbnailDataB64 = _(thumbnailUrl.split(',')).last()
+    thumbnailData = atob thumbnailDataB64
+    ab = new ArrayBuffer(thumbnailData.length)
+    ia = new Uint8Array(ab)
+    for e, i in thumbnailData
+      ia[i] = thumbnailData.charCodeAt(i)
+    data = ia
+
+    { data: data, dataB64: thumbnailDataB64 }
+  
   
   

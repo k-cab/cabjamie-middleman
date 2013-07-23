@@ -22,12 +22,21 @@ app.use(express.session(
 	{ secret: "EverestJS" }
 ));
 
+// log incoming
+app.use(function(req, res, next) {
+	console.log("inbound request " + req.method + " " + req.url);
+	next();
+});
+
 app.use(app.router);
 
+// log outgoing TODO
 
 // error handler
 // 500 on all exceptions
 app.use(function(err, req, res, next) {
+	console.error(err);
+
     res.send(500, {err: err});
 
     // exit the process and get forever to pick up
@@ -69,7 +78,7 @@ mackerelApi.setup(app);
 
 
 //Allow X-Domain Ajax
-app.all('/', function(req, res, next) {
+app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
@@ -131,7 +140,7 @@ app.all('/authentication/callback', function(req, res){
 					authToken: authToken,
 					noteStoreURL: 'https://sandbox.evernote.com/shard/' + edamUser.shardId + '/notestore'
 				};
-				app.store.setCredentials( 'evernote', 'sohocoke', edamUser );
+				app.store.setCredentials( 'evernote', edamUser.username, edamUser );
 
 				var client_url = 'http://localhost:4567/mackerel-chrome/popup.html';
 				res.redirect(client_url);
