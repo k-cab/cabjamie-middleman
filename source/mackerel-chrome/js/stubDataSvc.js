@@ -10,17 +10,7 @@
     var obj;
 
     obj = app.stubDataSvc = {
-      init: function() {
-        Restangular.setBaseUrl(app.apiServer + "/mackerel");
-        return Restangular.setFullRequestInterceptor(function(el, op, what, url, headers, params) {
-          headers['x-username'] = 'sohocoke';
-          return {
-            headers: headers,
-            params: params,
-            element: el
-          };
-        });
-      },
+      init: function() {},
       fetchPage: function(params) {
         var deferred;
 

@@ -8,14 +8,6 @@ app = @appModule
     #= userDataSource interface realisation
     
     init: ->
-      Restangular.setBaseUrl(app.apiServer + "/mackerel")
-
-      Restangular.setFullRequestInterceptor (el, op, what, url, headers, params)->
-        headers['x-username'] = 'sohocoke'
-        # FIXME read username from localStorage
-        headers: headers
-        params: params
-        element: el
 
       
     fetchPage: (params) ->

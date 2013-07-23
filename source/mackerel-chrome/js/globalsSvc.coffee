@@ -2,6 +2,7 @@ that = this
 app = @appModule
 
 @appModule.factory 'globalsSvc', ($log, $rootScope, $location,
+  Restangular
   userPrefs, envs) ->
   
   # set up an authentication object under root scope, as ui needs to invoke ops. all controllers must declare this service as an injected dep in order to make authentication flows work.
@@ -43,11 +44,35 @@ app = @appModule
   # looking redundant - just use rootscope?
   obj = 
 
-    doit: ->
+    setupRestangular: ->
+      apiServer = envs[userPrefs.get('env')].apiServer
+      Restangular.setBaseUrl(apiServer + "/mackerel")
 
-      # all state refreshes.
+      username = userPrefs.get 'username'
+      throw "null username" unless username
+
+      Restangular.setFullRequestInterceptor (el, op, what, url, headers, params)->
+        headers['x-username'] = username
+        # FIXME read username from localStorage
+        headers: headers
+        params: params
+        element: el
+
+
+    # all state refreshes.
+    doit: ->
       envs.apply()
+      
+      obj.setupRestangular()
+
       obj.update()
+
+
+    # update all dependents.
+    update: ->
+      app.userDataSource.init()
+      $rootScope.authentication.setLoggedIn()
+      app.stickersC?.update()
 
 
     handleError: (e) ->
@@ -61,12 +86,7 @@ app = @appModule
       # console.warn { msg: 'Exception!!', obj:e }
 
 
-    update: ->
-      # update all dependents.
-      app.userDataSource.init()
-      $rootScope.authentication.setLoggedIn()
-      app.stickersC?.update()
-
+  obj
 
 
 @appModule.factory 'userPrefs', ($log
@@ -139,7 +159,7 @@ app = @appModule
   userPrefs) ->
 
 
-  userPrefs.envs = obj =
+  obj =
 
     ## envs.
 

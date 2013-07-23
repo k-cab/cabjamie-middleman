@@ -6,7 +6,7 @@
 
   app = this.appModule;
 
-  this.appModule.factory('globalsSvc', function($log, $rootScope, $location, userPrefs, envs) {
+  this.appModule.factory('globalsSvc', function($log, $rootScope, $location, Restangular, userPrefs, envs) {
     var obj;
 
     $rootScope.authentication = {
@@ -37,16 +37,29 @@
       $rootScope.error = null;
       return $rootScope.msg = null;
     };
-    return obj = {
+    obj = {
+      setupRestangular: function() {
+        var apiServer, username;
+
+        apiServer = envs[userPrefs.get('env')].apiServer;
+        Restangular.setBaseUrl(apiServer + "/mackerel");
+        username = userPrefs.get('username');
+        if (!username) {
+          throw "null username";
+        }
+        return Restangular.setFullRequestInterceptor(function(el, op, what, url, headers, params) {
+          headers['x-username'] = username;
+          return {
+            headers: headers,
+            params: params,
+            element: el
+          };
+        });
+      },
       doit: function() {
         envs.apply();
+        obj.setupRestangular();
         return obj.update();
-      },
-      handleError: function(e) {
-        $log.error(e);
-        $rootScope.msg = "error: " + e;
-        $rootScope.error = e;
-        return $rootScope.$apply();
       },
       update: function() {
         var _ref;
@@ -54,8 +67,15 @@
         app.userDataSource.init();
         $rootScope.authentication.setLoggedIn();
         return (_ref = app.stickersC) != null ? _ref.update() : void 0;
+      },
+      handleError: function(e) {
+        $log.error(e);
+        $rootScope.msg = "error: " + e;
+        $rootScope.error = e;
+        return $rootScope.$apply();
       }
     };
+    return obj;
   });
 
   this.appModule.factory('userPrefs', function($log) {
@@ -121,7 +141,7 @@
   this.appModule.factory('envs', function($log, $injector, userPrefs) {
     var obj;
 
-    return userPrefs.envs = obj = {
+    return obj = {
       production: {
         userDataSource: 'stubDataSvc',
         apiServer: 'http://mackerel-everest.herokuapp.com'
