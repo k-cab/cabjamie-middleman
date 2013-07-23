@@ -10,11 +10,14 @@ Credentials = Parse.Object.extend 'Credentials'
 
 store  =
   getCredentials: (vendorId, username) ->
+    unless vendorId && username
+      throw "null params for store query."
+
     q = new Parse.Query Credentials
-    q.find( {
-              vendorId
-              username 
-            })
+    q.equalTo 'vendorId', vendorId
+    q.equalTo 'username', username
+
+    q.find()
     # TODO ensure we order results.
 
 
@@ -418,7 +421,8 @@ module.exports = obj =
     if !req.session.user 
       # new session for this client - get mackerel token, attempt to load vendor token.
 
-      username = req.params.username
+      username = req.headers['x-username']
+      username ||= req.params.username
       store.getCredentials( 'evernote', username)
       .then (credentialsSet)->
         credentials = _.sortBy( credentialsSet, (e) -> e.updatedAt ).reverse()[0]

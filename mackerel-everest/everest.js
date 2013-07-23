@@ -22,8 +22,15 @@ app.use(express.session(
 	{ secret: "EverestJS" }
 ));
 
+// log incoming
+app.use(function(req, res, next) {
+	console.log("inbound request " + req.method + " " + req.url);
+	next();
+});
+
 app.use(app.router);
 
+// log outgoing TODO
 
 // error handler
 // 500 on all exceptions
@@ -133,7 +140,7 @@ app.all('/authentication/callback', function(req, res){
 					authToken: authToken,
 					noteStoreURL: 'https://sandbox.evernote.com/shard/' + edamUser.shardId + '/notestore'
 				};
-				app.store.setCredentials( 'evernote', 'sohocoke', edamUser );  // FIXME
+				app.store.setCredentials( 'evernote', edamUser.username, edamUser );
 
 				var client_url = 'http://localhost:4567/mackerel-chrome/popup.html';
 				res.redirect(client_url);
