@@ -395,7 +395,7 @@
       deferred = Q.defer();
       if (!req.session.user) {
         username = req.headers['x-username'];
-        username || (username = req.params.username);
+        username || (username = req.query.username);
         store.getCredentials('evernote', username).then(function(credentialsSet) {
           var credentials, data;
           credentials = _.sortBy(credentialsSet, function(e) {

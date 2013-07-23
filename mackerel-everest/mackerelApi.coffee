@@ -451,7 +451,7 @@ module.exports = obj =
       # new session for this client - get mackerel token, attempt to load vendor token.
 
       username = req.headers['x-username']
-      username ||= req.params.username
+      username ||= req.query.username
       store.getCredentials( 'evernote', username)
       .then (credentialsSet)->
         credentials = _.sortBy( credentialsSet, (e) -> e.updatedAt ).reverse()[0]
