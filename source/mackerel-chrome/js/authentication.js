@@ -4,11 +4,17 @@
 
   app = this.appModule;
 
-  angular.module('appModule').controller('AuthenticationCntl', function($scope, $rootScope, $log, $location, $resource, globalsSvc, userPrefs) {
+  angular.module('appModule').controller('AuthenticationCntl', function($scope, $rootScope, $log, $location, $resource, globalsSvc, userPrefs, envs) {
+    $scope.loginForm = {
+      username: userPrefs.get('username')
+    };
     $scope.doLogin = function() {
-      var authenticationDetails;
+      var authenticationDetails, serverLoc;
 
-      authenticationDetails = $resource(app.apiServer.replace(/:(\d+)/, '\\:$1') + '/authentication/details').get();
+      userPrefs.set('username', $scope.loginForm.username);
+      globalsSvc.setupRestangular();
+      serverLoc = envs[userPrefs.get('env')].apiServer;
+      authenticationDetails = $resource(serverLoc.replace(/:(\d+)/, '\\:$1') + '/authentication/details').get();
       return authenticationDetails.$then(function() {
         if (authenticationDetails) {
           app.userPrefs.authToken = authenticationDetails.authToken;
@@ -20,13 +26,13 @@
         if (app.userPrefs.authToken) {
           return;
         }
-        return location.href = app.apiServer + '/authentication';
+        return location.href = serverLoc + '/authentication';
       });
     };
     if ($location.path().match(/logout/)) {
       return $rootScope.authentication.setLoggedOut();
     } else if ($location.path().match(/login$/)) {
-      return $scope.doLogin();
+      return console.log('login requested.');
     }
   });
 
