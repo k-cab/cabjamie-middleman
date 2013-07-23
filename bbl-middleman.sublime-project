@@ -32,6 +32,18 @@
 		{
 			"follow_symlinks": true,
 			"path": "/Users/ilo-robbie/dev/src/public/template-chrome"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/ilo-robbie/dev/src/public/evernote-sdk-javascript"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/ilo-robbie/dev/src/public/evernote-sdk-ruby"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/ilo-robbie/dev/src/public/evernote-sdk-js"
 		}
 	]
 }
