@@ -136,10 +136,14 @@ app.all('/authentication/callback', function(req, res){
 				req.session.user = edamUser;
 				
 				// TACTICAL
+
+				// send back info for the client to use - remove.
 				details = {
 					authToken: authToken,
 					noteStoreURL: 'https://sandbox.evernote.com/shard/' + edamUser.shardId + '/notestore'
 				};
+
+				// keep the login data around.
 				app.store.setCredentials( 'evernote', edamUser.username, edamUser );
 
 				var client_url = 'http://localhost:4567/mackerel-chrome/popup.html';
