@@ -441,7 +441,16 @@ module.exports = obj =
         msg: "error while serving evernote request"
         error: e
         trace: e.stack
-      obj.sendError res, e
+
+      switch e.type
+        when 'authentication'
+          res.redirect '/authentication'
+
+        else
+          obj.sendError res, e
+
+          
+        
     .done()
 
   initEdamUser: (req) ->
@@ -462,7 +471,9 @@ module.exports = obj =
           data = credentials.get 'credentials'
         else
           # raise error for client to handle and redirect to login.
-          deferred.reject "no credentials from store."
+          deferred.reject 
+            type: 'authentication'
+            msg: "no credentials from store."
 
       .then (data)->
         authToken = data.authToken

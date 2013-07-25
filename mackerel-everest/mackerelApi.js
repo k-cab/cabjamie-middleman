@@ -388,7 +388,12 @@
           error: e,
           trace: e.stack
         });
-        return obj.sendError(res, e);
+        switch (e.type) {
+          case 'authentication':
+            return res.redirect('/authentication');
+          default:
+            return obj.sendError(res, e);
+        }
       }).done();
     },
     initEdamUser: function(req) {
@@ -407,7 +412,10 @@
           if (credentials) {
             return data = credentials.get('credentials');
           } else {
-            return deferred.reject("no credentials from store.");
+            return deferred.reject({
+              type: 'authentication',
+              msg: "no credentials from store."
+            });
           }
         }).then(function(data) {
           var authToken, getUserPromise;
