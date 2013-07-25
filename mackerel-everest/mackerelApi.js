@@ -383,11 +383,12 @@
     },
     serveEvernoteRequest: function(req, res, callback) {
       return obj.initEdamUser(req).then(callback).fail(function(e) {
-        return console.error({
+        console.error({
           msg: "error while serving evernote request",
           error: e,
           trace: e.stack
         });
+        return obj.sendError(res, e);
       }).done();
     },
     initEdamUser: function(req) {
@@ -396,12 +397,18 @@
       if (!req.session.user) {
         username = req.headers['x-username'];
         username || (username = req.query.username);
-        store.getCredentials('evernote', username).then(function(credentialsSet) {
+        Q.fcall(function() {
+          return store.getCredentials('evernote', username);
+        }).then(function(credentialsSet) {
           var credentials, data;
           credentials = _.sortBy(credentialsSet, function(e) {
             return e.updatedAt;
           }).reverse()[0];
-          return data = credentials.get('credentials');
+          if (credentials) {
+            return data = credentials.get('credentials');
+          } else {
+            return deferred.reject("no credentials from store.");
+          }
         }).then(function(data) {
           var authToken, getUserPromise;
           authToken = data.authToken;
