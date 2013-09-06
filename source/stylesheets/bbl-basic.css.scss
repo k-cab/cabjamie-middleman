@@ -5,13 +5,33 @@ body {
 	margin: 20px;
 	padding: 20px;
 
-	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
-	background-color: #eee;/*#42413C;*/
+	// font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	// font-family: 'Lucida Sans Unicode', 'Lucida Grande', 'Tahoma', 'sans-serif';
 
-	color: #777;
+	// # the font from webbuddyapp.com
+	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-size: medium;
+
+	// # the font from squarespace.
+	// font-family: 'Lucida Sans Unicode', 'Lucida Grande', 'Tahoma', 'sans-serif';
+
+	// bright
+	background-color: #f8f8f8;
+	color: #666;
+	h1, h2, h3 { 	color: #000; }
+
+	// dark
+	// background-color: #42413C;
+	// color: #eee;
+	// h1, h2, h3 { 	color: #aaa; }
+
 }
 
+h1, h2, h3 {
+	font-family: Tahoma, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-weight: bold;
+	text-align: center;
+}
 
 header {
 	img {

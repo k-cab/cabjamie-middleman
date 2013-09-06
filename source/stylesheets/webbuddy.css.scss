@@ -1,4 +1,11 @@
-@import "../foundation-scss-standalone/scss/foundation";
+// #  disabled because this overrides styles defined in bbl-basic.
+// @import "../foundation-scss-standalone/scss/foundation/components/global";
+// @import "../foundation-scss-standalone/scss/foundation/components/grid";
+
+// # alt:
+@import "bbl-basic.css.scss";
+// # this results in the lib scss changes not being hotloaded.
+
 
 section {
 	// @include grid-row();
