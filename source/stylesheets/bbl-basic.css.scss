@@ -108,10 +108,15 @@ section.actions {
 
 section.feature-major, section.benefit {
 
+	text-align: center;
+
 	img {
-		@include grid-column(2, $float:left);
+		@include grid-column(1, $pull:8);
 
 		vertical-align: middle;
+
+		margin-left: auto;
+		margin-right: 0;
 
 		// responsive
 		@media screen and (max-width: #{500px}) {
@@ -120,11 +125,14 @@ section.feature-major, section.benefit {
 			// TODO constrain image size. workaround:
 			display: none;
 		}
-
 	}
 
+	.title {
+		@include grid-column(9, $push:2);
+		text-align: left;
+	}
 	.subtitle {
-		@include grid-column(9, $float:right);
+		@include grid-column(9, $push:2);
 
 		// responsive
 		@media screen and (max-width: #{500px}) {
