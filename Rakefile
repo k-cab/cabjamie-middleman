@@ -19,9 +19,11 @@ task :'build:middleman' do
 	# bundle exec middleman build -c; rsync -avv source/mackerel-chrome/_* build/mackerel-chrome/; rsync -avv --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman
 	
 	cmd = %q(
+		set -e
+
 		bundle exec middleman build
 
-		# copy over _* e.g. _locales
+		# copy over _* e.g. _locales to get build/mackerel-chrome to work.
 		rsync -avv source/mackerel-chrome/_* build/mackerel-chrome/
 
 		# TODO failure handling
@@ -120,7 +122,21 @@ namespace :deploy do
 
 	desc "production deployment (Gandi)"
 	task :prod do
-		# TODO migrate from deploy.sh
+		cmd = %q(
+			set -e
+
+			rsync -av --delete build/* ~/Dropbox/bigbearlabs/ngp/mackerel/mackerel-site/public/
+
+			(cd ~/Dropbox/bigbearlabs/ngp/mackerel/mackerel-site/public
+				git add -A :/
+				git commit -a -m "site build"
+				git push gandi master -i ~/.ssh/github_rsa
+				)
+
+			ssh -i ~/.ssh/github_rsa 482462@git.dc0.gpaas.net 'deploy default.git master'
+		)
+
+		system cmd
 	end
 end
 
