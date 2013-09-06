@@ -80,13 +80,20 @@ section {
 	max-width: 700px;
 }
 
+section.news {
+	background-color: yellow;
+
+	.subtitle {
+		text-align: justify;
+	}
+}
 section.title {
 	h2 {
 		/* current image has embedded text */
 		display:none ;
 	}
 	.subtitle {
-		display:none ;
+		text-align: center;
 	}
 }
 
@@ -94,38 +101,6 @@ section.actions {
  .title {
 		display: none;
 	}
-}
-
-
-// tagyeti-specific bits crept in. MOVE
-section.graphical-intro {
-	// @include grid-row;  // had to disable this to get the margins to work.
-	@include clearfix;
-
-	> section {
-		@include grid-column(4);
-
-		margin: 0;
-
-		position: relative;
-	}
-}
-
-section.marketing-video {
-	text-align: center;
-	font-size: 0;
-
-	object {
-		display: inline-block;
-
-		width:420px; height:315px;
-	}
-}
-
-section.major-feature {
-	.title {
-	  font-family: "Calibri", Garamond, sans-serif;
-  	}
 }
 
 
