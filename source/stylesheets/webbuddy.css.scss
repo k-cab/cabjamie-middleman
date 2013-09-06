@@ -45,10 +45,25 @@ section.feature-major, section.benefit {
 		@include grid-column(2, $float:left);
 
 		vertical-align: middle;
+
+		// responsive
+		@media screen and (max-width: #{500px}) {
+			// @include grid-row;
+			// @include grid-column(12);
+			// TODO constrain image size. workaround:
+			display: none;
+		}
+
 	}
 
 	.subtitle {
 		@include grid-column(9, $float:right);
+
+		// responsive
+		@media screen and (max-width: #{500px}) {
+			@include grid-row;
+			@include grid-column(12);
+		}
 	}
-	
+
 }
