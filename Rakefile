@@ -125,15 +125,18 @@ namespace :deploy do
 		cmd = %q(
 			set -e
 
+			echo "Copying build output to mackerel-site/public/..."
 			rsync -av --delete build/* ~/Dropbox/bigbearlabs/ngp/mackerel/mackerel-site/public/
-
+	
+			echo "'git push gandi master'..."
 			(cd ~/Dropbox/bigbearlabs/ngp/mackerel/mackerel-site/public
 				git add -A :/
 				git commit -a -m "site build"
-				git push gandi master -i ~/.ssh/github_rsa
+				git push gandi master  # depends on the right ssh identity configured in ~/.ssh/config
 				)
-
-			ssh -i ~/.ssh/github_rsa 482462@git.dc0.gpaas.net 'deploy default.git master'
+			
+			echo "Running deploy command on gandi server via ssh..."
+			ssh 482462@git.dc0.gpaas.net 'deploy default.git master'
 		)
 
 		system cmd
