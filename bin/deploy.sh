@@ -1,3 +1,7 @@
+## deploys to gandi servers.
+## TODO migrate to a rake task.
+
+
 # password: dlafvfknxn
 
 `dirname $0`/auto-co.rb
@@ -13,4 +17,3 @@ rsync -av --delete build/* ../ngp/mackerel/mackerel-site/public/
 	)
 
 ssh -i ~/.ssh/github_rsa 482462@git.dc0.gpaas.net 'deploy default.git master'
-
