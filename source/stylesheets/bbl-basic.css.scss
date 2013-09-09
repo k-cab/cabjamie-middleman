@@ -10,8 +10,10 @@
 
 body {
 
-	margin: 20px;
-	padding: 20px;
+	@media screen and (min-width: #{400px}) {
+		margin: 20px;
+		padding: 20px;
+	}
 
 	// font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
 	// font-family: 'Lucida Sans Unicode', 'Lucida Grande', 'Tahoma', 'sans-serif';
