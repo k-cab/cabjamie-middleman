@@ -33,5 +33,5 @@
 -# TODO make section rendering recursive.
 - if elem[:sections]
   - elem[:sections].each do |subsection|
-    %section( class="#{elem[:role]} subsection" )
+    %section( class="#{subsection[:role]} subsection" )
       = partial 'section', locals: { elem: subsection }
