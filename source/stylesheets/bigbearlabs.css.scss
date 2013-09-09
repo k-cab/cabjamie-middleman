@@ -1,6 +1,7 @@
-@import "../foundation-scss-standalone/scss/foundation";
+@import "bbl-basic.css.scss";
 
 body {
+	// can't change this until we fix the title banner img.
 	background-color: white;
 }
 
@@ -10,6 +11,10 @@ header {
 
 section {
 	// @include grid-row();
+
+	.subtitle {
+		text-align: center;
+	}
 }
 
 section.title {
@@ -44,18 +49,17 @@ section.title {
 }
 
 section.product {
-	@include grid-column(4);
+	@include grid-column(6);
 
-	@media screen and (max-width: #{800px}) {
+	// single-column when < 550
+	@media screen and (max-width: #{550px}) {
 		@include grid-row;
 		@include grid-column(12);
 	}
-
-	margin: 50px auto;
 	
 	.title {
 		margin-top: 5%;
-		font-size: 200%;
+		// font-size: 200%;
 	}
 	.subtitle {
 	}

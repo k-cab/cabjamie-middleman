@@ -1,17 +1,51 @@
 // Foundation
 @import "../foundation-scss-standalone/scss/foundation";
 
-body {
-	margin: 20px;
-	padding: 20px;
-
-	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
-	background-color: #eee;/*#42413C;*/
-
-	color: #777;
-	font-size: medium;
+// foundation has a strange layout break-point that ends up with too much h margin when roughly 820 < x < 950 . work around.
+@media screen and (max-width: #{950px}) {
+	.main {
+		max-width: 800px;
+	}
 }
 
+body {
+
+	@media screen and (min-width: #{400px}) {
+		margin: 20px;
+		padding: 20px;
+	}
+
+	// font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	// font-family: 'Lucida Sans Unicode', 'Lucida Grande', 'Tahoma', 'sans-serif';
+
+	// # the font from webbuddyapp.com
+	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: medium;
+
+	// # the font from squarespace.
+	// font-family: 'Lucida Sans Unicode', 'Lucida Grande', 'Tahoma', 'sans-serif';
+
+	// bright
+	background-color: #f8f8f8;
+	color: #666;
+	h1, h2, h3 { 	color: #000; }
+
+	// dark
+	// background-color: #42413C;
+	// color: #eee;
+	// h1, h2, h3 { 	color: #aaa; }
+
+}
+
+h1, h2, h3 {
+	font-family: Tahoma, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-weight: bold;
+	text-align: center;
+}
+
+h2 {
+	font-size: 130%;
+}
 
 header {
 	img {
@@ -40,15 +74,28 @@ section {
 	margin: 66px auto;
 
 	text-align: center;
+
+	.subtitle {
+		text-align: justify;
+	}
+
+	max-width: 700px;
 }
 
+section.news {
+	background-color: yellow;
+
+	.subtitle {
+		text-align: justify;
+	}
+}
 section.title {
 	h2 {
 		/* current image has embedded text */
 		display:none ;
 	}
 	.subtitle {
-		display:none ;
+		text-align: center;
 	}
 }
 
@@ -58,32 +105,53 @@ section.actions {
 	}
 }
 
-section.graphical-intro {
-	// @include grid-row;  // had to disable this to get the margins to work.
-	@include clearfix;
 
-	> section {
-		@include grid-column(4);
+// section presentation template incubated from WebBuddy
 
-		margin: 0;
+section.feature-major, section.benefit {
 
-		position: relative;
-	}
-}
-
-section.marketing-video {
 	text-align: center;
-	font-size: 0;
 
-	object {
-		display: inline-block;
+	img {
+		@include grid-column(1, $pull:8);
 
-		width:420px; height:315px;
+		vertical-align: middle;
+
+		margin-left: auto;
+		margin-right: 0;
+	}
+
+}
+@media screen and (min-width: #{500px}) {
+		section.feature-major, section.benefit {
+		.title {
+			@include grid-column(9, $push:2);
+			text-align: left;
+		}
+		.subtitle {
+			@include grid-column(9, $push:2);
+		}
 	}
 }
 
-section.major-feature {
-	.title {
-	  font-family: "Calibri", Garamond, sans-serif;
-  	}
+// section responsive behaviour
+@media screen and (max-width: #{500px}) {
+	section.feature-major, section.benefit {
+
+		img {
+			// @include grid-row();
+			// @include grid-column(12);
+			// TODO constrain image size. workaround:
+			display: none;
+		}
+
+		.title {
+			@include grid-row();
+			@include grid-column(12, $center:true);
+		}
+		.subtitle {
+			@include grid-row();
+			@include grid-column(12, $center:true);
+		}
+	}
 }

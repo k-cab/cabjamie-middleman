@@ -1,26 +1,32 @@
 # TODO  grep -r '<<<<<<<' to check for merge conflicts.
 
 
-
 require 'rake'
 require 'rake/packagetask'
 
 
-# bundle exec middleman build -c; rsync -avv source/mackerel-chrome/_* build/mackerel-chrome/; rsync -avv --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman
-
-
 task :default => :build
+
+task :deploy => [ :build, :'deploy:dev' ]
+
 
 desc 'build everything'
 task build: [:'build:middleman', :'build:chrome']
 
 desc 'run the the middleman build'
 task :'build:middleman' do
+	## grew out of:
+	# bundle exec middleman build -c; rsync -avv source/mackerel-chrome/_* build/mackerel-chrome/; rsync -avv --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman
+	
 	cmd = %q(
+		set -e
+
 		bundle exec middleman build
 
-		# copy over _* e.g. _locales
+		# copy over _* e.g. _locales to get build/mackerel-chrome to work.
 		rsync -avv source/mackerel-chrome/_* build/mackerel-chrome/
+
+		# TODO failure handling
 	)
 
 	system cmd
@@ -92,14 +98,51 @@ task :'build:chrome' do
 
 end
 
-desc 'deploy to dropbox builds dir'
-task :deploy => :build do
-	cmd = %q(
-		rsync -avv --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman | grep -v uptodate
-	)
 
-	system cmd
+namespace :deploy do
+	desc "dev deployment (Dropbox)"
+	task :dev do
+		cmd = '''
+			rsync -avv --delete build/ ~/Dropbox/bigbearlabs/builds/bbl-middleman | grep -v uptodate
+		'''
+
+		system cmd
+	end
+
+	desc "integration deployment (Heroku)"
+	task :int do
+		raise "unimplemented"
+
+		cmd = '''
+			echo "TODO commit and push mackerel-site to heroku"
+		'''
+
+		system cmd
+	end
+
+	desc "production deployment (Gandi)"
+	task :prod do
+		cmd = %q(
+			set -e
+
+			echo "Copying build output to mackerel-site/public/..."
+			rsync -av --delete build/* ~/Dropbox/bigbearlabs/ngp/mackerel/mackerel-site/public/
+	
+			echo "'git push gandi master'..."
+			(cd ~/Dropbox/bigbearlabs/ngp/mackerel/mackerel-site/public
+				git add -A :/
+				git commit -a -m "site build"
+				git push gandi master  # depends on the right ssh identity configured in ~/.ssh/config
+				)
+			
+			echo "Running deploy command on gandi server via ssh..."
+			ssh 482462@git.dc0.gpaas.net 'deploy default.git master'
+		)
+
+		system cmd
+	end
 end
+
 
 desc 'watch and deploy in a loop'
 task :'deploy:loop' do
