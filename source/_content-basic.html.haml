@@ -4,40 +4,9 @@
 -## functions defined in the helper class, probably most of which are redundant given middleman helper functions which I didn't know very well at the time of writing.
 
 - current_page.data.sections.each do |elem|
-
-  -## strutures a section
   %section( class="#{elem[:role]}" )
-
-    -## a title or equivalent heading.
-
-    -# determine heading level
-    - heading_level = elem[:role] == 'title' ? :h1 : :h2
-
-    -# wrap title in an a tag if there's an href.
-    -# FIXME not working.
     - if elem[:href]
-      %a{ href: elem[:href] } #{el_if_present elem, :title, heading_level}
+      = link_to elem[:href] do
+        = partial 'section', locals: { elem: elem }
     - else
-      = el_if_present elem, :title, heading_level
-
-    -## an image.
-    = el_if_present elem, :img
-
-    -## a subtitle. (subtext)
-    = el_if_present elem, :subtitle, :p
-
-    -## a secondary image.
-    = el_if_present elem, :subimg
-
-    -## embedded content.
-    - if elem[:embed]
-      = elem[:embed]
-
-
-    -# TODO blurb
-
-
-    -# TODO make section rendering recursive.
-    - if elem[:sections]
-      - elem[:sections].each do |section|
-        = render_section section
+      = partial 'section', locals: { elem: elem }

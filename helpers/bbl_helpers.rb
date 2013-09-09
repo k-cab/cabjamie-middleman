@@ -16,34 +16,7 @@ def el_if_present( data, role, html_el = role )
     end
 
     inner_el = el html_el, content, role, attrs
-
-    # wrap title with link tag
-    # if href
-    #   # link_to data[:href] do
-    #   #   inner_el
-    #   # end
-    #   "<a href=#{href}>#{inner_el}</a>"
-    # else
-      inner_el
-    # end
   end
-end
-
-
-def render_section( data )
-  href = data[:href]
-  puts "!!", href
-  [ 
-    "<section>",
-    # wrap the whole thing in an a tag if an href exists.
-    href ? "<a href='#{href}'>" : "",
-    el_if_present( data, :title, :p),
-    el_if_present( data, :img),
-    el_if_present( data, :subtitle, :p),
-    el_if_present( data, :subimg),
-    href ? "</a>" : "",
-    "</section>"
-  ].join
 end
 
 
