@@ -4,5 +4,9 @@
 -## functions defined in the helper class, probably most of which are redundant given middleman helper functions which I didn't know very well at the time of writing.
 
 - current_page.data.sections.each do |elem|
-
-  = partial 'section', locals: { elem: elem }
+  %section( class="#{elem[:role]}" )
+    - if elem[:href]
+      = link_to elem[:href] do
+        = partial 'section', locals: { elem: elem }
+    - else
+      = partial 'section', locals: { elem: elem }
