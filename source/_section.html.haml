@@ -22,7 +22,10 @@
       = image_tag elem[:img]
 
     -## a subtitle. (subtext)
-    = el_if_present elem, :subtitle, :p
+    - if elem[:subtitle]
+      .subtitle
+        - elem[:subtitle].each_line.map do |paragraph|
+          %p #{paragraph}
 
     -## a secondary image.
     = el_if_present elem, :subimg
@@ -49,7 +52,11 @@
   - if elem[:img]
     = image_tag elem[:img]
 
-  = el_if_present elem, :subtitle, :p
+  -## a subtitle. (subtext)
+  - if elem[:subtitle]
+    .subtitle
+      - elem[:subtitle].each_line.map do |paragraph|
+        %p #{paragraph}
 
   = el_if_present elem, :subimg
 
