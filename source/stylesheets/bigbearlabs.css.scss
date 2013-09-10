@@ -12,9 +12,10 @@ header {
 section {
 	// @include grid-row();
 
-	.subtitle {
+	.subtitle p {
 		text-align: center;
 	}
+
 }
 
 section.title {
@@ -60,9 +61,6 @@ section.product {
 	.title {
 		margin-top: 5%;
 		// font-size: 200%;
-	}
-	.subtitle p {
-		text-align: center;
 	}
 
 	img {

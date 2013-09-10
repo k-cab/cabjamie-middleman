@@ -21,8 +21,10 @@
 
     = javascript_include_tag "vendor/modernizr-2.6.1.min"
     = stylesheet_link_tag "site"
-    = stylesheet_link_tag "bbl-basic"
+    -#= stylesheet_link_tag "bbl-basic"  # not needed since it's imported
     = stylesheet_link_tag current_page.data.stylesheet if current_page.data.stylesheet
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300,400' rel='stylesheet' type='text/css'>
 
   %body
     /[if lt IE 7] <p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p>
