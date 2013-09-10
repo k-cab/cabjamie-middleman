@@ -3,35 +3,60 @@
 
 -## a title or equivalent heading.
 
--# determine heading level
-- heading_level = elem[:role] == 'title' ? :h1 : :h2
+- if elem[:href]
 
--# wrap title in an a tag if there's an href.
--# - if elem[:href]
--#   %a{ href: elem[:href] } #{el_if_present elem, :title, heading_level}
--# - else
--#   = el_if_present elem, :title, heading_level
-= el_if_present elem, :title, heading_level
+  = link_to elem[:href] do
 
--## an image.
-= el_if_present elem, :img
+    -# determine heading level
+    - heading_level = elem[:role] == 'title' ? :h1 : :h2
 
--## a subtitle. (subtext)
-= el_if_present elem, :subtitle, :p
+    -# wrap title in an a tag if there's an href.
+    -# - if elem[:href]
+    -#   %a{ href: elem[:href] } #{el_if_present elem, :title, heading_level}
+    -# - else
+    -#   = el_if_present elem, :title, heading_level
+    = el_if_present elem, :title, heading_level
 
--## a secondary image.
-= el_if_present elem, :subimg
+    -## an image.
+    - if elem[:img]
+      = image_tag elem[:img]
 
--## embedded content.
-- if elem[:embed]
-  = elem[:embed]
+    -## a subtitle. (subtext)
+    = el_if_present elem, :subtitle, :p
 
+    -## a secondary image.
+    = el_if_present elem, :subimg
 
--# TODO blurb
+    -## embedded content.
+    - if elem[:embed]
+      = elem[:embed]
 
+    -# TODO blurb
 
--# TODO make section rendering recursive.
-- if elem[:sections]
-  - elem[:sections].each do |subsection|
-    %section( class="#{subsection[:role]} subsection" )
-      = partial 'section', locals: { elem: subsection }
+    -# TODO make section rendering recursive.
+    - if elem[:sections]
+      - elem[:sections].each do |subsection|
+        %section( class="#{subsection[:role]} subsection" )
+          = partial 'section', locals: { elem: subsection }
+
+- else
+
+  -# dupe
+  - heading_level = elem[:role] == 'title' ? :h1 : :h2
+
+  = el_if_present elem, :title, heading_level
+
+  - if elem[:img]
+    = image_tag elem[:img]
+
+  = el_if_present elem, :subtitle, :p
+
+  = el_if_present elem, :subimg
+
+  - if elem[:embed]
+    = elem[:embed]
+
+  - if elem[:sections]
+    - elem[:sections].each do |subsection|
+      %section( class="#{subsection[:role]} subsection" )
+        = partial 'section', locals: { elem: subsection }

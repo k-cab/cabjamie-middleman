@@ -5,8 +5,4 @@
 
 - current_page.data.sections.each do |elem|
   %section( class="#{elem[:role]}" )
-    - if elem[:href]
-      = link_to elem[:href] do
-        = partial 'section', locals: { elem: elem }
-    - else
-      = partial 'section', locals: { elem: elem }
+    = partial 'section', locals: { elem: elem }
