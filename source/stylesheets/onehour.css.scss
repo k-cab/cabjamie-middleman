@@ -1,0 +1,19 @@
+@import "bbl-basic.css.scss";
+// @import "../foundation-scss-standalone/scss/foundation";
+
+body {
+  background-color: black; 
+  color: #ddd;
+
+  h1 { display: none; }
+  h2, h3 {  color: white; font-size: 20px; }
+}
+
+.subtitle p {
+}
+
+.howto-images {
+  .subsection {
+    @include grid-column(4);
+  }
+}
