@@ -2,7 +2,6 @@
 title: OneHour
 subtitle: 
 
-stylesheet: onehour.css
 google_analytics_id: 
 
 sections:
@@ -31,6 +30,11 @@ sections:
     Happy focusing!
 -
   role: howto-images
+  sections:
+  - img: onehour/onehour-howto-01.png
+  - img: onehour/onehour-howto-02.png
+  - img: onehour/onehour-howto-03.png
+  - img: onehour/onehour-howto-04.png
 -
   role: actions
   sections:
@@ -43,3 +47,16 @@ sections:
 
 = partial "content-basic"
 
+:scss
+  @import "bbl-basic.css.scss";
+
+  body {
+    background-color: black; 
+    color: #ddd;
+  }
+
+  .howto-images {
+    .subsection {
+      @include grid-column(3);
+    }
+  }
