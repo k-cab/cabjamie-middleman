@@ -9,6 +9,8 @@ task :default => :build
 
 task :deploy => [ :build, :'deploy:dev' ]
 
+task :release => [ :deploy, :'deploy:prod' ]
+
 
 desc 'build everything'
 task build: [:'build:middleman', :'build:chrome']
