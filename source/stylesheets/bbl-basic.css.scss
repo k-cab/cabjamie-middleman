@@ -62,8 +62,10 @@ body {
 
 	p {
 		text-align: left;
+		// max-width: 95%;
 	}
 
+	// desktop-aspect
 	@media screen and (min-width: #{400px}) {
 		margin: 20px;
 		padding: 20px;
@@ -101,10 +103,6 @@ section {
 	@include clearfix;
 	
 	margin: 40px auto;
-
-	.subtitle p {
-		text-align: justify;
-	}
 
 	max-width: 700px;
 }
@@ -148,23 +146,8 @@ section.feature-major, section.benefit {
 		margin-right: 0;
 	}
 
-}
-@media screen and (min-width: #{500px}) {
-		section.feature-major, section.benefit {
-		.title {
-			@include grid-column(9, $push:2);
-			text-align: left;
-		}
-		.subtitle {
-			@include grid-column(9, $push:2);
-		}
-	}
-}
-
-// section responsive behaviour
-@media screen and (max-width: #{500px}) {
-	section.feature-major, section.benefit {
-
+	// mobile-aspect
+	@media screen and (max-width: #{500px}) {
 		img {
 			// @include grid-row();
 			// @include grid-column(12);
@@ -181,4 +164,16 @@ section.feature-major, section.benefit {
 			@include grid-column(12, $center:true);
 		}
 	}
+
+	// gridded for desktop-aspect
+	@media screen and (min-width: #{500px}) {
+		.title {
+			@include grid-column(9, $push:2);
+			text-align: left;
+		}
+		.subtitle {
+			@include grid-column(9, $push:2);
+		}
+	}
+	
 }
