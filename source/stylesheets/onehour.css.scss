@@ -12,8 +12,31 @@ body {
 .subtitle p {
 }
 
+
+.tagline {
+  margin-bottom: 80px;
+}
+
 .howto-images {
+  @include grid-row;
+
+  max-width: none;
+
   .subsection {
-    @include grid-column(4);
+    .subtitle p {
+      text-align: center;
+      font-size: 13px;
+      color: #b0b0b0;
+    }
+  }
+
+  @media screen and (min-width: #{500px}) {
+    .subsection {
+      @include grid-column(4);
+
+      img {
+        width: 100%;
+      }
+    }
   }
 }

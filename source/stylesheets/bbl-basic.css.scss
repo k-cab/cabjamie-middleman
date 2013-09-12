@@ -100,12 +100,11 @@ footer p {
 section {
 	@include clearfix;
 	
-	margin: 66px auto;
+	margin: 40px auto;
 
 	.subtitle p {
 		text-align: justify;
 	}
-
 
 	max-width: 700px;
 }
