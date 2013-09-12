@@ -6,3 +6,5 @@ gem "middleman-livereload"
 gem "susy", "~>1.0.5"
 gem "redcarpet"
 gem 'rake'
+
+gem "middleman-imageoptim", "~> 0.0.4"

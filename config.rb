@@ -1,6 +1,9 @@
 #Markdown
 set :markdown_engine, :redcarpet
 
+# image optimisation
+activate :image_optim
+
 #Livereload
 activate :livereload, :port => 35730
 # activate :livereload

@@ -21,6 +21,7 @@ GEM
       multi_json (~> 1.0)
     favicon_maker (0.2.1)
       mini_magick (~> 3.5)
+    fspath (2.0.5)
     fssm (0.2.10)
     haml (4.0.3)
       tilt
@@ -30,6 +31,13 @@ GEM
       rack (>= 1.0.0)
       url_mount (~> 0.2.1)
     i18n (0.6.1)
+    image_optim (0.8.1)
+      fspath (~> 2.0.3)
+      image_size (~> 1.1.2)
+      in_threads (~> 1.1.1)
+      progress (~> 2.4.0)
+    image_size (1.1.3)
+    in_threads (1.1.2)
     listen (0.7.3)
     maruku (0.6.1)
       syntax (>= 1.0.0)
@@ -49,6 +57,9 @@ GEM
     middleman-favicon-maker (3.2)
       favicon_maker (~> 0.2.0)
       middleman-core (>= 3.0.0)
+    middleman-imageoptim (0.0.4)
+      image_optim (~> 0.8.0)
+      middleman-core (>= 3.0)
     middleman-livereload (3.1.0)
       em-websocket (>= 0.2.0)
       middleman-core (>= 3.0.2)
@@ -84,6 +95,7 @@ GEM
     padrino-helpers (0.10.7)
       i18n (~> 0.6)
       padrino-core (= 0.10.7)
+    progress (2.4.0)
     rack (1.4.5)
     rack-livereload (0.3.15)
       rack
@@ -128,6 +140,7 @@ PLATFORMS
 DEPENDENCIES
   middleman (~> 3.0.14)
   middleman-favicon-maker
+  middleman-imageoptim (~> 0.0.4)
   middleman-livereload
   rake
   redcarpet
