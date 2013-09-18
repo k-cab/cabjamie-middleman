@@ -9,9 +9,20 @@ body {
   h2, h3 {  color: white; font-size: 20px; }
 }
 
-.subtitle p {
-}
+section.title {
 
+  // banner image width exceeds defaults for section
+  max-width: 100%;
+
+  @media screen and (max-width: #{600px}) {
+    img {
+      // image wasn't made with mobile in mind - scale up
+      min-width: 200%;
+      // center horizontally
+      margin-left: -50%;
+    }
+  }
+}
 
 .tagline {
   margin-bottom: 80px;
