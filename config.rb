@@ -1,8 +1,14 @@
+## set up the mackerel-chrome subproject
+page "/mackerel-chrome/*", :layout => "angular"
+page "/mackerel-chrome/templates/*", :layout => false
+page "/mackerel-chrome/partials/*", :layout => false
+
+
 #Markdown
 set :markdown_engine, :redcarpet
 
 # image optimisation
-activate :image_optim
+activate :image_optim  # NOTE this gets very slow.
 
 #Livereload
 activate :livereload, :port => 35730
@@ -37,9 +43,7 @@ activate :livereload, :port => 35730
 # with_layout :admin do
 #   page "/admin/*"
 # end
-page "/mackerel-chrome/*", :layout => "angular"
-page "/mackerel-chrome/templates/*", :layout => false
-page "/mackerel-chrome/partials/*", :layout => false
+
 
 # Proxy (fake) files
 # page "/this-page-has-no-template.html", :proxy => "/template-file.html" do
