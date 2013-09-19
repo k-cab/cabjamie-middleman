@@ -7,6 +7,9 @@ page "/mackerel-chrome/partials/*", :layout => false
 #Markdown
 set :markdown_engine, :redcarpet
 
+
+activate :gzip
+
 # image optimisation
 activate :image_optim  # NOTE this gets very slow.
 
