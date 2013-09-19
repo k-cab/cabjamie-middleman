@@ -15,11 +15,30 @@ section.title {
   max-width: 100%;
 
   @media screen and (max-width: #{600px}) {
-    img {
-      // image wasn't made with mobile in mind - scale up
-      min-width: 200%;
-      // center horizontally
-      margin-left: -50%;
+    .img-container {
+      
+      // 'crop' the image.
+      overflow: hidden;
+      height: 250px;
+
+      img {
+        margin-top: 30px;
+        -webkit-transform: scale(2);
+
+        // // image wasn't made with mobile in mind - scale up
+        // min-width: 200%;
+        // // center horizontally
+        // margin-left: -50%;
+
+        // max-width: 2000px;
+        // margin-left: -90%;
+
+        // display: none;
+
+        // max-width: 100%;
+        // margin-left: 0%;
+
+      }
     }
   }
 }
@@ -37,10 +56,15 @@ section.title {
     .subtitle p {
       text-align: center;
       font-size: 13px;
-      color: #b0b0b0;
+      color: #b8b8b8;
     }
   }
 
+  @media screen and (max-width: #{500px}) {
+    .subsection img {
+      width: 80%;
+    }
+  }
   @media screen and (min-width: #{500px}) {
     .subsection {
       @include grid-column(4);

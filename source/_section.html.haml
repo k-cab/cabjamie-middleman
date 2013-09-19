@@ -19,7 +19,8 @@
 
     -## an image.
     - if elem[:img]
-      = image_tag elem[:img]
+      = content_tag :div, class: 'img-container' do
+        = image_tag elem[:img]
 
     -## a subtitle. (subtext)
     = el_if_present elem, :subtitle, :div
@@ -53,7 +54,8 @@
   = el_if_present elem, :title, heading_level
 
   - if elem[:img]
-    = image_tag elem[:img]
+    = content_tag :div, class: 'img-container' do
+      = image_tag elem[:img]
 
   -## a subtitle. (subtext)
   - if elem[:subtitle]
