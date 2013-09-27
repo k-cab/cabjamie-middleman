@@ -101,6 +101,7 @@ GEM
       rack
     rack-protection (1.5.0)
       rack
+    rack-rewrite (1.3.3)
     rack-test (0.6.2)
       rack (>= 1.0)
     rake (10.0.4)
@@ -142,6 +143,7 @@ DEPENDENCIES
   middleman-favicon-maker
   middleman-imageoptim (~> 0.0.4)
   middleman-livereload
+  rack-rewrite
   rake
   redcarpet
   susy (~> 1.0.5)

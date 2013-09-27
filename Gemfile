@@ -8,3 +8,5 @@ gem "redcarpet"
 gem 'rake'
 
 gem "middleman-imageoptim", "~> 0.0.4"
+
+gem 'rack-rewrite'
