@@ -12,7 +12,7 @@ module SiteHelpers
     if data.page.description
       description = data.page.description
     else
-      description = "Set your site description in /helpers/site_helpers.rb"
+      description = "We work on products and client projects for iOS, Mac and Web platforms."
     end
     description
   end
