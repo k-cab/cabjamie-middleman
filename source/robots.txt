@@ -4,3 +4,6 @@ User-agent: *
 
 # exclude mackerel-chrome - the world's not ready for it.
 Disallow: /mackerel-chrome
+
+# retired areas.
+Disallow: /tagyeti
