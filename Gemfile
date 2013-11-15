@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem "middleman", "~>3.0.14"
+gem "middleman"
 gem "middleman-favicon-maker"
 gem "middleman-livereload"
 gem "susy", "~>1.0.5"
