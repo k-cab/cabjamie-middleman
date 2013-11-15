@@ -12,6 +12,8 @@ use Rack::Rewrite do
   # r301      '/wiki/Yair_Flicker',   '/yair'
   # r302      '/wiki/Greg_Jastrab',   '/greg'
   # r301      %r{/wiki/(\w+)_\w+},    '/$1'
-  r301 '/onehour/support', 'http://support.bigbearlabs.com/forums/191718-general/category/67220-onehour'
+
+  ## gandi instance not running with rack, so this is superceded by page with the meta tag.
+  # r301 '/onehour/support', 'http://support.bigbearlabs.com/forums/191718-general/category/67220-onehour'
 end
 

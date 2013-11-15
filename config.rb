@@ -3,6 +3,9 @@ page "/mackerel-chrome/*", :layout => "angular"
 page "/mackerel-chrome/templates/*", :layout => false
 page "/mackerel-chrome/partials/*", :layout => false
 
+## redirects must be assembled without layout.
+page "/onehour/support/*", :layout => false
+
 
 #Markdown
 set :markdown_engine, :redcarpet
@@ -11,7 +14,7 @@ set :markdown_engine, :redcarpet
 activate :gzip
 
 # image optimisation
-activate :image_optim  # NOTE this gets very slow.
+# activate :image_optim  # NOTE this gets very slow.
 
 #Livereload
 activate :livereload, :port => 35730
@@ -88,7 +91,7 @@ configure :build do
   
   # Create favicon/touch icon set from source/favicon_base.png
   ## NOTE disabling due to the build getting touched every time.
-  # activate :favicon_maker
+  activate :favicon_maker
   
   # Enable cache buster
   # activate :cache_buster
