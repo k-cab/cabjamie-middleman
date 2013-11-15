@@ -5,14 +5,18 @@ body {
   background-color: black; 
   color: #ddd;
 
-  h1 { display: none; }
   h2, h3 {  color: white; font-size: 20px; }
 }
 
 section.title {
 
+  h1 {
+    // display: none;   // for the legacy title banner with inlined text
+    color: #eee;
+  }
+
   // banner image width exceeds defaults for section
-  max-width: 100%;
+  max-width: 80%;
 
   @media screen and (max-width: #{600px}) {
     .img-container {
