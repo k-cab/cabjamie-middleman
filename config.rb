@@ -1,12 +1,3 @@
-## set up the mackerel-chrome subproject
-page "/mackerel-chrome/*", :layout => "angular"
-page "/mackerel-chrome/templates/*", :layout => false
-page "/mackerel-chrome/partials/*", :layout => false
-
-## redirects must be assembled without layout.
-page "/onehour/support/*", :layout => false
-
-
 #Markdown
 set :markdown_engine, :redcarpet
 
@@ -14,7 +5,7 @@ set :markdown_engine, :redcarpet
 activate :gzip
 
 # image optimisation
-# activate :image_optim  # NOTE this gets very slow.
+# activate :image_optim  # DISABLED very slow.
 
 #Livereload
 activate :livereload, :port => 35730
@@ -49,6 +40,17 @@ activate :livereload, :port => 35730
 # with_layout :admin do
 #   page "/admin/*"
 # end
+
+## set up the mackerel-chrome subproject
+page "/mackerel-chrome/*", :layout => "angular"
+page "/mackerel-chrome/templates/*", :layout => false
+page "/mackerel-chrome/partials/*", :layout => false
+page "/mackerel-chrome/styles/*", :layout => false
+
+## assemble redirects without layout to avoid flickering.
+page "/onehour/support/*", :layout => false
+page "/webbuddy/support/*", :layout => false
+page "/webbuddy/start/*", :layout => false
 
 
 # Proxy (fake) files
