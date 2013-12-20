@@ -3,3 +3,4 @@ config.js
 example/config.js
 .sass-cache
 build
+node_modules/
