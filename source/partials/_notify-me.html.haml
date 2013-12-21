@@ -1,19 +1,15 @@
-:html
-	<!-- Begin MailChimp Signup Form -->
-	<link href="//cdn-images.mailchimp.com/embedcode/slim-081711.css" rel="stylesheet" type="text/css">
-	<style type="text/css">
-		#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
-		/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
-		   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
-	</style>
-	<div id="mc_embed_signup">
-	<form action="http://bigbearlabs.us7.list-manage.com/subscribe/post?u=67250bcf57517576fe88a59bc&amp;id=8ee3ac6f15" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-		<label for="mce-EMAIL">Subscribe to our mailing list</label>
-		<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
-	    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-	    <div style="position: absolute; left: -5000px;"><input type="text" name="b_67250bcf57517576fe88a59bc_8ee3ac6f15" value=""></div>
-		<div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
-	</form>
-	</div>
-
-	<!--End mc_embed_signup-->
+/ Begin MailChimp Signup Form
+%link{href: "//cdn-images.mailchimp.com/embedcode/slim-081711.css", rel: "stylesheet", type: "text/css"}/
+:css
+  #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; }
+#mc_embed_signup
+  %form#mc-embedded-subscribe-form.validate{action: "http://bigbearlabs.us7.list-manage.com/subscribe/post?u=67250bcf57517576fe88a59bc&id=8ee3ac6f15", method: "post", name: "mc-embedded-subscribe-form", novalidate: "", target: "_blank"}
+    %label{for: "mce-EMAIL"}= current_page.data.notification_text
+    %label{for: "mce-EMAIL"} Would you like us to notify you when this page is finished? No spam mail, we promise.
+    %input#mce-EMAIL.email{name: "EMAIL", placeholder: "email address", required: "", type: "email", value: ""}/
+    / real people should not fill this in and expect good things - do not remove this or risk form bot signups
+    %div{style: "position: absolute; left: -5000px;"}
+      %input{name: "b_67250bcf57517576fe88a59bc_8ee3ac6f15", type: "text", value: ""}/
+    .clear
+      %input#mc-embedded-subscribe.button{name: "subscribe", type: "submit", value: "Notify me"}/
+/ End mc_embed_signup
