@@ -13,7 +13,7 @@ task :release => [ :deploy, :'deploy:prod' ]
 
 
 desc 'build everything'
-task build: [:'build:middleman', :'mackerel:archive']
+task build: [:'build:middleman']
 
 desc 'run the the middleman build'
 task :'build:middleman' do
