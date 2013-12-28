@@ -3,7 +3,7 @@ module SiteHelpers
   def page_title
     title = "Big Bear Labs"
     if data.page.title
-      title << " | " + data.page.title
+      title = "#{data.page.title} | #{title}"
     end
     title
   end
