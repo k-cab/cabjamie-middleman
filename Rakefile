@@ -7,9 +7,9 @@ require 'rake/packagetask'
 
 task :default => :build
 
-task :deploy => [ :build, :'deploy:dev' ]
+task :stage => [ :build, :'deploy:dev', :'deploy:staging' ]
 
-task :release => [ :deploy, :'deploy:prod' ]
+task :release => [ :stage, :'deploy:prod' ]
 
 
 desc 'build everything'
@@ -44,12 +44,15 @@ namespace :deploy do
 		system cmd
 	end
 
-	desc "integration deployment (Heroku)"
-	task :int do
-		raise "unimplemented"
-
+	desc "staging deployment (Heroku)"
+	task :staging do
 		cmd = '''
-			echo "TODO commit and push mackerel-site to heroku"
+			echo "commit and push bbl-rails to heroku"
+  		rsync -av build/* ../bbl-rails/public/
+  		cd ../bbl-rails
+			git ci -a -m "prepare bbl-middleman staging."
+			git push heroku
+			)
 		'''
 
 		system cmd
