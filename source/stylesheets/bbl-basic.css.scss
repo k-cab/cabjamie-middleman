@@ -10,6 +10,42 @@
 
 body {
 
+	// ## layout
+	h1, h2 {
+		margin-top: 50px;
+	}
+	h3, h4 {
+		margin-top: 30px;
+	}
+
+	text-align: center;
+
+	p {
+		// text-align: left;
+		// max-width: 95%;
+	
+		max-width: 40em;
+		margin: auto;
+	}
+
+	
+	// ## basic defaults
+	li {
+		list-style: none;
+	}
+
+
+	// desktop-aspect
+	@media screen and (min-width: #{400px}) {
+		margin: 20px;
+		padding: 20px;
+
+		p {
+			text-align: justify;
+		}
+	}
+
+
 	// ## typography
 
 	// font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
@@ -45,7 +81,7 @@ body {
 	}
 
 
-	// ## colour
+	// ## colours
 
 	// bright
 	background-color: #f8f8f8;
@@ -57,24 +93,8 @@ body {
 	// color: #eee;
 	// h1, h2, h3 { 	color: #aaa; }
 
-
-	text-align: center;
-
-	p {
-		text-align: left;
-		// max-width: 95%;
-	}
-
-	// desktop-aspect
-	@media screen and (min-width: #{400px}) {
-		margin: 20px;
-		padding: 20px;
-
-		p {
-			text-align: justify;
-		}
-	}
 }
+
 
 header {
 	text-align: left;
@@ -82,9 +102,6 @@ header {
 	img {
 		width: 50px;
 		height: 50px;
-	}
-	li {
-		list-style: none;
 	}
 	p {
 		display: none;  /* HACK hiding the text. */
@@ -107,18 +124,17 @@ section {
 	max-width: 700px;
 }
 
-section.news {
-	background-color: yellow;
+.news {
+	background-color: #ffff99;
+
+	margin: 20px auto;
 
 	.subtitle {
 		text-align: justify;
 	}
+
 }
 section.title {
-	h2 {
-		/* current image has embedded text */
-		display:none ;
-	}
 	.subtitle p {
 		text-align: center;
 	}
@@ -133,7 +149,7 @@ section.actions {
 
 // section presentation template incubated from WebBuddy
 
-section.feature-major, section.benefit {
+.feature-major, section.benefit {
 
 	text-align: center;
 

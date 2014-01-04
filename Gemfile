@@ -4,7 +4,7 @@ gem "middleman"
 gem "middleman-favicon-maker"
 gem "middleman-livereload"
 gem "susy", "~>1.0.5"
-gem "redcarpet"
+gem "kramdown"
 gem 'rake'
 
 gem "middleman-imageoptim", "~> 0.0.4"

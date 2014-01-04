@@ -1,5 +1,6 @@
 #Markdown
-set :markdown_engine, :redcarpet
+require 'kramdown'
+set :markdown_engine, :kramdown
 
 
 activate :gzip
