@@ -6,6 +6,9 @@
 @import "bbl-basic.css.scss";
 // # this results in the lib scss changes not being hotloaded.
 
+p {
+	max-width: 25em;
+}
 
 section {
 	// @include grid-row();
