@@ -38,7 +38,7 @@ namespace :deploy do
 	desc "dev deployment (Dropbox)"
 	task :dev do
 		cmd = '''
-			rsync -avv --delete build/ ~/'Google Drive'/bbl-middleman | grep -v uptodate
+			rsync -avv --delete build/ "~/Google Drive/bbl-middleman" | grep -v uptodate
 		'''
 
 		system cmd
