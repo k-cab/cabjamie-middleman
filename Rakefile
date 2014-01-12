@@ -7,9 +7,9 @@ require 'rake/packagetask'
 
 task :default => :build
 
-task :stage => [ :build, :'deploy:dev', :'deploy:staging' ]
+task :stage => [ :build, :'deploy:dev', :'deploy:bbl-rails' ]
 
-task :release => [ :stage, :'deploy:prod' ]
+task :release => [ :stage, :'deploy:github', :'deploy:mackerel-site' ]
 
 
 desc 'build everything'
@@ -45,7 +45,7 @@ namespace :deploy do
 	end
 
 	desc "staging deployment (Heroku)"
-	task :staging do
+	task :'bbl-rails' do
 		cmd = '''
 			echo "commit and push bbl-rails to heroku"
   		rsync -av build/* ../bbl-rails/public/
@@ -57,8 +57,19 @@ namespace :deploy do
 		system cmd
 	end
 
+	desc "production deployment (Github Pages)"
+	task :'github' do
+		sh """
+			rsync -av --delete build/* ../bigbearlabs.github.io/
+			cd ../bigbearlabs.github.io/
+			git add *
+			git commit -a -m 'built from bbl-middleman at #{Time.new}'
+			git push
+		"""
+	end
+	
 	desc "production deployment (Gandi)"
-	task :prod do
+	task :'mackerel-site' do
 		cmd = %q(
 			set -e
 
