@@ -52,7 +52,6 @@ namespace :deploy do
   		cd ../bbl-rails
 			git ci -a -m "prepare bbl-middleman staging."
 			git push heroku
-			)
 		'''
 
 		system cmd
