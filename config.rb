@@ -12,6 +12,14 @@ activate :gzip
 activate :livereload, :port => 35730
 # activate :livereload
 
+
+## redirects
+redirect 'blog/index.html', to:'http://blog.bigbearlabs.com'
+# temporary
+redirect 'about/index.html', to:'consulting'
+redirect 'contact/index.html', to:'consulting'
+
+
 ### 
 # Compass
 ###
