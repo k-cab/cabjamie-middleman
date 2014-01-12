@@ -18,6 +18,7 @@ redirect 'blog/index.html', to:'http://blog.bigbearlabs.com'
 # temporary
 redirect 'about/index.html', to:'consulting'
 redirect 'contact/index.html', to:'consulting'
+redirect 'downloads/index.html', to:'webbuddy'
 
 
 ### 
