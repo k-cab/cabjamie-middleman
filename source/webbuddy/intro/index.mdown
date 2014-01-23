@@ -14,23 +14,25 @@ uservoice_category: 58642
 
 ### Option + Option to search.
 
-Press the option/alt key twice to reveal a browser. 
+Press the [Option] / [Alt] key twice to reveal WebBuddy. 
 
 It's the fastest way to a Google search result page!
 
 
-### Work with links in context.
-
-Click on a link in an app such as Mail or Twitter to open it without losing context. 
-
-You can also open a link in a browser of your choice using modifier keys.
-
-
 ### Find anything you've seen before.
 
-Press Option/Alt twice, then start typing to filter through your history.
+WebBuddy visualises your web history and makes it easy to search through them, saving you time finding stuff you've already seen before.
 
 Pages are organised into stacks based on originating search or app.
+
+
+### Work with web content in context.
+
+Click on a link in an app such as Mail, Twitter or Evernote to access the information without losing your working context. 
+
+Links opened from apps are saved in a stack for the app, so you can easily find it later.
+
+You can also open a link in a browser of your choice using the modifier keys, configurable in the preferences.
 
 
 ### [coming soon] Works with other browsers.
@@ -44,3 +46,8 @@ You can import browser sessions into WebBuddy and interact with your entire brow
 
 Tag stacks to use web research in conjunction with documents.
 
+
+### [coming soon] Full keyboard navigation.
+
+
+### [coming soon] Highlighting.
