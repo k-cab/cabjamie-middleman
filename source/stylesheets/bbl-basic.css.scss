@@ -116,11 +116,13 @@ header {
 	}
 }
 
-footer p {
-	text-align: right;
-
-	font-size: 0.67em;
-	font-weight: bold;
+footer {
+	p {
+		text-align: center;
+		
+		font-size: 0.67em;
+		font-weight: bold;		
+	}
 }
 
 

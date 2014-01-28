@@ -9,7 +9,7 @@ task :default => :build
 
 task :stage => [ :build, :'deploy:dev', :'deploy:bbl-rails' ]
 
-task :release => [ :stage, :'deploy:github', :'deploy:mackerel-site' ]
+task :release => [ :stage, :'deploy:github' ]
 
 
 desc 'build everything'
