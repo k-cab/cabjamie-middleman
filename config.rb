@@ -21,6 +21,17 @@ redirect 'contact/index.html', to:'consulting'
 redirect 'downloads/index.html', to:'webbuddy'
 redirect 'webbuddy/2/preview/index.html', to:'http://alpha.webbuddyapp.com'
 
+## legacy redirects involving meta tags in index.html.
+## assemble redirects without layout to avoid flickering.
+page "/onehour/support/*", :layout => false
+page "/webbuddy/support/*", :layout => false
+page "/webbuddy/start/*", :layout => false
+
+
+activate :blog do |blog|
+  blog.sources = "blog-test/{year}/{month}/{day}/{title}.html"
+end
+
 
 ### 
 # Compass
@@ -51,17 +62,6 @@ redirect 'webbuddy/2/preview/index.html', to:'http://alpha.webbuddyapp.com'
 # with_layout :admin do
 #   page "/admin/*"
 # end
-
-## set up the mackerel-chrome subproject
-page "/mackerel-chrome/*", :layout => "angular"
-page "/mackerel-chrome/templates/*", :layout => false
-page "/mackerel-chrome/partials/*", :layout => false
-page "/mackerel-chrome/styles/*", :layout => false
-
-## assemble redirects without layout to avoid flickering.
-page "/onehour/support/*", :layout => false
-page "/webbuddy/support/*", :layout => false
-page "/webbuddy/start/*", :layout => false
 
 
 # Proxy (fake) files
@@ -121,3 +121,14 @@ configure :build do
   # set :http_path, "/Content/images/"
   # set :http_path, "/"
 end
+
+
+
+
+## obsolete content
+
+## set up the mackerel-chrome subproject
+page "/mackerel-chrome/*", :layout => "angular"
+page "/mackerel-chrome/templates/*", :layout => false
+page "/mackerel-chrome/partials/*", :layout => false
+page "/mackerel-chrome/styles/*", :layout => false

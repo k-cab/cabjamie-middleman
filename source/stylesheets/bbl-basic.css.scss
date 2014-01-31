@@ -157,7 +157,7 @@ section.actions {
 }
 
 
-.form {
+form {
 	
 	max-width: 600px;
 	
@@ -165,7 +165,7 @@ section.actions {
 	@include grid-column(8, $center:true);
 }
 
-.form.contact {
+form.contact {
 	label {
 		@include grid-row;
 		@include grid-column(3);
@@ -179,6 +179,12 @@ section.actions {
 
 	textarea {
 		min-height: 8em;
+	}
+
+	input[type="submit"] {
+		@include grid-row;
+		@include grid-column(2, $center:true);
+		background-color: red;
 	}
 }
 // section presentation template incubated from WebBuddy
