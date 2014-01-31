@@ -6,15 +6,20 @@
 @import "bbl-basic.css.scss";
 // # this results in the lib scss changes not being hotloaded.
 
-p {
-	max-width: 25em;
+
+h1, h2 {
+	text-align: center;
 }
 
 section {
 	// @include grid-row();
 }
 
-.title-section {
+section.actions {
+	text-align: center;
+}
+
+section.title {
 	display: block;
 
 	@include grid-row();
@@ -55,7 +60,6 @@ section {
 
 }
 
-// legacy
 section.feature-major, section.benefit {
 	img {
 		width: 60px;
