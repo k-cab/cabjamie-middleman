@@ -5,12 +5,18 @@ require 'rake'
 require 'rake/packagetask'
 
 
-task :default => :build
+task :default => :loop
 
 task :stage => [ :build, :'deploy:dev', :'deploy:bbl-rails' ]
 
 task :release => [ :stage, :'deploy:github' ]
 
+desc 'dev loop'
+task :loop do
+	sh %q(
+		bundle exec middleman
+	)
+end
 
 desc 'build everything'
 task build: [:'build:middleman']

@@ -8,6 +8,11 @@
 	}
 }
 
+
+.draft {
+	display: none;
+}
+
 body {
 
 	// ## layout
@@ -26,6 +31,9 @@ body {
 	
 		max-width: 40em;
 		margin: auto;
+		margin-top: 20px;
+
+		line-height: 1.8;
 	}
 
 	
@@ -41,7 +49,7 @@ body {
 		padding: 20px;
 
 		p {
-			text-align: justify;
+			text-align: left;
 		}
 	}
 
@@ -149,6 +157,36 @@ section.actions {
 }
 
 
+form {
+	
+	max-width: 600px;
+	
+	@include grid-row;
+	@include grid-column(8, $center:true);
+}
+
+form.contact {
+	label {
+		@include grid-row;
+		@include grid-column(3);
+
+		text-align: right;
+	}
+
+	input, textarea {
+		@include grid-column(9);
+	}
+
+	textarea {
+		min-height: 8em;
+	}
+
+	input[type="submit"] {
+		@include grid-row;
+		@include grid-column(2, $center:true);
+		background-color: red;
+	}
+}
 // section presentation template incubated from WebBuddy
 
 .feature-major, section.benefit {
