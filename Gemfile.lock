@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (3.2.15)
+    activesupport (3.2.16)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     addressable (2.3.5)
@@ -30,7 +30,7 @@ GEM
       tilt
     hike (1.2.3)
     http_parser.rb (0.5.3)
-    i18n (0.6.5)
+    i18n (0.6.9)
     image_optim (0.8.1)
       fspath (~> 2.0.3)
       image_size (~> 1.1.2)
@@ -72,7 +72,7 @@ GEM
     middleman-imageoptim (0.0.4)
       image_optim (~> 0.8.0)
       middleman-core (>= 3.0)
-    middleman-livereload (3.1.0)
+    middleman-livereload (3.1.1)
       em-websocket (>= 0.2.0)
       middleman-core (>= 3.0.2)
       multi_json (~> 1.0)
@@ -87,7 +87,7 @@ GEM
       sprockets-sass (~> 1.0.0)
     mini_magick (3.6.0)
       subexec (~> 0.2.1)
-    multi_json (1.8.2)
+    multi_json (1.8.4)
     progress (2.4.0)
     rack (1.5.2)
     rack-livereload (0.3.15)
@@ -96,8 +96,8 @@ GEM
     rack-test (0.6.2)
       rack (>= 1.0)
     rake (10.0.4)
-    rb-fsevent (0.9.3)
-    rb-inotify (0.9.2)
+    rb-fsevent (0.9.4)
+    rb-inotify (0.9.3)
       ffi (>= 0.5.0)
     rb-kqueue (0.2.0)
       ffi (>= 0.5.0)

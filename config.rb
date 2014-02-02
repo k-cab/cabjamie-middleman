@@ -9,8 +9,9 @@ activate :gzip
 # activate :image_optim  # DISABLED very slow.
 
 #Livereload
-activate :livereload, :port => 35730
-# activate :livereload
+activate :livereload, 
+  :port => 35730,
+  :no_swf => true
 
 
 ## redirects
