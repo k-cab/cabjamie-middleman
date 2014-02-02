@@ -41,7 +41,7 @@ task :'build:middleman' do
 end
 
 namespace :deploy do
-	desc "dev deployment (Dropbox)"
+	desc "dev deployment (Google Drive)"
 	task :dev do
 		cmd = '''
 			rsync -avv --delete build/ "~/Google Drive/bbl-middleman" | grep -v uptodate
