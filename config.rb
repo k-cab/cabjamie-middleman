@@ -25,7 +25,6 @@ redirect 'about/index.html', to:'/consulting'
 redirect 'contact/index.html', to:'/consulting'
 
 redirect 'downloads/index.html', to:'/webbuddy'
-redirect 'webbuddy/intro/index.html', to:'/webbuddy'
 
 redirect 'webbuddy/2/preview/index.html', to:'http://alpha.webbuddyapp.com'
 
