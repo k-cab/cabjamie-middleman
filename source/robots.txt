@@ -2,8 +2,9 @@
 
 User-agent: *
 
-# exclude mackerel-chrome - the world's not ready for it.
-Disallow: /mackerel-chrome
+# exclude staging stuff.
+Disallow: /staging
+Disallow: /researches/staging
 
 # retired areas.
 Disallow: /tagyeti
