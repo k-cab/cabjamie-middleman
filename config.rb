@@ -16,6 +16,7 @@ activate :livereload,
 
 ## redirects
 redirect 'blog/index.html', to:'http://blog.bigbearlabs.com'
+redirect 'research-app', to:'/researches'
 
 redirect 'researches/staging/plugins/index.html', to:'http://bbl-rails.herokuapp.com/webbuddy-plugins/index.html'
 
