@@ -14,22 +14,27 @@
 }
 
 body {
+	text-align: left;
 
 	// ## layout
 	h1, h2 {
 		margin-top: 50px;
+		text-align: center;
 	}
 	h3, h4 {
 		margin-top: 30px;
 	}
 
-	text-align: left;
-
-	p {
-		// text-align: left;
-		// max-width: 95%;
-	
+	h3, h4, p {
 		max-width: 40em;
+	}
+
+	h3, h4 {
+		// cop out of left-aligned section design due to time constraints. 
+		// more structure in the content doc using pandoc annotations may help.
+		text-align: center;
+	}
+	p {
 		margin: auto;
 		margin-top: 20px;
 

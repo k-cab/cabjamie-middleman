@@ -19,9 +19,10 @@ redirect 'blog/index.html', to:'http://blog.bigbearlabs.com'
 
 redirect 'webbuddy/buy/index.html', to:'https://itunes.apple.com/gb/app/webbuddy/id525308400?mt=12'
 
-redirect 'research-app', to:'/researches'
-
 redirect 'researches/staging/plugins/index.html', to:'http://bbl-rails.herokuapp.com/webbuddy-plugins/index.html'
+
+redirect 'researches/extensions/chrome/index.html', to:'https://chrome.google.com/webstore/detail/researches-chrome-extensi/elcnecdfdhdfkpcgnejgacedngjflcha'
+redirect 'research-app', to:'/researches'
 
 
 ## temporary redirects
