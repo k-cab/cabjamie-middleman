@@ -30,14 +30,11 @@ body {
 	}
 
 	h3, h4 {
-		// cop out of left-aligned section design due to time constraints. 
-		// more structure in the content doc using pandoc annotations may help.
-		text-align: center;
+		
 	}
 	p {
 		margin: auto;
 		margin-top: 20px;
-
 		line-height: 1.8;
 	}
 
