@@ -9,17 +9,30 @@ activate :gzip
 # activate :image_optim  # DISABLED very slow.
 
 #Livereload
-activate :livereload, :port => 35730
-# activate :livereload
+activate :livereload, 
+  :port => 35730,
+  :no_swf => true
 
 
 ## redirects
 redirect 'blog/index.html', to:'http://blog.bigbearlabs.com'
-# temporary
-redirect 'about/index.html', to:'consulting'
-redirect 'contact/index.html', to:'consulting'
-redirect 'downloads/index.html', to:'webbuddy'
+
+redirect 'webbuddy/buy/index.html', to:'https://itunes.apple.com/gb/app/webbuddy/id525308400?mt=12'
+
+redirect 'researches/staging/plugins/index.html', to:'http://bbl-rails.herokuapp.com/webbuddy-plugins/index.html'
+
+redirect 'researches/extensions/chrome/index.html', to:'https://chrome.google.com/webstore/detail/researches-chrome-extensi/elcnecdfdhdfkpcgnejgacedngjflcha'
+redirect 'research-app', to:'/researches'
+
+
+## temporary redirects
+redirect 'about/index.html', to:'/consulting'
+redirect 'contact/index.html', to:'/consulting'
+
+redirect 'downloads/index.html', to:'/webbuddy'
+
 redirect 'webbuddy/2/preview/index.html', to:'http://alpha.webbuddyapp.com'
+
 
 ## legacy redirects involving meta tags in index.html.
 ## assemble redirects without layout to avoid flickering.
