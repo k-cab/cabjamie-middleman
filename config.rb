@@ -17,7 +17,16 @@ activate :livereload,
 ## redirects
 redirect 'blog/index.html', to:'http://blog.bigbearlabs.com'
 
-redirect 'research/staging/plugins/index.html', to:'http://bbl-rails.herokuapp.com/webbuddy-plugins/index.html'
+redirect 'webbuddy/buy/index.html', to:'https://itunes.apple.com/gb/app/webbuddy/id525308400?mt=12'
+
+
+redirect 'researches/index.html', to:'http://researches.launchrock.com'
+
+redirect 'research-app', to:'/researches'
+
+redirect 'researches/staging/plugins/index.html', to:'http://bbl-rails.herokuapp.com/webbuddy-plugins/index.html'
+
+redirect 'researches/extensions/chrome/index.html', to:'https://chrome.google.com/webstore/detail/researches-chrome-extensi/elcnecdfdhdfkpcgnejgacedngjflcha'
 
 
 ## temporary redirects
@@ -25,7 +34,6 @@ redirect 'about/index.html', to:'/consulting'
 redirect 'contact/index.html', to:'/consulting'
 
 redirect 'downloads/index.html', to:'/webbuddy'
-redirect 'webbuddy/intro/index.html', to:'/webbuddy'
 
 redirect 'webbuddy/2/preview/index.html', to:'http://alpha.webbuddyapp.com'
 
