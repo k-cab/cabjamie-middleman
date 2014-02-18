@@ -134,6 +134,12 @@ section {
 	margin: 40px auto;
 
 	max-width: 700px;
+
+	.media {
+		width: 80%;
+		// margin-left: 20%;  # disabled until the images arrive.
+		margin: auto;
+	}
 }
 
 .news {
@@ -153,6 +159,12 @@ section.title {
 }
 
 section.actions {
+	text-align: center;
+
+	> p {
+		display: inline-block;
+	}
+
  .download .title {
 		display: none;
 	}
