@@ -7,9 +7,9 @@ require 'rake/packagetask'
 
 task :default => :loop
 
-task :stage => [ :build, :'deploy:dev', :'deploy:bbl-rails' ]
+task :release => [ :stage, :'deploy:github', :'tag' ]
 
-task :release => [ :stage, :'deploy:github' ]
+task :stage => [ :build, :'deploy:dev', :'deploy:bbl-rails' ]
 
 desc 'dev loop'
 task :loop do
@@ -105,6 +105,13 @@ task :'deploy:loop' do
 		)
 
 	system cmd
+end
+
+desc 'git tag'
+task :tag	do
+	sh %Q(
+		git tag "#{Time.new.to_s}"
+	)	
 end
 
 
