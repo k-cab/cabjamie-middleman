@@ -1,6 +1,10 @@
 %header
-  %ul 
-    %li 
-      %a{:href => "/"}
-        = image_tag "bigbearlabs-ico.png"
-        %p Home
+  .menu
+    %a.home-button{:href => "/"}
+      = image_tag "bigbearlabs-ico.png", alt: 'Big Bear Labs'
+
+    .page-menu
+      - if current_page.data.menu
+        - current_page.data.menu.each do |menu_item|
+          - href = menu_item[:href] || menu_item[:label].downcase
+          = link_to menu_item[:label], href
