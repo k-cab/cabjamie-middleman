@@ -1,27 +1,27 @@
 ---
-title: WebBuddy Intro
+title: Researches Intro
 subtitle: Minimalistic web client for OS X
 
-stylesheet: webbuddy.css
+stylesheet: Researches.css
 google_analytics_id: UA-32373633-2
 uservoice_category: 58642
 
 ---
 
-# Welcome To WebBuddy!
+# Welcome To Researches!
 <!-- ## Page subtitle -->
 
 
 ### Option + Option to search.
 
-Press the [Option] / [Alt] key twice to reveal WebBuddy. 
+Press the [Option] / [Alt] key twice to reveal Researches. 
 
 It's the fastest way to a Google search result page!
 
 
 ### Find anything you've seen before.
 
-WebBuddy visualises your web history and makes it easy to search through them, saving you time finding stuff you've already seen before.
+Researches visualises your web history and makes it easy to search through them, saving you time finding stuff you've already seen before.
 
 Pages are organised into stacks based on originating search or app.
 
@@ -39,7 +39,7 @@ You can also open a link in a browser of your choice using the modifier keys, co
 
 Install extensions for safari, chrome or Firefox.
 
-You can import browser sessions into WebBuddy and interact with your entire browsing history and web-based context in a rich, graphical fashion.
+You can import browser sessions into Researches and interact with your entire browsing history and web-based context in a rich, graphical fashion.
 
 
 ### [coming soon] Organise using tags.
