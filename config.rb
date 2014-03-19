@@ -30,9 +30,9 @@ redirect 'researches/index.html', to:'http://researches.launchrock.com'
 
 redirect 'research-app', to:'/researches'
 
-redirect 'researches/staging/plugins/index.html', to:'http://bbl-rails.herokuapp.com/webbuddy-plugins/index.html'
-
 redirect 'researches/extensions/chrome/index.html', to:'https://chrome.google.com/webstore/detail/researches-chrome-extensi/elcnecdfdhdfkpcgnejgacedngjflcha'
+
+redirect 'researches/staging/plugins/index.html', to:'http://bbl-rails.herokuapp.com/webbuddy-plugins/index.html'
 
 
 ## temporary redirects

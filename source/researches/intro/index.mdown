@@ -35,11 +35,15 @@ Links opened from apps are saved in a stack for the app, so you can easily find 
 You can also open a link in a browser of your choice using the modifier keys, configurable in the preferences.
 
 
-### [coming soon] Works with other browsers.
+### Works with other browsers.
 
-Install extensions for safari, chrome or Firefox.
+Install extensions for your favorite browsers.
 
-You can import browser sessions into Researches and interact with your entire browsing history and web-based context in a rich, graphical fashion.
+- [Google Chrome](/researches/extensions/chrome)
+- Safari -- coming soon
+- Firefox -- coming soon
+
+You can import browser sessions into Researches and interact with your entire browsing history and web contexts in a rich, graphical fashion.
 
 
 ### [coming soon] Organise using tags.
