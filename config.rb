@@ -15,9 +15,15 @@ activate :livereload,
 
 
 ## redirects
+redirect 'links/index.html', to:'http://bigbearlabs.com'
+
 redirect 'blog/index.html', to:'http://blog.bigbearlabs.com'
 
+
 redirect 'webbuddy/buy/index.html', to:'https://itunes.apple.com/gb/app/webbuddy/id525308400?mt=12'
+
+
+redirect 'onehour/buy/index.html', to:'https://appstore.com/onehour'
 
 
 redirect 'researches/index.html', to:'http://researches.launchrock.com'
