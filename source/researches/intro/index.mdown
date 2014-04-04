@@ -55,7 +55,10 @@ Capture the most salient parts of your research effort. Minimise the noise when 
 
 ### Tell us what you think.
 
-Visit our discussion forum. @@
+Visit our [support forum][] and submit a support request for any feedback you'd like to give us. 
 
 ---
 [^1]: Thanks to [Mike Lee](http://murmu.rs), wordsmith extraordinaire for the term 're-search'.
+
+
+[support forum]: support

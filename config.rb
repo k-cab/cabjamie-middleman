@@ -19,20 +19,30 @@ redirect 'links/index.html', to:'http://bigbearlabs.com'
 
 redirect 'blog/index.html', to:'http://blog.bigbearlabs.com'
 
+redirect 'support/index.html', to:'http://bigbearlabs.zendesk.com'
+
+
 
 redirect 'webbuddy/buy/index.html', to:'https://itunes.apple.com/gb/app/webbuddy/id525308400?mt=12'
+
+redirect 'webbuddy/support/index.html', to:'/support'
 
 
 redirect 'onehour/buy/index.html', to:'https://appstore.com/onehour'
 
+redirect 'onehour/support/index.html', to:'/support'
+
 
 redirect 'researches/index.html', to:'http://researches.launchrock.com'
 
-redirect 'research-app', to:'/researches'
+redirect 'researches/support/index.html', to:'/support'
 
 redirect 'researches/extensions/chrome/index.html', to:'https://chrome.google.com/webstore/detail/researches-chrome-extensi/elcnecdfdhdfkpcgnejgacedngjflcha'
 
 redirect 'researches/staging/plugins/index.html', to:'http://bbl-rails.herokuapp.com/webbuddy-plugins/index.html'
+
+
+redirect 'research-app', to:'/researches'
 
 
 ## temporary redirects
