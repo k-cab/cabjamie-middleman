@@ -1,38 +1,23 @@
 ---
-title: Researches Intro
+title: Researches Intro (draft)
 subtitle: Minimalistic web client for OS X
 
-stylesheet: Researches.css
+stylesheet: bbl-basic.css
 google_analytics_id: UA-32373633-2
 uservoice_category: 58642
 
 ---
 
 # Welcome To Researches!
+
 <!-- ## Page subtitle -->
 
 
-### Option + Option to search.
+### Option, Option = quick search.
 
-Press the [Option] / [Alt] key twice to reveal Researches. 
+Press ⌥(Option / Alt) twice to reveal Researches.
 
-It's the fastest way to a Google search result page!
-
-
-### Find anything you've seen before.
-
-Researches visualises your web history and makes it easy to search through them, saving you time finding stuff you've already seen before.
-
-Pages are organised into stacks based on originating search or app.
-
-
-### Work with web content in context.
-
-Click on a link in an app such as Mail, Twitter or Evernote to access the information without losing your working context. 
-
-Links opened from apps are saved in a stack for the app, so you can easily find it later.
-
-You can also open a link in a browser of your choice using the modifier keys, configurable in the preferences.
+It's the fastest way to a Google search result page.
 
 
 ### Works with other browsers.
@@ -43,7 +28,14 @@ Install extensions for your favorite browsers.
 - Safari -- coming soon
 - Firefox -- coming soon
 
-You can import browser sessions into Researches and interact with your entire browsing history and web contexts in a rich, graphical fashion.
+The browser extensions send your browsing history to the Researches app for a rich re-search[^1] experience.
+
+
+### Find anything you've seen before.
+
+Visualise your web history and interactively find something you need, or scan through for insights on your research.
+
+History items are organised into stacks based on search term, app, or browser window. Other stack to come -- watch this space.
 
 
 ### [coming soon] Organise using tags.
@@ -53,5 +45,17 @@ Tag stacks to use web research in conjunction with documents.
 
 ### [coming soon] Full keyboard navigation.
 
+Perfect for people work with keyboard-centric workflows, such as writers or software developers.
+
 
 ### [coming soon] Highlighting.
+
+Capture the most salient parts of your research effort. Minimise the noise when you need to get back to the point.
+
+
+### Tell us what you think.
+
+Visit our discussion forum. @@
+
+---
+[^1]: Thanks to [Mike Lee](http://murmu.rs), wordsmith extraordinaire for the term 're-search'.
