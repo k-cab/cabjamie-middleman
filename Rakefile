@@ -110,7 +110,7 @@ end
 desc 'git tag'
 task :tag	do
 	sh %Q(
-		git tag "#{Time.new.to_s}"
+    git tag #{Time.new.utc.to_s.gsub(' ', '_').gsub(':', '_')}
 	)	
 end
 

@@ -21,7 +21,7 @@ redirect 'blog/index.html', to:'http://blog.bigbearlabs.com'
 
 redirect 'support/index.html', to:'http://bigbearlabs.zendesk.com'
 
-
+redirect '/vision/contextualisation', to:'http://researches.io'
 
 redirect 'webbuddy/buy/index.html', to:'https://itunes.apple.com/gb/app/webbuddy/id525308400?mt=12'
 
