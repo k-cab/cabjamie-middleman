@@ -9,7 +9,7 @@ task :default => :loop
 
 task :release => [ :stage, :'deploy:github', :'tag' ]
 
-task :stage => [ :build, :'deploy:dev', :'deploy:bbl-rails' ]
+task :stage => [ :build, :'deploy:bbl-rails' ]
 
 desc 'dev loop'
 task :loop do
@@ -41,14 +41,6 @@ task :'build:middleman' do
 end
 
 namespace :deploy do
-	desc "dev deployment (Google Drive)"
-	task :dev do
-		cmd = '''
-			rsync -avv --delete build/ "~/Google Drive/bbl-middleman" | grep -v uptodate
-		'''
-
-		system cmd
-	end
 
 	desc "staging deployment (Heroku)"
 	task :'bbl-rails' do
