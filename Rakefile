@@ -54,8 +54,8 @@ namespace :deploy do
 	desc "production deployment (Github Pages)"
 	task :'github' do
 		sh """
-			rsync -av --delete build/* ../#{site_name}.github.io/
-			cd ../#{site_name}.github.io/
+			rsync -av --delete build/* ./#{site_name}.github.io/
+			cd ./#{site_name}.github.io/
 			git add *
 			git commit -a -m 'built from bbl-middleman at #{Time.new}'
 			git push
