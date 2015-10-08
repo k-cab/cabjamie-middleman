@@ -38,19 +38,6 @@ end
 
 namespace :deploy do
 
-	desc "staging deployment (Heroku)"
-	task :'bbl-rails' do
-		cmd = '''
-			echo "commit and push bbl-rails to heroku"
-  		rsync -av build/* ../bbl-rails/public/
-  		cd ../bbl-rails
-			git ci -a -m "prepare bbl-middleman staging."
-			git push heroku
-		'''
-
-		system cmd
-	end
-
 	desc "production deployment (Github Pages)"
 	task :'github' do
 		sh """

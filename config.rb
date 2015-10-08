@@ -15,57 +15,7 @@ activate :livereload,
 
 
 ## redirects
-redirect 'links/index.html', to:'http://bigbearlabs.com'
 
-redirect 'blog/index.html', to:'http://blog.bigbearlabs.com'
-
-redirect 'support/index.html', to:'http://bigbearlabs.zendesk.com'
-
-
-redirect '/vision/contextualisation', to:'http://researches.io'
-
-
-redirect 'webbuddy/buy/index.html', to:'https://itunes.apple.com/gb/app/webbuddy/id525308400?mt=12'
-
-redirect 'webbuddy/support/index.html', to:'/support'
-
-
-redirect 'onehour/buy/index.html', to:'https://appstore.com/onehour'
-
-redirect 'onehour/support/index.html', to:'/support'
-
-
-redirect 'researches/index.html', to:'http://researches.launchrock.com'
-
-redirect 'researches/support/index.html', to:'/support'
-
-redirect 'researches/extensions/chrome/index.html', to:'https://chrome.google.com/webstore/detail/researches-chrome-extensi/elcnecdfdhdfkpcgnejgacedngjflcha'
-
-redirect 'researches/staging/plugins/index.html', to:'http://bbl-rails.herokuapp.com/webbuddy-plugins/index.html'
-
-
-redirect 'research-app', to:'/researches'
-
-
-## temporary redirects
-redirect 'about/index.html', to:'/consulting'
-redirect 'contact/index.html', to:'/consulting'
-
-redirect 'downloads/index.html', to:'/webbuddy'
-
-redirect 'webbuddy/2/preview/index.html', to:'http://alpha.webbuddyapp.com'
-
-
-## legacy redirects involving meta tags in index.html.
-## assemble redirects without layout to avoid flickering.
-page "/onehour/support/*", :layout => false
-page "/webbuddy/support/*", :layout => false
-page "/webbuddy/start/*", :layout => false
-
-
-activate :blog do |blog|
-  blog.sources = "blog-test/{year}/{month}/{day}/{title}.html"
-end
 
 
 ### 
@@ -158,12 +108,3 @@ configure :build do
 end
 
 
-
-
-## obsolete content
-
-## set up the mackerel-chrome subproject
-page "/mackerel-chrome/*", :layout => "angular"
-page "/mackerel-chrome/templates/*", :layout => false
-page "/mackerel-chrome/partials/*", :layout => false
-page "/mackerel-chrome/styles/*", :layout => false
