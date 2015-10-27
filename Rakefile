@@ -11,7 +11,7 @@ task :default => :loop
 
 task :release => [ :stage, :'deploy:github', :'tag' ]
 
-task :stage => [ :build, :'deploy:bbl-rails' ]
+task :stage => [ :build ]
 
 desc 'dev loop'
 task :loop do
